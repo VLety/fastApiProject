@@ -28,21 +28,33 @@ class Item(ItemBase):
     owner_id: int
 
     class Config:
-        orm_mode = True
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
+        from_attributes = True  # Pydantic V2 version
 
 
 class UserBase(BaseModel):
+    first_name: str
+    last_name: str
+    nick_name: str
+    phone: str
     email: str
+    birthday: str
+    country: str
+    city: str
+    address: str
+    # created: str
+    updated: str | None = None  # | None = None options required if no value present in database
 
 
 class UserCreate(UserBase):
-    password: str
+    #  password: str  # We can add here additional parameter that is not present in UserBase Class
+    pass
 
 
 class User(UserBase):
     id: int
-    is_active: bool
     items: list[Item] = []
 
     class Config:
-        orm_mode = True
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
+        from_attributes = True  # Pydantic V2 version
