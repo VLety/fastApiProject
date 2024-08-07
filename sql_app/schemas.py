@@ -33,6 +33,7 @@ class Item(ItemBase):
 
 
 class UserBase(BaseModel):
+    # Make Input json based on current (main) class
     first_name: str
     last_name: str
     nick_name: str
@@ -42,8 +43,6 @@ class UserBase(BaseModel):
     country: str
     city: str
     address: str
-    # created: str
-    updated: str | None = None  # | None = None options required if no value present in database
 
 
 class UserCreate(UserBase):
@@ -52,7 +51,10 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
+    # Make Output json based on main UserBase(BaseModel) class + current class
     id: int
+    created: str
+    updated: str | None = None  # | None = None options required if no value present in database
     items: list[Item] = []
 
     class Config:
