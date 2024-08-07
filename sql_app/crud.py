@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
+import util
 
 
 def get_user(db: Session, user_id: int):
@@ -23,7 +24,8 @@ def create_user(db: Session, user: schemas.UserCreate):
                           birthday=user.birthday,
                           country=user.country,
                           city=user.city,
-                          address=user.address)
+                          address=user.address,
+                          created=util.get_current_time_utc("TIME"))
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
