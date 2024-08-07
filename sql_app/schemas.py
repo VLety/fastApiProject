@@ -46,6 +46,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    # Make Input json based on main UserBase(BaseModel) class + current class
     #  password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
