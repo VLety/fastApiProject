@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 from . import models, schemas
 import util
 
@@ -47,6 +48,15 @@ def update_user(db: Session, db_user, user):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def delete_user(db: Session, db_user):
+    db.delete(db_user)
+    db.commit()
+
+    # Response Model - Return Type
+    # https://fastapi.tiangolo.com/tutorial/response-model/?h=#response-model-return-type
+    return JSONResponse(content={"message": "User deleted successfully"})
 
 
 def get_items(db: Session, skip: int = 0, limit: int = 100):

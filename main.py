@@ -1,3 +1,6 @@
+"""
+RESTful API with FastAPI framework
+"""
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -7,6 +10,7 @@ import util
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
 
+PROJECT_CONFIG = util.get_config()
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
@@ -15,17 +19,11 @@ app = FastAPI()
 # noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=util.get_config()["allow_origins"],
+    allow_origins=PROJECT_CONFIG["allow_origins"],
     allow_credentials=True,
-    allow_methods=util.get_config()["allow_methods"],
-    allow_headers=util.get_config()["allow_headers"],
+    allow_methods=PROJECT_CONFIG["allow_methods"],
+    allow_headers=PROJECT_CONFIG["allow_headers"]
 )
-
-
-@app.get('/favicon.ico', include_in_schema=False)  # Exclude request from DOCS schema
-async def favicon():
-    # https://fastapi.tiangolo.com/advanced/custom-response/#fileresponse
-    return FileResponse("./static/favicon.ico")
 
 
 # Dependency -> We need to have an independent database session/connection (SessionLocal) per request, use the same
@@ -57,19 +55,40 @@ def get_db():
         db.close()
 
 
+@app.get('/favicon.ico', include_in_schema=False)  # Exclude request from DOCS schema
+async def favicon():
+    # https://fastapi.tiangolo.com/advanced/custom-response/#fileresponse
+    return FileResponse("./static/favicon.ico")
+
+
+# Create (POST)
 @app.post("/users/", response_model=schemas.User)
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+
     # Check if unique User's identification attributes already exists
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered!")
+    db_user = crud.get_user_by_email(db, email=user.phone)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Phone already registered!")
 
     return crud.create_user(db=db, user=user)
+
+
+# Read (GET)
+@app.get("/users/{user_id}", response_model=schemas.User)
+async def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found!")
+    return db_user
 
 
 # Update (PUT)
 @app.put("/users/{user_id}", response_model=schemas.User)
 async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db)):
+
     # Check if User exists
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -78,18 +97,22 @@ async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depe
     return crud.update_user(db=db, db_user=db_user, user=user)
 
 
+# Delete (DELETE)
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: int, db: Session = Depends(get_db)):
+
+    # Check if User exists
+    db_user = crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found!")
+
+    return crud.delete_user(db=db, db_user=db_user)
+
+
 @app.get("/users/", response_model=list[schemas.User])
 async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
-
-
-@app.get("/users/{user_id}", response_model=schemas.User)
-async def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
 
 
 @app.post("/users/{user_id}/items/", response_model=schemas.Item)
