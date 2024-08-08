@@ -11,28 +11,30 @@ import util
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
 
-PROJECT_CONFIG = util.get_config()
+APP_CONFIG = util.get_config()
 models.Base.metadata.create_all(bind=engine)
 
 # Metadata and Docs URLs
 # https://fastapi.tiangolo.com/tutorial/metadata/#metadata-and-docs-urls
-app = FastAPI(title=PROJECT_CONFIG["api_docs"]["title"],
-              version=PROJECT_CONFIG["api_docs"]["version"],
-              summary=PROJECT_CONFIG["api_docs"]["summary"],
-              description=PROJECT_CONFIG["api_docs"]["description"],
-              terms_of_service=PROJECT_CONFIG["api_docs"]["terms_of_service"],
-              contact=PROJECT_CONFIG["api_docs"]["contact"],
-              license_info=PROJECT_CONFIG["api_docs"]["license_info"])
+app = FastAPI(root_path=APP_CONFIG["root_path"],
+              title=APP_CONFIG["api_docs"]["title"],
+              version=APP_CONFIG["api_docs"]["version"],
+              summary=APP_CONFIG["api_docs"]["summary"],
+              description=APP_CONFIG["api_docs"]["description"],
+              terms_of_service=APP_CONFIG["api_docs"]["terms_of_service"],
+              contact=APP_CONFIG["api_docs"]["contact"],
+              license_info=APP_CONFIG["api_docs"]["license_info"],
+              openapi_tags=APP_CONFIG["api_docs"]["openapi_tags"])
 
 # CORS (Cross-Origin Resource Sharing)
 # https://fastapi.tiangolo.com/tutorial/cors/#cors-cross-origin-resource-sharing
 # noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=PROJECT_CONFIG["allow_origins"],
-    allow_credentials=True,
-    allow_methods=PROJECT_CONFIG["allow_methods"],
-    allow_headers=PROJECT_CONFIG["allow_headers"]
+    allow_origins=APP_CONFIG["cors"]["allow_origins"],
+    allow_credentials=APP_CONFIG["cors"]["allow_credentials"],
+    allow_methods=APP_CONFIG["cors"]["allow_methods"],
+    allow_headers=APP_CONFIG["cors"]["allow_headers"]
 )
 
 
@@ -72,7 +74,7 @@ async def favicon():
 
 
 # Create (POST)
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users/", response_model=schemas.User, tags=["Users"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if unique User's identification attributes already exists
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -86,7 +88,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 # Read (GET)
-@app.get("/users/{user_id}", response_model=schemas.User)
+@app.get("/users/{user_id}", response_model=schemas.User, tags=["Users"])
 async def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -95,7 +97,7 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
 
 
 # Update (PUT)
-@app.put("/users/{user_id}", response_model=schemas.User)
+@app.put("/users/{user_id}", response_model=schemas.User, tags=["Users"])
 async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if User exists
     db_user = crud.get_user(db, user_id=user_id)
@@ -106,7 +108,7 @@ async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depe
 
 
 # Delete (DELETE)
-@app.delete("/users/{user_id}")
+@app.delete("/users/{user_id}", tags=["Users"])
 async def delete_user(user_id: int, db: Session = Depends(get_db)):
     # Check if User exists
     db_user = crud.get_user(db, user_id=user_id)
@@ -116,20 +118,18 @@ async def delete_user(user_id: int, db: Session = Depends(get_db)):
     return crud.delete_user(db=db, db_user=db_user)
 
 
-@app.get("/users/", response_model=list[schemas.User])
+@app.get("/users/", response_model=list[schemas.User], tags=["Users"])
 async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
-async def create_item_for_user(
-        user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
-):
+@app.post("/users/{user_id}/items/", response_model=schemas.Item, tags=["Items"])
+async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_user_item(db=db, item=item, user_id=user_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item])
+@app.get("/items/", response_model=list[schemas.Item], tags=["Items"])
 async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
