@@ -1,3 +1,9 @@
 {
-  "sqlite_db_path": "/sql_app/sql_app.db"
+  "sqlite_db_path": "/sql_app/sql_app.db",
+  "allow_origins": [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000"
+  ],
+  "allow_methods": ["*"],
+  "allow_headers": ["*"]
 }

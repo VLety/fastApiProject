@@ -32,6 +32,23 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+def update_user(db: Session, db_user, user):
+    db_user.first_name = user.first_name
+    db_user.last_name = user.last_name
+    db_user.nick_name = user.nick_name
+    db_user.phone = user.phone
+    db_user.email = user.email
+    db_user.birthday = user.birthday
+    db_user.country = user.country
+    db_user.city = user.city
+    db_user.address = user.address
+    db_user.updated = util.get_current_time_utc("TIME")
+
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
 def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
 
