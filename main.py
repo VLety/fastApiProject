@@ -1,5 +1,6 @@
 """
-RESTful API with FastAPI framework
+RESTful OpenAPI Specification (OAS) application programming interface (API) based on FastAPI framework
+Documentation: api-url/docs
 """
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +13,16 @@ from sql_app.database import SessionLocal, engine
 
 PROJECT_CONFIG = util.get_config()
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI()
+
+# Metadata and Docs URLs
+# https://fastapi.tiangolo.com/tutorial/metadata/#metadata-and-docs-urls
+app = FastAPI(title=PROJECT_CONFIG["api_docs"]["title"],
+              version=PROJECT_CONFIG["api_docs"]["version"],
+              summary=PROJECT_CONFIG["api_docs"]["summary"],
+              description=PROJECT_CONFIG["api_docs"]["description"],
+              terms_of_service=PROJECT_CONFIG["api_docs"]["terms_of_service"],
+              contact=PROJECT_CONFIG["api_docs"]["contact"],
+              license_info=PROJECT_CONFIG["api_docs"]["license_info"])
 
 # CORS (Cross-Origin Resource Sharing)
 # https://fastapi.tiangolo.com/tutorial/cors/#cors-cross-origin-resource-sharing
@@ -64,7 +74,6 @@ async def favicon():
 # Create (POST)
 @app.post("/users/", response_model=schemas.User)
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-
     # Check if unique User's identification attributes already exists
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -88,7 +97,6 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
 # Update (PUT)
 @app.put("/users/{user_id}", response_model=schemas.User)
 async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db)):
-
     # Check if User exists
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -100,7 +108,6 @@ async def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depe
 # Delete (DELETE)
 @app.delete("/users/{user_id}")
 async def delete_user(user_id: int, db: Session = Depends(get_db)):
-
     # Check if User exists
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:

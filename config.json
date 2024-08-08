@@ -4,6 +4,26 @@
     "http://127.0.0.1:8000",
     "http://localhost:8000"
   ],
-  "allow_methods": ["*"],
-  "allow_headers": ["*"]
+  "allow_methods": [
+    "*"
+  ],
+  "allow_headers": [
+    "*"
+  ],
+  "api_docs": {
+    "title": "RESTful API",
+    "version": "0.0.2",
+    "summary": "CRUD RESTful API examples",
+    "description": "RESTful OpenAPI Specification application programming interface (API) based on FastAPI framework",
+    "terms_of_service": "https://spec.openapis.org/oas/latest.html",
+    "contact": {
+      "name": "Volodymyr Letiahin",
+      "url": "https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/",
+      "email": "vl@key-info.com.ua"
+    },
+    "license_info": {
+      "name": "License: Apache 2.0",
+      "identifier": "MIT"
+    }
+  }
 }
