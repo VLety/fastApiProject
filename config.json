@@ -1,6 +1,11 @@
 {
   "sqlite_db_path": "/sql_app/sql_app.db",
   "root_path": "/api/v1",
+  "auth": {
+    "SECRET_KEY": "a25558caa5fcb16caa53861021e480c1d1977a98a77b63c2513dccf2b00b9c04",
+    "ALGORITHM": "HS256",
+    "ACCESS_TOKEN_EXPIRE_MINUTES": 1440
+  },
   "cors": {
     "allow_origins": [
       "http://127.0.0.1:8000",
@@ -30,6 +35,10 @@
       "identifier": "MIT"
     },
     "openapi_tags": [
+      {
+        "name": "Authentication",
+        "description": "OAuth2 with hashing Password and Bearer with JWT tokens."
+      },
       {
         "name": "Users",
         "description": "**CRUD** Operations with users."

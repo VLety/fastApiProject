@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
+from sqlalchemy.sql.functions import current_user
 
 import util
 from sql_app import crud, models, schemas, auth
@@ -14,7 +15,7 @@ from sql_app.database import SessionLocal, engine
 APP_CONFIG = util.get_config()
 models.Base.metadata.create_all(bind=engine)
 
-# Behind a Proxy root_path
+# Behind a Proxy root_path argument
 # https://fastapi.tiangolo.com/advanced/behind-a-proxy/#behind-a-proxy
 # Metadata and Docs URLs
 # https://fastapi.tiangolo.com/tutorial/metadata/#metadata-and-docs-urls
@@ -91,7 +92,12 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 # Read (GET)
 @app.get("/users/{user_id}", response_model=schemas.User, tags=["Users"])
-async def read_user(user_id: int, db: Session = Depends(get_db)):
+async def read_user(
+        auth_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_user, scopes=["users"])],
+        user_id: int,
+        db: Session = Depends(get_db)):
+    print("auth_user:", auth_user)
+
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found!")
@@ -137,27 +143,58 @@ async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return items
 
 
-@app.post("/token")
+@app.post("/token", tags=["Authentication"])
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
     user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=auth.status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username, "scopes": form_data.scopes},
+        expires_delta=access_token_expires,
     )
     return auth.Token(access_token=access_token, token_type="bearer")
 
 
-@app.get("/users/me/", response_model=auth.AuthUser)
-async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+@app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
+async def read_users_me(
+        current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)],
+):
     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+@app.get("/users/me/items/", tags=["Authentication"])
+async def read_own_items(
+        current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user, scopes=["items"])]
+):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+
+@app.get("/status/", tags=["Authentication"])
+async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+    return {"status": "ok"}
+
+# @app.post("/token", tags=["Authentication"])
+# async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
+#     user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=auth.status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = auth.create_access_token(
+#         data={"sub": user.username}, expires_delta=access_token_expires
+#     )
+#     return auth.Token(access_token=access_token, token_type="bearer")
+#
+#
+# @app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
+# async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+#     return current_user
+#
+#
+# @app.get("/users/me/items/", tags=["Authentication"])
+# async def read_own_items(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+#     return [{"item_id": "Foo", "owner": current_user.username}]
