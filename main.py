@@ -14,6 +14,8 @@ from sql_app.database import SessionLocal, engine
 APP_CONFIG = util.get_config()
 models.Base.metadata.create_all(bind=engine)
 
+# Behind a Proxy root_path
+# https://fastapi.tiangolo.com/advanced/behind-a-proxy/#behind-a-proxy
 # Metadata and Docs URLs
 # https://fastapi.tiangolo.com/tutorial/metadata/#metadata-and-docs-urls
 app = FastAPI(root_path=APP_CONFIG["root_path"],
