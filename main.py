@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
 
 import util
-from sql_app import crud, models, schemas
+from sql_app import crud, models, schemas, auth
 from sql_app.database import SessionLocal, engine
 
 APP_CONFIG = util.get_config()
@@ -133,3 +133,29 @@ async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Sessi
 async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+@app.post("/token")
+async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
+    user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=auth.status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return auth.Token(access_token=access_token, token_type="bearer")
+
+
+@app.get("/users/me/", response_model=auth.AuthUser)
+async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+    return current_user
+
+
+@app.get("/users/me/items/")
+async def read_own_items(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)], ):
+    return [{"item_id": "Foo", "owner": current_user.username}]
