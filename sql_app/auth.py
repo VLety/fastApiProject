@@ -14,46 +14,31 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 import util
 
-# to get a SECRET_KEY just run: openssl rand -hex 32
 APP_CONFIG = util.get_config()
-SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]
+SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
 ALGORITHM = APP_CONFIG["auth"]["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_MINUTES = APP_CONFIG["auth"]["ACCESS_TOKEN_EXPIRE_MINUTES"]
+PWD_CONTEXT = CryptContext(schemes=APP_CONFIG["auth"]["PWD_CONTEXT"]["schemes"],
+                           deprecated=APP_CONFIG["auth"]["PWD_CONTEXT"]["deprecated"])
+OAUTH2_SCHEME = OAuth2PasswordBearer(
+    tokenUrl=APP_CONFIG["auth"]["OAUTH2_SCHEME"]["tokenUrl"],
+    scopes=APP_CONFIG["auth"]["OAUTH2_SCHEME"]["scopes"]
+)
 
 fake_users_db = [
-    # password foo
+    # password admin
     {'id': 1,
      'username': 'admin',
-     'hashed_password': '$2b$12$N.i74Kle18n5Toxhas.rVOjZreVC2WM34fCidNDyhSNgxVlbKwX7i',
+     'hashed_password': '$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu',
      'role': ["admin"]
      },
-    # password bar
+    # password client
     {'id': 2,
      'username': 'client',
-     'hashed_password': '$2b$12$KUgpw1m0LF/s9NS1ZB5rRO2cA5D13MqRm56ab7ik2ixftXW/aqEyq',
+     'hashed_password': '$2a$10$YSpfBRAvvtRBzO8FCC0vLuWm3vBIJPcn9Ah7etEKVBJ7Zf7ISyIeu',
      'role': ['items:read', 'items:write', 'users:read', 'users:write']
      }
 ]
-
-
-# fake_users_db = {
-#     "johndoe": {
-#         "username": "johndoe",
-#         "full_name": "John Doe",
-#         "email": "johndoe@example.com",
-#         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-#         "disabled": False,
-#         "roles": ["admin", "users_read", "users_create", "users_update", "users_delete"]
-#     },
-#     "alice": {
-#         "username": "alice",
-#         "full_name": "Alice Chains",
-#         "email": "alicechains@example.com",
-#         "hashed_password": "$2b$12$gSvqqUPvlXP2tfVFaWK1Be7DlH.PKZbv5H8KnzzVgXXbVxpva.pFm",
-#         "disabled": True,
-#         "role": ["me"]
-#     },
-# }
 
 
 class Token(BaseModel):
@@ -79,24 +64,12 @@ class UserInDB(AuthUser):
     hashed_password: str
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="token",
-    scopes={
-        "me": "Read information about the current user.",
-        "items": "Read items.",
-        "users": "Read Users."
-    },
-)
-
-
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    return PWD_CONTEXT.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    return PWD_CONTEXT.hash(password)
 
 
 def get_user(db, username: str):
@@ -126,9 +99,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(
-        security_scopes: SecurityScopes, token: Annotated[str, Depends(oauth2_scheme)]
-):
+async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str, Depends(OAUTH2_SCHEME)]):
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -160,9 +131,7 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(
-        current_user: Annotated[AuthUser, Security(get_current_user, scopes=["me"])],
-):
+async def get_current_active_user(current_user: Annotated[AuthUser, Security(get_current_user, scopes=["me"])]):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
@@ -182,4 +151,3 @@ class RBAC:  # Role-based access control (RBAC) system where access permission (
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not enough permissions"
         )
-
