@@ -20,24 +20,38 @@ SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]
 ALGORITHM = APP_CONFIG["auth"]["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_MINUTES = APP_CONFIG["auth"]["ACCESS_TOKEN_EXPIRE_MINUTES"]
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-        "roles": ["admin", "users_read", "users_create", "users_update", "users_delete"]
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Chains",
-        "email": "alicechains@example.com",
-        "hashed_password": "$2b$12$gSvqqUPvlXP2tfVFaWK1Be7DlH.PKZbv5H8KnzzVgXXbVxpva.pFm",
-        "disabled": True,
-        "role": ["me"]
-    },
-}
+fake_users_db = [
+    # password foo
+    {'id': 1,
+     'username': 'admin',
+     'hashed_password': '$2b$12$N.i74Kle18n5Toxhas.rVOjZreVC2WM34fCidNDyhSNgxVlbKwX7i',
+     'permissions': ['items:read', 'items:write', 'users:read', 'users:write']},
+    # password bar
+    {'id': 2,
+     'username': 'client',
+     'hashed_password': '$2b$12$KUgpw1m0LF/s9NS1ZB5rRO2cA5D13MqRm56ab7ik2ixftXW/aqEyq',
+     'permissions': ['items:read']}
+]
+
+
+# fake_users_db = {
+#     "johndoe": {
+#         "username": "johndoe",
+#         "full_name": "John Doe",
+#         "email": "johndoe@example.com",
+#         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+#         "disabled": False,
+#         "roles": ["admin", "users_read", "users_create", "users_update", "users_delete"]
+#     },
+#     "alice": {
+#         "username": "alice",
+#         "full_name": "Alice Chains",
+#         "email": "alicechains@example.com",
+#         "hashed_password": "$2b$12$gSvqqUPvlXP2tfVFaWK1Be7DlH.PKZbv5H8KnzzVgXXbVxpva.pFm",
+#         "disabled": True,
+#         "role": ["me"]
+#     },
+# }
 
 
 class Token(BaseModel):
@@ -55,7 +69,8 @@ class AuthUser(BaseModel):
     email: str | None = None
     full_name: str | None = None
     disabled: bool | None = None
-    role: list | None = None
+    id: int
+    permissions: list[str] = []
 
 
 class UserInDB(AuthUser):
@@ -83,9 +98,10 @@ def get_password_hash(password):
 
 
 def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+    for user_record in db:
+        if username in user_record["username"]:
+            user_dict = user_record
+            return UserInDB(**user_dict)
 
 
 def authenticate_user(fake_db, username: str, password: str):
@@ -150,13 +166,15 @@ async def get_current_active_user(
     return current_user
 
 
-class RoleChecker:
-    def __init__(self, allowed_roles):
-        self.allowed_roles = allowed_roles
+class PermissionChecker:
+    def __init__(self, required_permissions: list[str]) -> None:
+        self.required_permissions = required_permissions
 
-    def __call__(self, user: Annotated[AuthUser, Depends(get_current_user)]):
-        if user.role in self.allowed_roles:
-            return True
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You don't have enough permissions")
+    def __call__(self, user: AuthUser = Depends(get_current_user)) -> bool:
+        for r_perm in self.required_permissions:
+            if r_perm not in user.permissions:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="You don't have enough permissions"
+                )
+        return True
