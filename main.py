@@ -95,7 +95,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 async def read_user(
         user_id: int,
         db: Session = Depends(get_db),
-        authorize: bool = Depends(auth.RBAC(permissions=["admin", "users:read"]))
+        authorize: bool = Depends(auth.RBAC(acl=["admin", "users:read"]))
 ):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:

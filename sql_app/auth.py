@@ -168,12 +168,12 @@ async def get_current_active_user(
     return current_user
 
 
-class RBAC:  # Role-based access control (RBAC) system where access permission based on User's role
-    def __init__(self, permissions: list[str]) -> None:
-        self.permissions = permissions
+class RBAC:  # Role-based access control (RBAC) system where access permission (ACL) based on User's role.
+    def __init__(self, acl: list[str]) -> None:
+        self.acl = acl
 
     def __call__(self, user: AuthUser = Depends(get_current_user)) -> bool:
-        for permission in self.permissions:
+        for permission in self.acl:
             if permission in user.role:
                 return True
 
