@@ -7,7 +7,7 @@ https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, Security, status
+from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
@@ -25,12 +25,14 @@ fake_users_db = [
     {'id': 1,
      'username': 'admin',
      'hashed_password': '$2b$12$N.i74Kle18n5Toxhas.rVOjZreVC2WM34fCidNDyhSNgxVlbKwX7i',
-     'permissions': ['items:read', 'items:write', 'users:read', 'users:write']},
+     'role': ["admin"]
+     },
     # password bar
     {'id': 2,
      'username': 'client',
      'hashed_password': '$2b$12$KUgpw1m0LF/s9NS1ZB5rRO2cA5D13MqRm56ab7ik2ixftXW/aqEyq',
-     'permissions': ['items:read']}
+     'role': ['items:read', 'items:write', 'users:read', 'users:write']
+     }
 ]
 
 
@@ -70,7 +72,7 @@ class AuthUser(BaseModel):
     full_name: str | None = None
     disabled: bool | None = None
     id: int
-    permissions: list[str] = []
+    role: list[str] = []
 
 
 class UserInDB(AuthUser):
@@ -166,15 +168,18 @@ async def get_current_active_user(
     return current_user
 
 
-class PermissionChecker:
-    def __init__(self, required_permissions: list[str]) -> None:
-        self.required_permissions = required_permissions
+class RBAC:  # Role-based access control (RBAC) system where access permission based on User's role
+    def __init__(self, permissions: list[str]) -> None:
+        self.permissions = permissions
 
     def __call__(self, user: AuthUser = Depends(get_current_user)) -> bool:
-        for r_perm in self.required_permissions:
-            if r_perm not in user.permissions:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="You don't have enough permissions"
-                )
-        return True
+        for permission in self.permissions:
+            if permission in user.role:
+                return True
+
+        # Raise UNAUTHORIZED error if permission is not exists in User's roles
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not enough permissions"
+        )
+

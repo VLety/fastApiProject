@@ -7,11 +7,11 @@ with your linters/IDE/brain. Define how data should be in pure and Python canoni
 are by default "lazy loading". That means, for example, that they don't fetch the data for relationships from the
 database unless you try to access the attribute that would contain that data.
     But with ORM mode, as Pydantic itself will try to access the data it needs from attributes (instead of assuming
-a dict), you can declare the specific data you want to return and it will be able to go and get it, even from ORMs.
+a dict), you can declare the specific data you want to return, and it will be able to go and get it, even from ORMs.
     Pydantic should be responsible for schemas (basically defining input and output formats) and DTOs (used to
 transfer data between different layers of an app).
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 
 class ItemBase(BaseModel):
