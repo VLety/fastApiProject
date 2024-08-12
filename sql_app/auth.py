@@ -27,7 +27,7 @@ fake_users_db = {
         "email": "johndoe@example.com",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
         "disabled": False,
-        "role": ["admin", "users"]
+        "roles": ["admin", "users_read", "users_create", "users_update", "users_delete"]
     },
     "alice": {
         "username": "alice",
