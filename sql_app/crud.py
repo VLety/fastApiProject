@@ -4,59 +4,63 @@ from . import models, schemas
 import util
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+def get_employee(db: Session, employee_id: int):
+    return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
 
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+def get_employee_by_email(db: Session, email: str):
+    return db.query(models.Employee).filter(models.Employee.email == email).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_employee_by_phone(db: Session, phone: str):
+    return db.query(models.Employee).filter(models.Employee.phone == phone).first()
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(first_name=user.first_name,
-                          last_name=user.last_name,
-                          nick_name=user.nick_name,
-                          phone=user.phone,
-                          email=user.email,
-                          birthday=user.birthday,
-                          country=user.country,
-                          city=user.city,
-                          address=user.address,
-                          created=util.get_current_time_utc("TIME"))
-    db.add(db_user)
+def get_employees(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Employee).offset(skip).limit(limit).all()
+
+
+def create_employee(db: Session, employee: schemas.EmployeeCreate):
+    db_employee = models.Employee(first_name=employee.first_name,
+                                  last_name=employee.last_name,
+                                  nick_name=employee.nick_name,
+                                  phone=employee.phone,
+                                  email=employee.email,
+                                  birthday=employee.birthday,
+                                  country=employee.country,
+                                  city=employee.city,
+                                  address=employee.address,
+                                  created=util.get_current_time_utc("TIME"))
+    db.add(db_employee)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_employee)
+    return db_employee
 
 
-def update_user(db: Session, db_user, user):
-    db_user.first_name = user.first_name
-    db_user.last_name = user.last_name
-    db_user.nick_name = user.nick_name
-    db_user.phone = user.phone
-    db_user.email = user.email
-    db_user.birthday = user.birthday
-    db_user.country = user.country
-    db_user.city = user.city
-    db_user.address = user.address
-    db_user.updated = util.get_current_time_utc("TIME")
+def update_employee(db: Session, db_employee, employee):
+    db_employee.first_name = employee.first_name
+    db_employee.last_name = employee.last_name
+    db_employee.nick_name = employee.nick_name
+    db_employee.phone = employee.phone
+    db_employee.email = employee.email
+    db_employee.birthday = employee.birthday
+    db_employee.country = employee.country
+    db_employee.city = employee.city
+    db_employee.address = employee.address
+    db_employee.updated = util.get_current_time_utc("TIME")
 
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_employee)
+    return db_employee
 
 
-def delete_user(db: Session, db_user):
-    db.delete(db_user)
+def delete_employee(db: Session, db_employee):
+    db.delete(db_employee)
     db.commit()
 
     # Response Model - Return Type
     # https://fastapi.tiangolo.com/tutorial/response-model/?h=#response-model-return-type
-    return JSONResponse(content={"message": "User deleted successfully"})
+    return JSONResponse(content={"message": "Employee deleted successfully"})
 
 
 def get_items(db: Session, skip: int = 0, limit: int = 100):

@@ -32,7 +32,7 @@ class Item(ItemBase):
         from_attributes = True  # Pydantic V2 version
 
 
-class UserBase(BaseModel):
+class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
     first_name: str
     last_name: str
@@ -45,19 +45,19 @@ class UserBase(BaseModel):
     address: str
 
 
-class UserCreate(UserBase):
+class EmployeeCreate(EmployeeBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
 
-class UserUpdate(UserBase):
+class EmployeeUpdate(EmployeeBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
 
-class User(UserBase):
+class Employee(EmployeeBase):
     # Make Output json based on main UserBase(BaseModel) class + current class
     id: int
     created: str

@@ -33,9 +33,9 @@
   },
   "api_docs": {
     "title": "RESTful API",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "summary": "CRUD RESTful API examples",
-    "description": "RESTful OpenAPI Specification application programming interface (API) based on FastAPI framework",
+    "description": "RESTful OpenAPI Specification (OAS) API with OAuth2 authentication and RBAC authorization based on FastAPI framework",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
       "name": "Volodymyr Letiahin",
@@ -53,7 +53,11 @@
       },
       {
         "name": "Users",
-        "description": "**CRUD** Operations with users."
+        "description": "CRUD operations with Users."
+      },
+      {
+        "name": "Employee",
+        "description": "CRUD operations with Employees."
       },
       {
         "name": "Items",
