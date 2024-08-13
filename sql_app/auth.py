@@ -27,16 +27,28 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
 
 fake_users_db = [
     # password admin
-    {'id': 1,
-     'username': 'admin',
-     'hashed_password': '$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu',
-     'role': ["admin"]
+    {"id": 1,
+     "username": "admin",
+     "email": "vl@key-info.com.ua",
+     "phone": "+380504434316",
+     "first_name": "Volodymyr",
+     "last_name": "Letiahin",
+     'role': ["admin"],
+     "disabled": False,
+     "login_denied": False,
+     "hashed_password": "$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu"
      },
     # password client
-    {'id': 2,
-     'username': 'client',
+    {"id": 2,
+     "username": "manager",
+     "email": "vl@key-info.com.ua",
+     "phone": "+380504434316",
+     "first_name": "Volodymyr",
+     "last_name": "Letiahin",
+     "role": ["items:read", "items:write", "users:read", "users:write"],
+     "disabled": False,
+     "login_denied": False,
      'hashed_password': '$2a$10$YSpfBRAvvtRBzO8FCC0vLuWm3vBIJPcn9Ah7etEKVBJ7Zf7ISyIeu',
-     'role': ['items:read', 'items:write', 'users:read', 'users:write']
      }
 ]
 
@@ -51,16 +63,19 @@ class TokenData(BaseModel):
     scopes: list[str] = []
 
 
-class AuthUser(BaseModel):
+class User(BaseModel):
+    id: int
     username: str
     email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
-    id: int
+    phone: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
     role: list[str] = []
+    disabled: bool | None = None
+    login_denied: bool | None = None
 
 
-class UserInDB(AuthUser):
+class UserInDB(User):
     hashed_password: str
 
 
@@ -81,10 +96,16 @@ def get_user(db, username: str):
 
 def authenticate_user(fake_db, username: str, password: str):
     user = get_user(fake_db, username)
-    if not user:
+
+    if not user:  # Check if User exist
         return False
-    if not verify_password(password, user.hashed_password):
+
+    if user.login_denied:  # Check if User login allowed
         return False
+
+    if not verify_password(password, user.hashed_password):  # heck if User password is valid
+        return False
+
     return user
 
 
@@ -99,7 +120,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
+# User has valid token
 async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str, Depends(OAUTH2_SCHEME)]):
+
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -109,31 +132,38 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": authenticate_value},
     )
+
     try:
+        # payload: {'sub': 'admin', 'scopes': [], 'exp': 1723557087}
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
+
         token_scopes = payload.get("scopes", [])
         token_data = TokenData(scopes=token_scopes, username=username)
-    except (InvalidTokenError, ValidationError):
+
+    except (InvalidTokenError, ValidationError) as token_error:
+        if str(token_error) == "Signature has expired":
+            credentials_exception.detail = "Token has expired"
         raise credentials_exception
+
     user = get_user(fake_users_db, username=token_data.username)
     if user is None:
         raise credentials_exception
+
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Not enough permissions",
-                headers={"WWW-Authenticate": authenticate_value},
-            )
+            credentials_exception.detail = "Not enough permissions"
+            raise credentials_exception
+
     return user
 
 
-async def get_current_active_user(current_user: Annotated[AuthUser, Security(get_current_user, scopes=["me"])]):
+# User has valid token and NOT disabled
+async def get_current_active_user(current_user: Annotated[User, Security(get_current_user)]):
     if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail="User disabled")
     return current_user
 
 
@@ -141,7 +171,7 @@ class RBAC:  # Role-based access control (RBAC) system where access permission (
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl
 
-    def __call__(self, user: AuthUser = Depends(get_current_user)) -> bool:
+    def __call__(self, user: User = Depends(get_current_active_user)) -> bool:
         for permission in self.acl:
             if permission in user.role:
                 return True

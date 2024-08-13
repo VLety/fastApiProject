@@ -14,7 +14,7 @@
     "OAUTH2_SCHEME": {
       "tokenUrl": "token",
       "scopes": {
-        "me": "Read information about the current user."
+        "status": "Read information about status."
       }
     }
   },

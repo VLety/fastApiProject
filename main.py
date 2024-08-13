@@ -6,7 +6,6 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
-
 import util
 from sql_app import crud, models, schemas, auth
 from sql_app.database import engine, get_db
@@ -113,12 +112,16 @@ async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
-
+""" OAuth2PasswordRequestForm:
+This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
+The OAuth2 specification dictates that for a password flow the data should be collected using form data 
+(instead of JSON) and that it should have the specific fields `username` and `password`.
+"""
 @app.post("/token", tags=["Authentication"])
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
     user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=400, detail="Incorrect User's name or password")
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
         data={"sub": user.username, "scopes": form_data.scopes},
@@ -127,11 +130,11 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
     return auth.Token(access_token=access_token, token_type="bearer")
 
 
-@app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
-async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
+@app.get("/users/me/", response_model=auth.User, tags=["Authentication"])
+async def read_users_me(current_user: auth.Annotated[auth.User, Depends(auth.get_current_user)]):
     return current_user
 
 
 @app.get("/status/", tags=["Authentication"])
-async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+async def read_system_status(current_user: auth.Annotated[auth.User, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
