@@ -4,7 +4,6 @@ https://docs.sqlalchemy.org/en/20/dialects/sqlite.html
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, MetaData
 from sqlalchemy.orm import relationship
 from .database import Base
-from sql_app.database import engine, get_db
 from sqlalchemy.dialects.sqlite import (
     BLOB,
     BOOLEAN,

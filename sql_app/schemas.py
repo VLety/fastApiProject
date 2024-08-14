@@ -14,6 +14,7 @@ transfer data between different layers of an app).
 from pydantic import BaseModel, Field
 
 
+# Authorization ---------------------------------------------------------------------------------------------------
 class AuthUser(BaseModel):
     id: int
     username: str
@@ -25,7 +26,19 @@ class AuthUser(BaseModel):
     disabled: bool | None = None
     login_denied: bool | None = None
 
+class AuthUserInDB(AuthUser):
+    hashed_password: str
 
+class AuthToken(BaseModel):
+    access_token: str
+    token_type: str
+
+class AuthTokenData(BaseModel):
+    username: str | None = None
+    scopes: list[str] = []
+
+
+# Users -----------------------------------------------------------------------------------------------------------
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
     username: str
@@ -37,19 +50,16 @@ class UserBase(BaseModel):
     disabled: bool = Field(default=False)
     login_denied: bool = Field(default=False)
 
-
 class UserCreate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     password: str
     pass
 
-
 class UserUpdate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
-
 
 class User(UserBase):
     # Make Output json based on main UserBase(BaseModel) class + current class
@@ -62,24 +72,7 @@ class User(UserBase):
         from_attributes = True  # Pydantic V2 version
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
-    owner_id: int
-
-    class Config:
-        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
-        from_attributes = True  # Pydantic V2 version
-
-
+# Employees + Items -----------------------------------------------------------------------------------------------
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
     first_name: str
@@ -92,18 +85,30 @@ class EmployeeBase(BaseModel):
     city: str
     address: str
 
-
 class EmployeeCreate(EmployeeBase):
     # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
-
 
 class EmployeeUpdate(EmployeeBase):
     # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
+class ItemBase(BaseModel):
+    title: str
+    description: str | None = None
+
+class ItemCreate(ItemBase):
+    pass
+
+class Item(ItemBase):
+    id: int
+    owner_id: int
+
+    class Config:
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
+        from_attributes = True  # Pydantic V2 version
 
 class Employee(EmployeeBase):
     # Make Output json based on main EmployeeBase(BaseModel) class + current class
@@ -115,3 +120,5 @@ class Employee(EmployeeBase):
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
+
+

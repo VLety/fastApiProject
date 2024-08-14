@@ -6,17 +6,17 @@ https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes
 """
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-import jwt
+from pydantic import ValidationError
 from fastapi import Depends, HTTPException, Security, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-from pydantic import BaseModel, ValidationError
 import util
-from .schemas import AuthUser
+from .schemas import AuthUser, AuthTokenData
 from .crud import get_user_by_username
 from .database import get_db
-from sqlalchemy.orm import Session
 
 APP_CONFIG = util.get_config()
 SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
@@ -31,44 +31,19 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
 
 """
 {
-  "username": "admin",
+  "username": "manager",
   "first_name": "Volodymyr",
   "last_name": "Letiahin",
-  "phone": "+380504434316",
-  "email": "vl@key-info.com.ua",
+  "phone": "+380504434317",
+  "email": "vlety@key-info.com.ua",
   "role": [
-    "admin"
+    "manager"
   ],
   "disabled": false,
-  "login_denied": false
+  "login_denied": false,
+  "password": "manager"
 }
 """
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: str | None = None
-    scopes: list[str] = []
-
-
-# class User(BaseModel):
-#     id: int
-#     username: str
-#     email: str | None = None
-#     phone: str | None = None
-#     first_name: str | None = None
-#     last_name: str | None = None
-#     role: list[str] = []
-#     disabled: bool | None = None
-#     login_denied: bool | None = None
-
-
-class UserInDB(AuthUser):
-    hashed_password: str
 
 
 def verify_password(plain_password, hashed_password):
@@ -127,7 +102,7 @@ async def get_current_user(security_scopes: SecurityScopes,
             raise credentials_exception
 
         token_scopes = payload.get("scopes", [])
-        token_data = TokenData(scopes=token_scopes, username=username)
+        token_data = AuthTokenData(scopes=token_scopes, username=username)
 
     except (InvalidTokenError, ValidationError) as token_error:
         if str(token_error) == "Signature has expired":
@@ -154,7 +129,8 @@ async def get_current_active_user(current_user: Annotated[AuthUser, Security(get
     return current_user
 
 
-class RBAC:  # Role-based access control (RBAC) system where access permission (ACL) based on User's role.
+# Role-based access control (RBAC) system where access permission (ACL) based on User's role.
+class RBAC:
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl
 

@@ -49,10 +49,11 @@ async def favicon():
 @app.post("/user/", response_model=schemas.User, tags=["Users"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=["admin"]))):
+
     # Check if unique user's identification attributes already exists
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered!")
+        raise HTTPException(status_code=400, detail="Username already registered!")
 
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -62,7 +63,8 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
     if db_user:
         raise HTTPException(status_code=400, detail="Phone already registered!")
 
-    return crud.create_user(db=db, user=user)
+    hashed_password = auth.get_password_hash(user.password)
+    return crud.create_user(db=db, user=user, hashed_password=hashed_password)
 
 
 # Create (POST)
@@ -84,7 +86,7 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
 # Read (GET)
 @app.get("/employee/{employee_id}", response_model=schemas.Employee, tags=["Employee"])
 async def read_employee(employee_id: int, db: Session = Depends(get_db),
-                        permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "users:read"]))):
+                        permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "employee"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
         raise HTTPException(status_code=404, detail="User not found!")
@@ -116,7 +118,8 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 
 @app.get("/employee/", response_model=list[schemas.Employee], tags=["Employee"])
-async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                         permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "employee"]))):
     employees = crud.get_employees(db, skip=skip, limit=limit)
     return employees
 
@@ -142,7 +145,7 @@ The OAuth2 specification dictates that for a password flow the data should be co
 @app.post("/token", tags=["Authentication"])
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
-                                 ) -> auth.Token:
+                                 ) -> schemas.AuthToken:
 
     db_user = crud.get_user_by_username(db, username=form_data.username)
     user = auth.authenticate_user(db_user, form_data.password)
@@ -154,7 +157,7 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
         data={"sub": user.username, "scopes": form_data.scopes},
         expires_delta=access_token_expires,
     )
-    return auth.Token(access_token=access_token, token_type="bearer")
+    return schemas.AuthToken(access_token=access_token, token_type="bearer")
 
 
 @app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
