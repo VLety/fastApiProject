@@ -49,7 +49,6 @@ async def favicon():
 @app.post("/user/", response_model=schemas.User, tags=["Users"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=["admin"]))):
-    # Cjeck
     # Check if unique user's identification attributes already exists
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
