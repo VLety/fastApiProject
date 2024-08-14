@@ -33,7 +33,7 @@ class UserBase(BaseModel):
     last_name: str
     phone: str
     email: str
-    role: list = [str]
+    role: list[str]
     disabled: bool = Field(default=False)
     login_denied: bool = Field(default=False)
 
