@@ -14,6 +14,9 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 import util
 from .schemas import AuthUser
+from .crud import get_user_by_username
+from .database import get_db
+from sqlalchemy.orm import Session
 
 APP_CONFIG = util.get_config()
 SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
@@ -103,13 +106,6 @@ def get_password_hash(password):
     return PWD_CONTEXT.hash(password)
 
 
-def get_user(db, username: str):
-    for user_record in db:
-        if username in user_record["username"]:
-            user_dict = user_record
-            return UserInDB(**user_dict)
-
-
 def authenticate_user(db_user, password: str):
 
     if not db_user:  # Check if User exist
@@ -136,7 +132,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 # User has valid token
-async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str, Depends(OAUTH2_SCHEME)]):
+async def get_current_user(security_scopes: SecurityScopes,
+                           token: Annotated[str, Depends(OAUTH2_SCHEME)],
+                           db: Session = Depends(get_db)):
 
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
@@ -163,8 +161,9 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
             credentials_exception.detail = "Token has expired"
         raise credentials_exception
 
-    user = get_user(fake_users_db, username=token_data.username)
-    if user is None:
+    db_user = get_user_by_username(db, username=token_data.username)
+
+    if db_user is None:
         raise credentials_exception
 
     for scope in security_scopes.scopes:
@@ -172,7 +171,7 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
             credentials_exception.detail = "Not enough permissions"
             raise credentials_exception
 
-    return user
+    return db_user
 
 
 # User has valid token and NOT disabled

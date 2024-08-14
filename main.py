@@ -143,6 +143,7 @@ The OAuth2 specification dictates that for a password flow the data should be co
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
                                  ) -> auth.Token:
+
     db_user = crud.get_user_by_username(db, username=form_data.username)
     user = auth.authenticate_user(db_user, form_data.password)
 

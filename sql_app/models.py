@@ -70,5 +70,3 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey("employees.id"))
 
     owner = relationship("Employee", back_populates="items")
-
-metadata_obj.create_all(engine)
