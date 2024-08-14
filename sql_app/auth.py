@@ -13,6 +13,7 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 import util
+from .schemas import AuthUser
 
 APP_CONFIG = util.get_config()
 SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
@@ -63,19 +64,19 @@ class TokenData(BaseModel):
     scopes: list[str] = []
 
 
-class User(BaseModel):
-    id: int
-    username: str
-    email: str | None = None
-    phone: str | None = None
-    first_name: str | None = None
-    last_name: str | None = None
-    role: list[str] = []
-    disabled: bool | None = None
-    login_denied: bool | None = None
+# class User(BaseModel):
+#     id: int
+#     username: str
+#     email: str | None = None
+#     phone: str | None = None
+#     first_name: str | None = None
+#     last_name: str | None = None
+#     role: list[str] = []
+#     disabled: bool | None = None
+#     login_denied: bool | None = None
 
 
-class UserInDB(User):
+class UserInDB(AuthUser):
     hashed_password: str
 
 
@@ -161,7 +162,7 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
 
 
 # User has valid token and NOT disabled
-async def get_current_active_user(current_user: Annotated[User, Security(get_current_user)]):
+async def get_current_active_user(current_user: Annotated[AuthUser, Security(get_current_user)]):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="User disabled")
     return current_user
@@ -171,7 +172,7 @@ class RBAC:  # Role-based access control (RBAC) system where access permission (
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl
 
-    def __call__(self, user: User = Depends(get_current_active_user)) -> bool:
+    def __call__(self, user: AuthUser = Depends(get_current_active_user)) -> bool:
         for permission in self.acl:
             if permission in user.role:
                 return True

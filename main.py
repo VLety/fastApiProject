@@ -46,10 +46,30 @@ async def favicon():
 
 
 # Create (POST)
+@app.post("/user/", response_model=schemas.User, tags=["Users"])
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=["admin"]))):
+
+    # Check if unique user's identification attributes already exists
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered!")
+
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered!")
+
+    db_user = crud.get_user_by_phone(db, phone=user.phone)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Phone already registered!")
+
+    return crud.create_user(db=db, user=user)
+
+
+# Create (POST)
 @app.post("/employee/", response_model=schemas.Employee, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=["admin", "manager"]))):
-
     # Check if unique employee's identification attributes already exists
     db_employee = crud.get_employee_by_email(db, email=employee.email)
     if db_employee:
@@ -112,11 +132,14 @@ async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
+
 """ OAuth2PasswordRequestForm:
 This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
 The OAuth2 specification dictates that for a password flow the data should be collected using form data 
 (instead of JSON) and that it should have the specific fields `username` and `password`.
 """
+
+
 @app.post("/token", tags=["Authentication"])
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
     user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
@@ -130,11 +153,11 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
     return auth.Token(access_token=access_token, token_type="bearer")
 
 
-@app.get("/users/me/", response_model=auth.User, tags=["Authentication"])
-async def read_users_me(current_user: auth.Annotated[auth.User, Depends(auth.get_current_user)]):
+@app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
+async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
 
 @app.get("/status/", tags=["Authentication"])
-async def read_system_status(current_user: auth.Annotated[auth.User, Depends(auth.get_current_active_user)]):
+async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}

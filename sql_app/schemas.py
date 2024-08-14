@@ -11,7 +11,54 @@ a dict), you can declare the specific data you want to return, and it will be ab
     Pydantic should be responsible for schemas (basically defining input and output formats) and DTOs (used to
 transfer data between different layers of an app).
 """
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field
+
+
+class AuthUser(BaseModel):
+    id: int
+    username: str
+    email: str | None = None
+    phone: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    role: list[str] = []
+    disabled: bool | None = None
+    login_denied: bool | None = None
+
+
+class UserBase(BaseModel):
+    # Make Input json based on current (main) class
+    username: str
+    first_name: str
+    last_name: str
+    phone: str
+    email: str
+    role: list = [str]
+    disabled: bool = Field(default=False)
+    login_denied: bool = Field(default=False)
+
+
+class UserCreate(UserBase):
+    # Make Input json based on main UserBase(BaseModel) class + current class
+    # password: str  # We can add here additional parameter that is not present in UserBase Class
+    pass
+
+
+class UserUpdate(UserBase):
+    # Make Input json based on main UserBase(BaseModel) class + current class
+    # password: str  # We can add here additional parameter that is not present in UserBase Class
+    pass
+
+
+class User(UserBase):
+    # Make Output json based on main UserBase(BaseModel) class + current class
+    id: int
+    created: str
+    updated: str | None = None  # | None = None options required if no value present in database
+
+    class Config:
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
+        from_attributes = True  # Pydantic V2 version
 
 
 class ItemBase(BaseModel):
@@ -46,19 +93,19 @@ class EmployeeBase(BaseModel):
 
 
 class EmployeeCreate(EmployeeBase):
-    # Make Input json based on main UserBase(BaseModel) class + current class
+    # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
 
 class EmployeeUpdate(EmployeeBase):
-    # Make Input json based on main UserBase(BaseModel) class + current class
+    # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
 
 class Employee(EmployeeBase):
-    # Make Output json based on main UserBase(BaseModel) class + current class
+    # Make Output json based on main EmployeeBase(BaseModel) class + current class
     id: int
     created: str
     updated: str | None = None  # | None = None options required if no value present in database

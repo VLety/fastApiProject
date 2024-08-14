@@ -4,6 +4,39 @@ from . import models, schemas
 import util
 
 
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+
+def get_user_by_username(db: Session, username: str):
+    return db.query(models.User).filter(models.User.username == username).first()
+
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
+
+
+def get_user_by_phone(db: Session, phone: str):
+    return db.query(models.User).filter(models.User.phone == phone).first()
+
+
+def create_user(db: Session, user: schemas.UserCreate):
+    db_user = models.User(username=user.username,
+                          first_name=user.first_name,
+                          last_name=user.last_name,
+                          phone=user.phone,
+                          email=user.email,
+                          role=user.role,
+                          disabled=user.disabled,
+                          login_denied=user.login_denied,
+                          created=util.get_current_time_utc("TIME"))
+
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
 def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
 
