@@ -5,19 +5,19 @@ import util
 
 
 def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
 
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
+    return db.query(models.User).filter(models.User.username == username).first()  # type: ignore[call-arg]
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(models.User).filter(models.User.email == email).first()  # type: ignore[call-arg]
 
 
 def get_user_by_phone(db: Session, phone: str):
-    return db.query(models.User).filter(models.User.phone == phone).first()
+    return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -38,15 +38,15 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_employee(db: Session, employee_id: int):
-    return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
+    return db.query(models.Employee).filter(models.Employee.id == employee_id).first()  # type: ignore[call-arg]
 
 
 def get_employee_by_email(db: Session, email: str):
-    return db.query(models.Employee).filter(models.Employee.email == email).first()
+    return db.query(models.Employee).filter(models.Employee.email == email).first()  # type: ignore[call-arg]
 
 
 def get_employee_by_phone(db: Session, phone: str):
-    return db.query(models.Employee).filter(models.Employee.phone == phone).first()
+    return db.query(models.Employee).filter(models.Employee.phone == phone).first()  # type: ignore[call-arg]
 
 
 def get_employees(db: Session, skip: int = 0, limit: int = 100):
@@ -100,8 +100,8 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
 
 
-def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = models.Item(**item.dict(), owner_id=user_id)
+def create_item(db: Session, item: schemas.ItemCreate, user_id: int):
+    db_item = models.Item(**item.model_dump(), owner_id=user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

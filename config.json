@@ -61,7 +61,7 @@
       },
       {
         "name": "Items",
-        "description": "Manage items [optional].",
+        "description": "Manage items for employee [optional].",
         "externalDocs": {
           "description": "Items external docs.",
           "url": "https://fastapi.tiangolo.com/"

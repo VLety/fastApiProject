@@ -44,33 +44,6 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
 }
 """
 
-# fake_users_db = [
-#     # password admin
-#     {"id": 1,
-#      "username": "admin",
-#      "email": "vl@key-info.com.ua",
-#      "phone": "+380504434316",
-#      "first_name": "Volodymyr",
-#      "last_name": "Letiahin",
-#      'role': ["admin"],
-#      "disabled": False,
-#      "login_denied": False,
-#      "hashed_password": "$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu"
-#      },
-#     # password client
-#     {"id": 2,
-#      "username": "manager",
-#      "email": "vl@key-info.com.ua",
-#      "phone": "+380504434316",
-#      "first_name": "Volodymyr",
-#      "last_name": "Letiahin",
-#      "role": ["items:read", "items:write", "users:read", "users:write"],
-#      "disabled": False,
-#      "login_denied": False,
-#      'hashed_password': '$2a$10$YSpfBRAvvtRBzO8FCC0vLuWm3vBIJPcn9Ah7etEKVBJ7Zf7ISyIeu',
-#      }
-# ]
-
 
 class Token(BaseModel):
     access_token: str
