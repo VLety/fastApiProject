@@ -26,32 +26,47 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
     scopes=APP_CONFIG["auth"]["OAUTH2_SCHEME"]["scopes"]
 )
 
-fake_users_db = [
-    # password admin
-    {"id": 1,
-     "username": "admin",
-     "email": "vl@key-info.com.ua",
-     "phone": "+380504434316",
-     "first_name": "Volodymyr",
-     "last_name": "Letiahin",
-     'role': ["admin"],
-     "disabled": False,
-     "login_denied": False,
-     "hashed_password": "$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu"
-     },
-    # password client
-    {"id": 2,
-     "username": "manager",
-     "email": "vl@key-info.com.ua",
-     "phone": "+380504434316",
-     "first_name": "Volodymyr",
-     "last_name": "Letiahin",
-     "role": ["items:read", "items:write", "users:read", "users:write"],
-     "disabled": False,
-     "login_denied": False,
-     'hashed_password': '$2a$10$YSpfBRAvvtRBzO8FCC0vLuWm3vBIJPcn9Ah7etEKVBJ7Zf7ISyIeu',
-     }
-]
+"""
+{
+  "username": "admin",
+  "first_name": "Volodymyr",
+  "last_name": "Letiahin",
+  "phone": "+380504434316",
+  "email": "vl@key-info.com.ua",
+  "role": [
+    "admin"
+  ],
+  "disabled": false,
+  "login_denied": false
+}
+"""
+
+# fake_users_db = [
+#     # password admin
+#     {"id": 1,
+#      "username": "admin",
+#      "email": "vl@key-info.com.ua",
+#      "phone": "+380504434316",
+#      "first_name": "Volodymyr",
+#      "last_name": "Letiahin",
+#      'role': ["admin"],
+#      "disabled": False,
+#      "login_denied": False,
+#      "hashed_password": "$2a$10$Dlw.zzMjzvLiklyECarLHusaPyY/Mz75fSQAB4z.f1pSk/Vfp.Uxu"
+#      },
+#     # password client
+#     {"id": 2,
+#      "username": "manager",
+#      "email": "vl@key-info.com.ua",
+#      "phone": "+380504434316",
+#      "first_name": "Volodymyr",
+#      "last_name": "Letiahin",
+#      "role": ["items:read", "items:write", "users:read", "users:write"],
+#      "disabled": False,
+#      "login_denied": False,
+#      'hashed_password': '$2a$10$YSpfBRAvvtRBzO8FCC0vLuWm3vBIJPcn9Ah7etEKVBJ7Zf7ISyIeu',
+#      }
+# ]
 
 
 class Token(BaseModel):
@@ -95,19 +110,18 @@ def get_user(db, username: str):
             return UserInDB(**user_dict)
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(db_user, password: str):
 
-    if not user:  # Check if User exist
+    if not db_user:  # Check if User exist
         return False
 
-    if user.login_denied:  # Check if User login allowed
+    if db_user.login_denied:  # Check if User login allowed
         return False
 
-    if not verify_password(password, user.hashed_password):  # heck if User password is valid
+    if not verify_password(password, db_user.hashed_password):  # heck if User password is valid
         return False
 
-    return user
+    return db_user
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):

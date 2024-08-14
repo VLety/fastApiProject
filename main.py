@@ -140,8 +140,12 @@ The OAuth2 specification dictates that for a password flow the data should be co
 
 
 @app.post("/token", tags=["Authentication"])
-async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()], ) -> auth.Token:
-    user = auth.authenticate_user(auth.fake_users_db, form_data.username, form_data.password)
+async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
+                                 db: Session = Depends(get_db)
+                                 ) -> auth.Token:
+    db_user = crud.get_user_by_username(db, username=form_data.username)
+    user = auth.authenticate_user(db_user, form_data.password)
+
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect User's name or password")
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
