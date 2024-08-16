@@ -45,6 +45,10 @@ async def favicon():
     return FileResponse("./static/favicon.ico")
 
 
+class Permission:
+    pass
+
+
 # Create (POST)
 @app.post("/user/", response_model=schemas.User, tags=["User"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
