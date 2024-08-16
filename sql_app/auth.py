@@ -92,7 +92,7 @@ async def get_current_user(security_scopes: SecurityScopes,
         authenticate_value = "Bearer"
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail=APP_CONFIG["raise_error"]["could_not_validate_credentials"],
         headers={"WWW-Authenticate": authenticate_value},
     )
 
@@ -107,8 +107,8 @@ async def get_current_user(security_scopes: SecurityScopes,
         token_data = AuthTokenData(scopes=token_scopes, username=username)
 
     except (InvalidTokenError, ValidationError) as token_error:
-        if str(token_error) == "Signature has expired":
-            credentials_exception.detail = "Token has expired"
+        if str(token_error) == "Signature has expired":  # ValidationError respond
+            credentials_exception.detail = APP_CONFIG["raise_error"]["token_has_expired"]
         raise credentials_exception
 
     db_user = crud.get_user_by_username(db, username=token_data.username)
@@ -118,7 +118,7 @@ async def get_current_user(security_scopes: SecurityScopes,
 
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
-            credentials_exception.detail = "Not enough permissions"
+            credentials_exception.detail = APP_CONFIG["raise_error"]["not_enough_permissions"]
             raise credentials_exception
 
     return db_user
@@ -127,7 +127,7 @@ async def get_current_user(security_scopes: SecurityScopes,
 # User has valid token and NOT disabled
 async def get_current_active_user(current_user: Annotated[AuthUser, Security(get_current_user)]):
     if current_user.disabled:
-        raise HTTPException(status_code=400, detail="User disabled")
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["user_disabled"])
     return current_user
 
 
@@ -144,5 +144,5 @@ class RBAC:
         # Raise UNAUTHORIZED error if permission is not exists in User's roles
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not enough permissions"
+            detail=APP_CONFIG["raise_error"]["not_enough_permissions"]
         )

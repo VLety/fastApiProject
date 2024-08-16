@@ -117,7 +117,7 @@ def delete_employee(db: Session, db_employee):
 
     # Response Model - Return Type
     # https://fastapi.tiangolo.com/tutorial/response-model/?h=#response-model-return-type
-    return JSONResponse(content={"message": "Employee deleted successfully"})
+    return JSONResponse(content={"message": APP_CONFIG["message"]["employee_deleted_successfully"]})
 
 
 def get_items(db: Session, skip: int = 0, limit: int = 100):

@@ -38,16 +38,24 @@
   },
   "raise_error": {
     "incorrect_user_name_or_password": "Incorrect User name or password",
+    "could_not_validate_credentials": "Could not validate credentials",
+    "token_has_expired": "Token has expired",
+    "not_enough_permissions": "Not enough permissions",
+    "user_disabled": "User disabled",
     "username_already_registered": "Username already registered",
     "email_already_registered": "Email already registered",
     "phone_already_registered": "Phone already registered",
-    "unknown_role": "Unknown role"
+    "unknown_role": "Unknown role",
+    "employee_not_found": "Employee not found"
+  },
+  "message": {
+    "employee_deleted_successfully": "Employee deleted successfully"
   },
   "api_docs": {
     "title": "RESTful API",
     "version": "0.0.3",
-    "summary": "CRUD RESTful API examples",
-    "description": "RESTful OpenAPI Specification (OAS) API with OAuth2 authentication and RBAC authorization based on FastAPI framework",
+    "summary": "CRUD REST API examples",
+    "description": "REST OpenAPI Specification (OAS) API with OAuth2 authentication and RBAC authorization based on FastAPI framework",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
       "name": "Volodymyr Letiahin",

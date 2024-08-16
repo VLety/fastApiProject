@@ -64,11 +64,11 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
     # Check if unique employee's identification attributes already exists
     db_employee = crud.get_employee_by_email(db, email=employee.email)
     if db_employee:
-        raise HTTPException(status_code=400, detail="Email already registered!")
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
 
     db_employee = crud.get_employee_by_phone(db, phone=employee.phone)
     if db_employee:
-        raise HTTPException(status_code=400, detail="Phone already registered!")
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
     return crud.create_employee(db=db, employee=employee)
 
@@ -79,7 +79,7 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
                         permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "employee"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail="User not found!")
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
     return db_employee
 
 
@@ -90,7 +90,7 @@ async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db
     # Check if Employee exists
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail="Employee not found!")
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
     return crud.update_employee(db=db, db_employee=db_employee, employee=employee)
 
@@ -102,7 +102,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
     # Check if Employee exists
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail="Employee not found!")
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
     return crud.delete_employee(db=db, db_employee=db_employee)
 
