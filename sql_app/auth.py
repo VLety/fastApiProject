@@ -14,8 +14,8 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 import util
-from .schemas import AuthUser, AuthTokenData
-from .crud import get_user_by_username
+from .schemas import AuthUser, AuthTokenData, UserCreate
+from . import crud
 from .database import get_db
 
 APP_CONFIG = util.get_config()
@@ -44,6 +44,27 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
   "password": "manager"
 }
 """
+
+
+def check_new_user(db: Session, user: UserCreate):
+
+    # Check if role is allowed
+    for role in user.role:
+        if role not in APP_CONFIG["auth"]["rbac_roles"]:
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
+
+    # Check if unique user's identification attributes already exists
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+
+    db_user = crud.get_user_by_phone(db, phone=user.phone)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
 
 def verify_password(plain_password, hashed_password):
@@ -109,7 +130,7 @@ async def get_current_user(security_scopes: SecurityScopes,
             credentials_exception.detail = "Token has expired"
         raise credentials_exception
 
-    db_user = get_user_by_username(db, username=token_data.username)
+    db_user = crud.get_user_by_username(db, username=token_data.username)
 
     if db_user is None:
         raise credentials_exception

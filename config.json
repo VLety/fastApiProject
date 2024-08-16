@@ -16,7 +16,12 @@
       "scopes": {
         "status": "Read information about status."
       }
-    }
+    },
+    "rbac_roles": [
+      "admin",
+      "manager",
+      "employee"
+    ]
   },
   "cors": {
     "allow_origins": [
@@ -30,6 +35,12 @@
     "allow_headers": [
       "*"
     ]
+  },
+  "raise_error": {
+    "username_already_registered": "Username already registered.",
+    "email_already_registered": "Email already registered.",
+    "phone_already_registered": "Phone already registered.",
+    "unknown_role": "Unknown role."
   },
   "api_docs": {
     "title": "RESTful API",
@@ -52,7 +63,7 @@
         "description": "OAuth2 with hashing Password and Bearer with JWT tokens."
       },
       {
-        "name": "Users",
+        "name": "User",
         "description": "CRUD operations with Users."
       },
       {
@@ -60,7 +71,7 @@
         "description": "CRUD operations with Employees."
       },
       {
-        "name": "Items",
+        "name": "Item",
         "description": "Manage items for employee [optional].",
         "externalDocs": {
           "description": "Items external docs.",
