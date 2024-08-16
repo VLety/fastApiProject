@@ -14,7 +14,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 import util
-from .schemas import AuthUser, AuthTokenData, UserCreate
+from .schemas import AuthUser, AuthTokenData
 from . import crud
 from .database import get_db
 
@@ -46,27 +46,6 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
 """
 
 
-def check_new_user(db: Session, user: UserCreate):
-
-    # Check if role is allowed
-    for role in user.role:
-        if role not in APP_CONFIG["auth"]["rbac_roles"]:
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
-
-    # Check if unique user's identification attributes already exists
-    db_user = crud.get_user_by_username(db, username=user.username)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
-
-    db_user = crud.get_user_by_phone(db, phone=user.phone)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
-
-
 def verify_password(plain_password, hashed_password):
     return PWD_CONTEXT.verify(plain_password, hashed_password)
 
@@ -89,12 +68,14 @@ def authenticate_user(db_user, password: str):
     return db_user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta):  # timedelta | None = None
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    expire = datetime.now(timezone.utc) + expires_delta
+    # if expires_delta:
+    #     expire = datetime.now(timezone.utc) + expires_delta
+    # else:
+    #     expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

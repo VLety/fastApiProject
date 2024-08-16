@@ -50,7 +50,7 @@ async def favicon():
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=["admin"]))):
 
-    auth.check_new_user(db, user)
+    crud.check_new_user(db, user)
 
     hashed_password = auth.get_password_hash(user.password)
     return crud.create_user(db=db, user=user, hashed_password=hashed_password)
@@ -60,6 +60,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
 @app.post("/employee/", response_model=schemas.Employee, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=["admin", "manager"]))):
+
     # Check if unique employee's identification attributes already exists
     db_employee = crud.get_employee_by_email(db, email=employee.email)
     if db_employee:
@@ -138,7 +139,8 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
     user = auth.authenticate_user(db_user, form_data.password)
 
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect User's name or password")
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"])
+
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
         data={"sub": user.username, "scopes": form_data.scopes},

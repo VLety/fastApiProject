@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from . import models, schemas
 import util
+APP_CONFIG = util.get_config()
 
 
 def get_user(db: Session, user_id: int):
@@ -18,6 +20,27 @@ def get_user_by_email(db: Session, email: str):
 
 def get_user_by_phone(db: Session, phone: str):
     return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
+
+
+def check_new_user(db: Session, user: schemas.UserCreate):
+
+    # Check if role is allowed
+    for role in user.role:
+        if role not in APP_CONFIG["auth"]["rbac_roles"]:
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
+
+    # Check if unique user's identification attributes already exists
+    db_user = get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+
+    db_user = get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+
+    db_user = get_user_by_phone(db, phone=user.phone)
+    if db_user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
 
 def create_user(db: Session, user: schemas.UserCreate, hashed_password):

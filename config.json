@@ -37,10 +37,11 @@
     ]
   },
   "raise_error": {
-    "username_already_registered": "Username already registered.",
-    "email_already_registered": "Email already registered.",
-    "phone_already_registered": "Phone already registered.",
-    "unknown_role": "Unknown role."
+    "incorrect_user_name_or_password": "Incorrect User name or password",
+    "username_already_registered": "Username already registered",
+    "email_already_registered": "Email already registered",
+    "phone_already_registered": "Phone already registered",
+    "unknown_role": "Unknown role"
   },
   "api_docs": {
     "title": "RESTful API",
