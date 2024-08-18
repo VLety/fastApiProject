@@ -106,22 +106,22 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
     return crud.delete_employee(db=db, db_employee=db_employee)
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
-async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
-    return crud.create_item(db=db, item=item, user_id=user_id)
+""" USER CRUD requests --------------------------------------------------------------------------------------- """
+
+# Create (POST)
+@app.post("/user/", response_model=schemas.User, tags=["User"])
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_user"]))):
+    crud.check_new_user(db, user)  # Check if new user attributes is valid
+    hashed_password = auth.get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
+    return crud.create_user(db=db, user=user, hashed_password=hashed_password)
 
 
-@app.get("/items/", response_model=list[schemas.Item], tags=["Item"])
-async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=skip, limit=limit)
-    return items
-
-
-""" OAuth2PasswordRequestForm:
-This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
-The OAuth2 specification dictates that for a password flow the data should be collected using form data 
-(instead of JSON) and that it should have the specific fields `username` and `password`.
-"""
+""" Authentication ------------------------------------------------------------------------------------------- """
+# OAuth2PasswordRequestForm:
+# This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
+# The OAuth2 specification dictates that for a password flow the data should be collected using form data
+# (instead of JSON) and that it should have the specific fields `username` and `password`.
 @app.post("/token", tags=["Authentication"])
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
@@ -140,17 +140,7 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
     return schemas.AuthToken(access_token=access_token, token_type="bearer")
 
 
-# Create (POST)
-@app.post("/user/", response_model=schemas.User, tags=["User"])
-async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=["admin"]))):
-    crud.check_new_user(db, user)
-
-    hashed_password = auth.get_password_hash(user.password)
-    return crud.create_user(db=db, user=user, hashed_password=hashed_password)
-
-
-@app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
+@app.get("/me/", response_model=auth.AuthUser, tags=["Authentication"])
 async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
@@ -158,3 +148,15 @@ async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth
 @app.get("/status/", tags=["Authentication"])
 async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
+
+
+""" Items --------------------------------------------------------------------------------------------------- """
+@app.post("/user/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
+async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
+    return crud.create_item(db=db, item=item, user_id=user_id)
+
+
+@app.get("/items/", response_model=list[schemas.Item], tags=["Item"])
+async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    items = crud.get_items(db, skip=skip, limit=limit)
+    return items

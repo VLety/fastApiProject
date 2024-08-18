@@ -24,12 +24,12 @@ def get_user_by_phone(db: Session, phone: str):
 
 def check_new_user(db: Session, user: schemas.UserCreate):
 
-    # Check if role is allowed
+    # Check if User's role is allowed
     for role in user.role:
         if role not in APP_CONFIG["auth"]["rbac_roles"]:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
 
-    # Check if unique user's identification attributes already exists
+    # Check if unique User's identification attributes already exists
     db_user = get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])

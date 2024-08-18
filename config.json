@@ -53,10 +53,10 @@
     "employee_deleted_successfully": "Employee deleted successfully"
   },
   "api_docs": {
-    "title": "RESTful API",
+    "title": "REST API",
     "version": "0.0.3",
     "summary": "CRUD REST API examples",
-    "description": "REST OpenAPI Specification (OAS) API with OAuth2 authentication and RBAC authorization based on FastAPI framework",
+    "description": "REST OpenAPI Specification (OAS) with OAuth2 authentication and RBAC authorization based on FastAPI framework",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
       "name": "Volodymyr Letiahin",
@@ -70,19 +70,19 @@
     "openapi_tags": [
       {
         "name": "Authentication",
-        "description": "OAuth2 with hashing Password and Bearer with JWT tokens."
+        "description": "OAuth2 with hashing Password and Bearer authentication with JWT token."
       },
       {
         "name": "User",
-        "description": "CRUD operations with Users."
+        "description": "CRUD operations with User."
       },
       {
         "name": "Employee",
-        "description": "CRUD operations with Employees."
+        "description": "CRUD operations with Employee."
       },
       {
         "name": "Item",
-        "description": "Manage items for employee [optional].",
+        "description": "Manage items for user [optional].",
         "externalDocs": {
           "description": "Items external docs.",
           "url": "https://fastapi.tiangolo.com/"
