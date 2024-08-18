@@ -15,7 +15,7 @@
     "OAUTH2_SCHEME": {
       "tokenUrl": "token",
       "scopes": {
-        "status": "Read information about status."
+        "status": "Read information about My authorization status."
       }
     },
     "rbac_roles": [
@@ -53,10 +53,10 @@
     "employee_deleted_successfully": "Employee deleted successfully"
   },
   "api_docs": {
-    "title": "REST API",
+    "title": "REST API promotional project based on FastAPI framework",
     "version": "0.0.3",
-    "summary": "CRUD REST API examples",
-    "description": "REST OpenAPI Specification (OAS) with OAuth2 authentication and RBAC authorization based on FastAPI framework",
+    "summary": "OAuth2 authorization with basic CRUD operation for users & employees",
+    "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control model",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
       "name": "Volodymyr Letiahin",
@@ -70,23 +70,23 @@
     "openapi_tags": [
       {
         "name": "Authentication",
-        "description": "OAuth2 with hashing Password and Bearer authentication with JWT token."
+        "description": "OAuth2 with hashing Password and Bearer authentication with JWT token.",
+        "externalDocs": {
+          "description": "OAuth2 authorization protocol specification >>>",
+          "url": "https://oauth.net/2/"
+        }
       },
       {
         "name": "User",
-        "description": "CRUD operations with User."
+        "description": "CRUD operations with User"
       },
       {
         "name": "Employee",
-        "description": "CRUD operations with Employee."
+        "description": "CRUD operations with Employee"
       },
       {
         "name": "Item",
-        "description": "Manage items for user [optional].",
-        "externalDocs": {
-          "description": "Items external docs.",
-          "url": "https://fastapi.tiangolo.com/"
-        }
+        "description": "Manage items for user [optional]"
       }
     ]
   }

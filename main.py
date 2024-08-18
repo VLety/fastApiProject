@@ -140,17 +140,18 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
     return schemas.AuthToken(access_token=access_token, token_type="bearer")
 
 
-@app.get("/me/", response_model=auth.AuthUser, tags=["Authentication"])
+@app.get("/user/me/", response_model=auth.AuthUser, tags=["Authentication"])
 async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
 
-@app.get("/status/", tags=["Authentication"])
+@app.get("/user/status/", tags=["Authentication"])
 async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
 """ Items --------------------------------------------------------------------------------------------------- """
+# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
 @app.post("/user/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
 async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_item(db=db, item=item, user_id=user_id)
