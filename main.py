@@ -4,15 +4,16 @@ Documentation: api-url/docs
 """
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
+from typing import Annotated
+from sqlalchemy.orm import Session
 import util
 from sql_app import crud, models, schemas, auth
 from sql_app.database import engine, get_db
 
 APP_CONFIG = util.get_config()  # Project config data
-PERMISSIONS = util.get_permissions()
-models.Base.metadata.create_all(bind=engine)
+PERMISSIONS = util.get_permissions()  # Project access permission data
+models.Base.metadata.create_all(bind=engine)  # Create all empty tables by "if not exist" condition
 
 # Behind a Proxy root_path argument
 # https://fastapi.tiangolo.com/advanced/behind-a-proxy/#behind-a-proxy
@@ -145,13 +146,16 @@ async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth
     return current_user
 
 
+# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
+# Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
+# It is just example - in fact we don't need use scope Security for this endpoint...
 @app.get("/user/status/", tags=["Authentication"])
-async def read_system_status(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
+async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
+                                                                                       scopes=["status"])]):
     return {"status": "ok"}
 
 
 """ Items --------------------------------------------------------------------------------------------------- """
-# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
 @app.post("/user/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
 async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_item(db=db, item=item, user_id=user_id)

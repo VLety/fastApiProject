@@ -53,10 +53,10 @@
     "employee_deleted_successfully": "Employee deleted successfully"
   },
   "api_docs": {
-    "title": "REST API promotional project based on FastAPI framework",
+    "title": "REST API promotional & education project based on FastAPI framework",
     "version": "0.0.3",
-    "summary": "OAuth2 authorization with basic CRUD operation for users & employees",
-    "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control model",
+    "summary": "OAuth2 authentication with basic CRUD operation for users & employees",
+    "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control authorization model",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
       "name": "Volodymyr Letiahin",

@@ -29,22 +29,6 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(
     scopes=APP_CONFIG["auth"]["OAUTH2_SCHEME"]["scopes"]
 )
 
-"""
-{
-  "username": "manager",
-  "first_name": "Volodymyr",
-  "last_name": "Letiahin",
-  "phone": "+380504434317",
-  "email": "vlety@key-info.com.ua",
-  "role": [
-    "manager"
-  ],
-  "disabled": false,
-  "login_denied": false,
-  "password": "manager"
-}
-"""
-
 
 def verify_password(plain_password, hashed_password):
     return PWD_CONTEXT.verify(plain_password, hashed_password)
@@ -131,7 +115,7 @@ async def get_current_active_user(current_user: Annotated[AuthUser, Security(get
     return current_user
 
 
-# Role-based access control (RBAC) system where access permission (ACL) based on User's role.
+# Role-based access control (RBAC) system where access permission (ACL) based on User's roles
 class RBAC:
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl

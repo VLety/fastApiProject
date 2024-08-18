@@ -23,9 +23,10 @@ from sqlalchemy.dialects.sqlite import (
 )
 metadata_obj = MetaData()
 
+
 class User(Base):
-    __tablename__ = "users"  # Set relevant table name or pass this string if class name is equal table name
-    metadata_obj = metadata_obj
+    __tablename__ = "users"  # Set relevant table name or skip this string if class name is equal table name
+    metadata_obj = metadata_obj  # Create table if not exist
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     username = Column(String(16), index=True, unique=True)
@@ -42,7 +43,8 @@ class User(Base):
 
 
 class Employee(Base):
-    __tablename__ = "employees"  # Set relevant table name or pass this string if class name is equal table name
+    __tablename__ = "employees"  # Set relevant table name or skip this string if class name is equal table name
+    metadata_obj = metadata_obj  # Create table if not exist
 
     id = Column(Integer, primary_key=True)
     first_name = Column(String(64), index=True)
@@ -57,15 +59,16 @@ class Employee(Base):
     created = Column(String(19), index=True)
     updated = Column(String(19), index=True)
 
-    items = relationship("Item", back_populates="owner")
+    items = relationship("Item", back_populates="owner")  # Set table relation
 
 
 class Item(Base):
-    __tablename__ = "items"  # Set relevant table name or pass this string if class name is equal table name
+    __tablename__ = "items"  # Set relevant table name or skip this string if class name is equal table name
+    metadata_obj = metadata_obj  # Create table if not exist
 
     id = Column(Integer, primary_key=True)
     title = Column(String, index=True)
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("employees.id"))
 
-    owner = relationship("Employee", back_populates="items")
+    owner = relationship("Employee", back_populates="items")  # Set table relation
