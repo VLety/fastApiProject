@@ -1,0 +1,25 @@
+{
+  "detail": "Project RBAC permissions settings",
+  "POST_employee": [
+    "admin",
+    "manager"
+  ],
+  "GET_employee": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "GET_employee_employee_id": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "PUT_employee_employee_id": [
+    "admin",
+    "manager"
+  ],
+  "DELETE_employee_employee_id": [
+    "admin",
+    "manager"
+  ]
+}

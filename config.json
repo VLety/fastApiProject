@@ -1,4 +1,5 @@
 {
+  "detail": "Project main configuration settings",
   "sqlite_db_path": "/sql_app/sql_app.db",
   "root_path": "/api/v1",
   "auth": {

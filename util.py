@@ -40,6 +40,14 @@ def get_config():
     return config_json
 
 
+def get_permissions():
+    """ GET project permissions from permissions.json file"""
+    file_path_config = f"{get_project_root()}/permissions.json"
+    permissions_json = get_json_file_content(file_path_config)
+
+    return permissions_json
+
+
 def get_credential():
     """ GET project config from credential.json file"""
     file_path_config = f"{get_project_root()}/credential.json"

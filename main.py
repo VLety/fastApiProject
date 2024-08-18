@@ -10,7 +10,8 @@ import util
 from sql_app import crud, models, schemas, auth
 from sql_app.database import engine, get_db
 
-APP_CONFIG = util.get_config()
+APP_CONFIG = util.get_config()  # Project config data
+PERMISSIONS = util.get_permissions()
 models.Base.metadata.create_all(bind=engine)
 
 # Behind a Proxy root_path argument
@@ -45,22 +46,12 @@ async def favicon():
     return FileResponse("./static/favicon.ico")
 
 
-# Create (POST)
-@app.post("/user/", response_model=schemas.User, tags=["User"])
-async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=["admin"]))):
-
-    crud.check_new_user(db, user)
-
-    hashed_password = auth.get_password_hash(user.password)
-    return crud.create_user(db=db, user=user, hashed_password=hashed_password)
-
+""" EMPLOYEE CRUD requests --------------------------------------------------------------------------------------- """
 
 # Create (POST)
 @app.post("/employee/", response_model=schemas.Employee, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=["admin", "manager"]))):
-
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_employee"]))):
     # Check if unique employee's identification attributes already exists
     db_employee = crud.get_employee_by_email(db, email=employee.email)
     if db_employee:
@@ -73,20 +64,28 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
     return crud.create_employee(db=db, employee=employee)
 
 
-# Read (GET)
+# Read (GET) ALL
+@app.get("/employee/", response_model=list[schemas.Employee], tags=["Employee"])
+async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
+    employees = crud.get_employees(db, skip=skip, limit=limit)
+    return employees
+
+
+# Read (GET) FIRST
 @app.get("/employee/{employee_id}", response_model=schemas.Employee, tags=["Employee"])
 async def read_employee(employee_id: int, db: Session = Depends(get_db),
-                        permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "employee"]))):
+                        permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee_employee_id"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
     return db_employee
 
 
-# Update (PUT)
+# Update (PUT) FIRST
 @app.put("/employee/{employee_id}", response_model=schemas.Employee, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=["admin", "manager"]))):
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
     # Check if Employee exists
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
@@ -95,23 +94,16 @@ async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db
     return crud.update_employee(db=db, db_employee=db_employee, employee=employee)
 
 
-# Delete (DELETE)
+# Delete (DELETE) FIRST
 @app.delete("/employee/{employee_id}", tags=["Employee"])
 async def delete_employee(employee_id: int, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=["admin", "manager"]))):
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_employee_employee_id"]))):
     # Check if Employee exists
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
     return crud.delete_employee(db=db, db_employee=db_employee)
-
-
-@app.get("/employee/", response_model=list[schemas.Employee], tags=["Employee"])
-async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                         permission: bool = Depends(auth.RBAC(acl=["admin", "manager", "employee"]))):
-    employees = crud.get_employees(db, skip=skip, limit=limit)
-    return employees
 
 
 @app.post("/users/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
@@ -134,7 +126,6 @@ The OAuth2 specification dictates that for a password flow the data should be co
 async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
                                  ) -> schemas.AuthToken:
-
     db_user = crud.get_user_by_username(db, username=form_data.username)
     user = auth.authenticate_user(db_user, form_data.password)
 
@@ -147,6 +138,16 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
         expires_delta=access_token_expires,
     )
     return schemas.AuthToken(access_token=access_token, token_type="bearer")
+
+
+# Create (POST)
+@app.post("/user/", response_model=schemas.User, tags=["User"])
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=["admin"]))):
+    crud.check_new_user(db, user)
+
+    hashed_password = auth.get_password_hash(user.password)
+    return crud.create_user(db=db, user=user, hashed_password=hashed_password)
 
 
 @app.get("/users/me/", response_model=auth.AuthUser, tags=["Authentication"])
