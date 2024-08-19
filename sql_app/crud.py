@@ -63,6 +63,17 @@ def create_user(db: Session, user: schemas.UserCreate, hashed_password):
     return db_user
 
 
+def update_user(db: Session, user_id, user):
+    # Check if User exists
+    db_user = get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+
+    # Update Employee record in database
+    db_employee = update_db_record_by_id(db, db_user, user)
+    return db_employee
+
+
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
 
 def get_employee(db: Session, employee_id: int):

@@ -62,7 +62,7 @@ class UserUpdate(UserBase):
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
-class User(UserBase):
+class UserResponse(UserBase):
     # Make Output json based on main UserBase(BaseModel) class + current class
     id: int
     created: str
@@ -81,7 +81,7 @@ class EmployeeBase(BaseModel):
     nick_name: str
     phone: str
     email: str
-    birthday: date = None
+    birthday: date
     country: str
     city: str
     address: str
@@ -120,8 +120,8 @@ class Ticket(TicketBase):
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
 
-class Employee(EmployeeBase):
-    # Make Output json based on main EmployeeBase(BaseModel) class + current class
+class EmployeeResponse(EmployeeBase):
+    # Output response json based on main EmployeeBase(BaseModel) class + current class
     id: int
     created: str
     updated: str | None = None  # | None = None options required if no value present in database

@@ -50,7 +50,7 @@ async def favicon():
 """ EMPLOYEE CRUD requests --------------------------------------------------------------------------------------- """
 
 # Create (POST)
-@app.post("/employee/", response_model=schemas.Employee, tags=["Employee"])
+@app.post("/employee/", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_employee"]))):
     # Check if unique employee's identification attributes already exists
@@ -66,7 +66,7 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
 
 
 # Read (GET) ALL
-@app.get("/employee/", response_model=list[schemas.Employee], tags=["Employee"])
+@app.get("/employee/", response_model=list[schemas.EmployeeResponse], tags=["Employee"])
 async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
     employees = crud.get_employees(db, skip=skip, limit=limit)
@@ -74,7 +74,7 @@ async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(
 
 
 # Read (GET) FIRST
-@app.get("/employee/{employee_id}", response_model=schemas.Employee, tags=["Employee"])
+@app.get("/employee/{employee_id}", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def read_employee(employee_id: int, db: Session = Depends(get_db),
                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee_employee_id"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
@@ -84,7 +84,7 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
 
 
 # Update (PUT) FIRST
-@app.put("/employee/{employee_id}", response_model=schemas.EmployeeUpdate, tags=["Employee"])
+@app.put("/employee/{employee_id}", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
 
@@ -106,12 +106,20 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 """ USER CRUD requests --------------------------------------------------------------------------------------- """
 
 # Create (POST)
-@app.post("/user/", response_model=schemas.User, tags=["User"])
+@app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_user"]))):
     crud.check_new_user(db, user)  # Check if new user attributes is valid
     hashed_password = auth.get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
     return crud.create_user(db=db, user=user, hashed_password=hashed_password)
+
+
+# Update (PUT) FIRST
+@app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
+async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
+
+    return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 """ Authentication ------------------------------------------------------------------------------------------- """

@@ -42,7 +42,8 @@
     "email_already_registered": "Email already registered",
     "phone_already_registered": "Phone already registered",
     "unknown_role": "Unknown role",
-    "employee_not_found": "Employee not found"
+    "employee_not_found": "Employee not found",
+    "user_not_found": "User not found"
   },
   "message": {
     "employee_deleted_successfully": "Employee deleted successfully"
@@ -81,7 +82,7 @@
       },
       {
         "name": "Ticket",
-        "description": "Manage Tickets for Employees"
+        "description": "Manage Tickets for Employee"
       }
     ]
   }
