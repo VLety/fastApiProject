@@ -99,7 +99,12 @@ def create_employee(db: Session, employee: schemas.EmployeeCreate):
 
 
 def update_employee(db: Session, employee_id, employee):
-    db_employee = update_db_record(db, employee_id, employee)
+    # Check if Employee exists
+    db_employee = get_employee(db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+
+    db_employee = update_db_record_by_id(db, db_employee, employee)
     return db_employee
 
 
@@ -126,12 +131,7 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int):
 
 """ Support functions -------------------------------------------------------------------------------------------- """
 
-def update_db_record(db, record_id, payload):
-
-    # Check if Employee exists
-    db_record = get_employee(db, employee_id=record_id)
-    if db_record is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+def update_db_record_by_id(db, db_record, payload):
 
     # Set new fild(s) value(s) and not override existence DB field(s)
     for field_name in payload.model_fields_set:
