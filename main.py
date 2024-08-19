@@ -87,12 +87,8 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
 @app.put("/employee/{employee_id}", response_model=schemas.EmployeeUpdate, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
-    # Check if Employee exists
-    db_employee = crud.get_employee(db, employee_id=employee_id)
-    if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
-    return crud.update_employee(db=db, db_employee=db_employee, employee=employee)
+    return crud.update_employee(db=db, employee_id=employee_id, employee=employee)
 
 
 # Delete (DELETE) FIRST

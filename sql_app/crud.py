@@ -9,7 +9,6 @@ PERMISSIONS = util.get_permissions()  # Project access permission data
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
-
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
 
@@ -66,7 +65,6 @@ def create_user(db: Session, user: schemas.UserCreate, hashed_password):
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
 
-
 def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()  # type: ignore[call-arg]
 
@@ -100,17 +98,8 @@ def create_employee(db: Session, employee: schemas.EmployeeCreate):
     return db_employee
 
 
-def update_employee(db: Session, db_employee, employee):
-    # Set new filed(s) value(s) and not override existence DB field(s)
-    for field_name in employee.model_fields_set:
-        setattr(db_employee, field_name, getattr(employee, field_name))
-
-    # Set update time-date
-    db_employee.updated = util.get_current_time_utc("TIME")
-
-    # Update database
-    db.commit()
-    db.refresh(db_employee)
+def update_employee(db: Session, employee_id, employee):
+    db_employee = update_db_record(db, employee_id, employee)
     return db_employee
 
 
@@ -133,3 +122,26 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+""" Support functions -------------------------------------------------------------------------------------------- """
+
+def update_db_record(db, record_id, payload):
+
+    # Check if Employee exists
+    db_record = get_employee(db, employee_id=record_id)
+    if db_record is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+
+    # Set new fild(s) value(s) and not override existence DB field(s)
+    for field_name in payload.model_fields_set:
+        setattr(db_record, field_name, getattr(payload, field_name))
+
+    # Set update time-date
+    db_record.updated = util.get_current_time_utc("TIME")
+
+    # Update database
+    db.commit()
+    db.refresh(db_record)
+    return db_record
+
