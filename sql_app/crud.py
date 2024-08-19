@@ -104,6 +104,7 @@ def update_employee(db: Session, employee_id, employee):
     if db_employee is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
+    # Update Employee record in database
     db_employee = update_db_record_by_id(db, db_employee, employee)
     return db_employee
 
