@@ -11,8 +11,7 @@ a dict), you can declare the specific data you want to return, and it will be ab
     Pydantic should be responsible for schemas (basically defining input and output formats) and DTOs (used to
 transfer data between different layers of an app).
 """
-from datetime import datetime
-from datetime import date, datetime
+from datetime import date
 from pydantic import BaseModel, Field
 
 
@@ -82,7 +81,7 @@ class EmployeeBase(BaseModel):
     nick_name: str
     phone: str
     email: str
-    birthday: str
+    birthday: date = None
     country: str
     city: str
     address: str
