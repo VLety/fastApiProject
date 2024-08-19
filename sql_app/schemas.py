@@ -90,10 +90,18 @@ class EmployeeCreate(EmployeeBase):
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
-class EmployeeUpdate(EmployeeBase):
+class EmployeeUpdate(BaseModel):
     # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
-    pass
+    first_name: str | None = None
+    last_name: str | None = None
+    nick_name: str | None = None
+    phone: str | None = None
+    email: str | None = None
+    birthday: str | None = None
+    country: str | None = None
+    city: str | None = None
+    address: str | None = None
 
 class TicketBase(BaseModel):
     title: str

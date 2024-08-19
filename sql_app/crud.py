@@ -101,17 +101,14 @@ def create_employee(db: Session, employee: schemas.EmployeeCreate):
 
 
 def update_employee(db: Session, db_employee, employee):
-    db_employee.first_name = employee.first_name
-    db_employee.last_name = employee.last_name
-    db_employee.nick_name = employee.nick_name
-    db_employee.phone = employee.phone
-    db_employee.email = employee.email
-    db_employee.birthday = employee.birthday
-    db_employee.country = employee.country
-    db_employee.city = employee.city
-    db_employee.address = employee.address
+    # Set new filed(s) value(s) and not override existence DB field(s)
+    for field_name in employee.model_fields_set:
+        setattr(db_employee, field_name, getattr(employee, field_name))
+
+    # Set update time-date
     db_employee.updated = util.get_current_time_utc("TIME")
 
+    # Update database
     db.commit()
     db.refresh(db_employee)
     return db_employee

@@ -84,7 +84,7 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
 
 
 # Update (PUT) FIRST
-@app.put("/employee/{employee_id}", response_model=schemas.Employee, tags=["Employee"])
+@app.put("/employee/{employee_id}", response_model=schemas.EmployeeUpdate, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
     # Check if Employee exists
