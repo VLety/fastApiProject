@@ -14,7 +14,7 @@ transfer data between different layers of an app).
 from pydantic import BaseModel, Field
 
 
-# Authorization ---------------------------------------------------------------------------------------------------
+""" Authorization -------------------------------------------------------------------------------------------------- """
 class AuthUser(BaseModel):
     id: int
     username: str
@@ -38,7 +38,7 @@ class AuthTokenData(BaseModel):
     scopes: list[str] = []
 
 
-# Users -----------------------------------------------------------------------------------------------------------
+""" Users ---------------------------------------------------------------------------------------------------------- """
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
     username: str
@@ -72,7 +72,7 @@ class User(UserBase):
         from_attributes = True  # Pydantic V2 version
 
 
-# Employees + Items -----------------------------------------------------------------------------------------------
+""" Employees + Tickets -------------------------------------------------------------------------------------------- """
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
     first_name: str
@@ -95,14 +95,15 @@ class EmployeeUpdate(EmployeeBase):
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
-class ItemBase(BaseModel):
+class TicketBase(BaseModel):
     title: str
     description: str | None = None
+    status: str
 
-class ItemCreate(ItemBase):
+class TicketCreate(TicketBase):
     pass
 
-class Item(ItemBase):
+class Ticket(TicketBase):
     id: int
     owner_id: int
 
@@ -115,7 +116,7 @@ class Employee(EmployeeBase):
     id: int
     created: str
     updated: str | None = None  # | None = None options required if no value present in database
-    items: list[Item] = []
+    tickets: list[Ticket] = []
 
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'

@@ -59,16 +59,17 @@ class Employee(Base):
     created = Column(String(19), index=True)
     updated = Column(String(19), index=True)
 
-    items = relationship("Item", back_populates="owner")  # Set table relation
+    tickets = relationship("Ticket", back_populates="owner")  # Set table relation
 
 
-class Item(Base):
-    __tablename__ = "items"  # Set relevant table name or skip this string if class name is equal table name
+class Ticket(Base):
+    __tablename__ = "tickets"  # Set relevant table name or skip this string if class name is equal table name
     metadata_obj = metadata_obj  # Create table if not exist
 
     id = Column(Integer, primary_key=True)
     title = Column(String, index=True)
     description = Column(String, index=True)
+    status = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("employees.id"))
 
-    owner = relationship("Employee", back_populates="items")  # Set table relation
+    owner = relationship("Employee", back_populates="tickets")  # Set table relation

@@ -1,5 +1,10 @@
 {
   "detail": "Project RBAC permissions settings",
+  "rbac_roles": [
+    "admin",
+    "manager",
+    "employee"
+  ],
   "com01": "Employees ACL -----------------------------------------------------------------------------------------",
   "POST_employee": [
     "admin",
@@ -22,6 +27,16 @@
   "DELETE_employee_employee_id": [
     "admin",
     "manager"
+  ],
+  "POST_ticket": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "GET_ticket": [
+    "admin",
+    "manager",
+    "employee"
   ],
   "com02": "Users ACL ----------------------------------------------------------------------------------------------",
   "POST_user": [

@@ -155,13 +155,15 @@ async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Se
     return {"status": "ok"}
 
 
-""" Items --------------------------------------------------------------------------------------------------- """
-@app.post("/user/{user_id}/items/", response_model=schemas.Item, tags=["Item"])
-async def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
-    return crud.create_item(db=db, item=item, user_id=user_id)
+""" Ticket ---------------------------------------------------------------------------------------------------- """
+@app.post("/employee/{employee_id}/ticket/", response_model=schemas.Ticket, tags=["Ticket"])
+async def create_ticket_for_employee(employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
+                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
+    return crud.create_ticket(db=db, ticket=ticket, user_id=employee_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item], tags=["Item"])
-async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=skip, limit=limit)
+@app.get("/tickets/", response_model=list[schemas.Ticket], tags=["Ticket"])
+async def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+    items = crud.get_ticket(db, skip=skip, limit=limit)
     return items

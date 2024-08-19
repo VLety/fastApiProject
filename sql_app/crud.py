@@ -3,7 +3,11 @@ from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from . import models, schemas
 import util
+
 APP_CONFIG = util.get_config()
+PERMISSIONS = util.get_permissions()  # Project access permission data
+
+""" Users ---------------------------------------------------------------------------------------------------------- """
 
 
 def get_user(db: Session, user_id: int):
@@ -23,10 +27,9 @@ def get_user_by_phone(db: Session, phone: str):
 
 
 def check_new_user(db: Session, user: schemas.UserCreate):
-
     # Check if User's role is allowed
     for role in user.role:
-        if role not in APP_CONFIG["auth"]["rbac_roles"]:
+        if role not in PERMISSIONS["rbac_roles"]:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
 
     # Check if unique User's identification attributes already exists
@@ -59,6 +62,9 @@ def create_user(db: Session, user: schemas.UserCreate, hashed_password):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+""" Employees + Tickets -------------------------------------------------------------------------------------------- """
 
 
 def get_employee(db: Session, employee_id: int):
@@ -120,12 +126,12 @@ def delete_employee(db: Session, db_employee):
     return JSONResponse(content={"message": APP_CONFIG["message"]["employee_deleted_successfully"]})
 
 
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Item).offset(skip).limit(limit).all()
+def get_ticket(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Ticket).offset(skip).limit(limit).all()
 
 
-def create_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = models.Item(**item.model_dump(), owner_id=user_id)
+def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int):
+    db_item = models.Ticket(**ticket.model_dump(), owner_id=user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

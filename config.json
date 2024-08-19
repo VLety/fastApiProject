@@ -17,12 +17,7 @@
       "scopes": {
         "status": "Read information about My authorization status."
       }
-    },
-    "rbac_roles": [
-      "admin",
-      "manager",
-      "employee"
-    ]
+    }
   },
   "cors": {
     "allow_origins": [
@@ -85,8 +80,8 @@
         "description": "CRUD operations with Employee"
       },
       {
-        "name": "Item",
-        "description": "Manage items for user [optional]"
+        "name": "Ticket",
+        "description": "Manage Tickets for Employees"
       }
     ]
   }
