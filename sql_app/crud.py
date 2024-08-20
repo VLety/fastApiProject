@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from . import models, schemas
+from .auth import get_password_hash
 import util
 
 APP_CONFIG = util.get_config()
@@ -26,7 +27,7 @@ def get_user_by_phone(db: Session, phone: str):
 
 
 def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
-    # Remove role list duplication like ["admin", "admin"] and sort list
+    # Remove role list duplication like ["admin", "admin"] and sorting list
     user.role = list(set(user.role))
     user.role.sort(reverse=False)
 
@@ -48,7 +49,9 @@ def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User
     return user
 
 
-def create_user(db: Session, user: schemas.UserCreate, hashed_password):
+def create_user(db: Session, user: schemas.UserCreate):
+    user = validate_user_attr(db=db, user=user, db_user=None)  # Check if new user attributes is valid
+    hashed_password = get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
     db_user = models.User(username=user.username,
                           first_name=user.first_name,
                           last_name=user.last_name,

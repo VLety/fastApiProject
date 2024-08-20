@@ -42,7 +42,7 @@ class AuthTokenData(BaseModel):
 """ Users ---------------------------------------------------------------------------------------------------------- """
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
-    username: str
+    username: str = Field(pattern=r"^[0-9A-Za-z]$", min_length=5, max_length=16)
     first_name: str
     last_name: str
     phone: str
@@ -54,7 +54,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
-    password: str
+    password: str = Field(min_length=8, max_length=16)
 
 
 class UserUpdate(BaseModel):
