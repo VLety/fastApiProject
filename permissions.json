@@ -48,5 +48,9 @@
   "GET_user": [
     "admin",
     "manager"
+  ],
+  "GET_user_user_id": [
+    "admin",
+    "manager"
   ]
 }

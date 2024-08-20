@@ -69,8 +69,7 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
 @app.get("/employee/", response_model=list[schemas.EmployeeResponse], tags=["Employee"])
 async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
-    employees = crud.get_employees(db, skip=skip, limit=limit)
-    return employees
+    return crud.get_employees(db, skip=skip, limit=limit)
 
 
 # Read (GET) FIRST
@@ -118,8 +117,17 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
 @app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
 async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
-    employees = crud.get_employees(db, skip=skip, limit=limit)
-    return employees
+    return crud.get_users(db, skip=skip, limit=limit)
+
+
+# Read (GET) FIRST
+@app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
+async def read_employee(user_id: int, db: Session = Depends(get_db),
+                        permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
+    db_user = crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+    return db_user
 
 
 # Update (PUT) FIRST
