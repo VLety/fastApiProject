@@ -74,6 +74,18 @@ def update_user(db: Session, user_id, user):
     return db_employee
 
 
+def delete_user(db: Session, user_id):
+    # Check if User exists
+    db_user = get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+    # Delete User in database
+    db.delete(db_user)
+    db.commit()
+
+    return JSONResponse(content={"message": APP_CONFIG["message"]["user_deleted_successfully"]})
+
+
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
@@ -124,7 +136,13 @@ def update_employee(db: Session, employee_id, employee):
     return db_employee
 
 
-def delete_employee(db: Session, db_employee):
+def delete_employee(db: Session, employee_id):
+
+    # Check if Employee exists
+    db_employee = get_employee(db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+    # Delete User in database
     db.delete(db_employee)
     db.commit()
 

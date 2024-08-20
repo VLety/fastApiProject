@@ -49,6 +49,7 @@ async def favicon():
 
 """ EMPLOYEE CRUD requests --------------------------------------------------------------------------------------- """
 
+
 # Create (POST)
 @app.post("/employee/", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
@@ -86,7 +87,6 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
 @app.put("/employee/{employee_id}", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
-
     return crud.update_employee(db=db, employee_id=employee_id, employee=employee)
 
 
@@ -94,15 +94,11 @@ async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db
 @app.delete("/employee/{employee_id}", tags=["Employee"])
 async def delete_employee(employee_id: int, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_employee_employee_id"]))):
-    # Check if Employee exists
-    db_employee = crud.get_employee(db, employee_id=employee_id)
-    if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
-
-    return crud.delete_employee(db=db, db_employee=db_employee)
+    return crud.delete_employee(db=db, employee_id=employee_id)
 
 
 """ USER CRUD requests --------------------------------------------------------------------------------------- """
+
 
 # Create (POST)
 @app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
@@ -115,15 +111,15 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
 
 # Read (GET) ALL
 @app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
-async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
+async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
     return crud.get_users(db, skip=skip, limit=limit)
 
 
 # Read (GET) FIRST
 @app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def read_employee(user_id: int, db: Session = Depends(get_db),
-                        permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
+async def read_user(user_id: int, db: Session = Depends(get_db),
+                    permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
@@ -133,12 +129,20 @@ async def read_employee(user_id: int, db: Session = Depends(get_db),
 # Update (PUT) FIRST
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
 async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
-
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
+# Delete (DELETE) FIRST
+@app.delete("/user/{user_id}", tags=["User"])
+async def delete_user(user_id: int, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
+    return crud.delete_user(db=db, user_id=user_id)
+
+
 """ Authentication ------------------------------------------------------------------------------------------- """
+
+
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
 # The OAuth2 specification dictates that for a password flow the data should be collected using form data
@@ -176,14 +180,16 @@ async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Se
 
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
+
+
 @app.post("/employee/{employee_id}/ticket/", response_model=schemas.Ticket, tags=["Ticket"])
 async def create_ticket_for_employee(employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
-                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
+                                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
     return crud.create_ticket(db=db, ticket=ticket, user_id=employee_id)
 
 
 @app.get("/tickets/", response_model=list[schemas.Ticket], tags=["Ticket"])
 async def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     items = crud.get_ticket(db, skip=skip, limit=limit)
     return items

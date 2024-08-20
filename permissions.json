@@ -42,9 +42,6 @@
   "POST_user": [
     "admin"
   ],
-  "PUT_user_user_id": [
-    "admin"
-  ],
   "GET_user": [
     "admin",
     "manager"
@@ -52,5 +49,11 @@
   "GET_user_user_id": [
     "admin",
     "manager"
+  ],
+  "PUT_user_user_id": [
+    "admin"
+  ],
+  "DELETE_user_user_id": [
+    "admin"
   ]
 }

@@ -46,7 +46,8 @@
     "user_not_found": "User not found"
   },
   "message": {
-    "employee_deleted_successfully": "Employee deleted successfully"
+    "employee_deleted_successfully": "Employee deleted successfully",
+    "user_deleted_successfully": "User deleted successfully"
   },
   "api_docs": {
     "title": "REST API promotional & education project based on FastAPI framework",
@@ -66,7 +67,7 @@
     "openapi_tags": [
       {
         "name": "Authentication",
-        "description": "OAuth2 with hashing Password and Bearer authentication with JWT token.",
+        "description": "OAuth2 with scope, hashing Password and Bearer authentication with JWT token.",
         "externalDocs": {
           "description": "OAuth2 authorization protocol specification >>>",
           "url": "https://oauth.net/2/"
