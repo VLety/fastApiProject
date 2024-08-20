@@ -25,24 +25,27 @@ def get_user_by_phone(db: Session, phone: str):
     return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
 
 
-def check_new_user(db: Session, user: schemas.UserCreate):
-    # Check if User's role is allowed
-    for role in user.role:
+def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
+    # Remove role list duplication like ["admin", "admin"] and sort list
+    user.role = list(set(user.role))
+    user.role.sort(reverse=False)
+
+    for role in user.role:  # Check if User's role is allowed
         if role not in PERMISSIONS["rbac_roles"]:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
 
-    # Check if unique User's identification attributes already exists
-    db_user = get_user_by_username(db, username=user.username)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+    if db_user is None:  # For NEW User: check if unique User's identification attributes already exists
+        db_user = get_user_by_username(db, username=user.username)
+        if db_user:
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+        db_user = get_user_by_email(db, email=user.email)
+        if db_user:
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+        db_user = get_user_by_phone(db, phone=user.phone)
+        if db_user:
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
-    db_user = get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
-
-    db_user = get_user_by_phone(db, phone=user.phone)
-    if db_user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+    return user
 
 
 def create_user(db: Session, user: schemas.UserCreate, hashed_password):
@@ -68,6 +71,9 @@ def update_user(db: Session, user_id, user):
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+
+    # Validate User's attributes
+    user = validate_user_attr(db=db, user=user, db_user=db_user)
 
     # Update User record in database
     db_employee = update_db_record_by_id(db, db_user, user)

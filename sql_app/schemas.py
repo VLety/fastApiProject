@@ -64,6 +64,10 @@ class UserUpdate(BaseModel):
     email: str
 
 
+class UserRoleUpdate(BaseModel):
+    role: list[str]
+
+
 class UserResponse(UserBase):
     # Make Output json based on main UserBase(BaseModel) class + current class
     id: int

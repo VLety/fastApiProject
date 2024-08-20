@@ -102,7 +102,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 @app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_user"]))):
-    crud.check_new_user(db, user)  # Check if new user attributes is valid
+    crud.validate_user_attr(db=db, user=user, db_user=None)  # Check if new user attributes is valid
     hashed_password = auth.get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
     return crud.create_user(db=db, user=user, hashed_password=hashed_password)
 
@@ -131,10 +131,11 @@ async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depe
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
-# Update (PUT) FIRST
-@app.put("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
-async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
+# Update element (PATCH)
+@app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
+
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
