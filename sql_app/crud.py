@@ -69,7 +69,7 @@ def update_user(db: Session, user_id, user):
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
 
-    # Update Employee record in database
+    # Update User record in database
     db_employee = update_db_record_by_id(db, db_user, user)
     return db_employee
 
@@ -98,7 +98,7 @@ def create_employee(db: Session, employee: schemas.EmployeeCreate):
                                   nick_name=employee.nick_name,
                                   phone=employee.phone,
                                   email=employee.email,
-                                  birthday=employee.birthday,
+                                  birthday=str(employee.birthday),
                                   country=employee.country,
                                   city=employee.city,
                                   address=employee.address,

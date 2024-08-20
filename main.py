@@ -114,10 +114,18 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
     return crud.create_user(db=db, user=user, hashed_password=hashed_password)
 
 
+# Read (GET) ALL
+@app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
+async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
+    employees = crud.get_employees(db, skip=skip, limit=limit)
+    return employees
+
+
 # Update (PUT) FIRST
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
 async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
 
     return crud.update_user(db=db, user_id=user_id, user=user)
 

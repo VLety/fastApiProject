@@ -57,10 +57,12 @@ class UserCreate(UserBase):
     password: str
     pass
 
-class UserUpdate(UserBase):
-    # Make Input json based on main UserBase(BaseModel) class + current class
-    # password: str  # We can add here additional parameter that is not present in UserBase Class
-    pass
+class UserUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    phone: str
+    email: str
+
 
 class UserResponse(UserBase):
     # Make Output json based on main UserBase(BaseModel) class + current class
