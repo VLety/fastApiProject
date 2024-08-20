@@ -49,7 +49,6 @@ async def favicon():
 
 """ EMPLOYEE CRUD requests --------------------------------------------------------------------------------------- """
 
-
 # Create (POST)
 @app.post("/employee/", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db),
@@ -99,7 +98,6 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 """ USER CRUD requests --------------------------------------------------------------------------------------- """
 
-
 # Create (POST)
 @app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
@@ -133,6 +131,13 @@ async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depe
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
+# Update (PUT) FIRST
+@app.put("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
+async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
 # Delete (DELETE) FIRST
 @app.delete("/user/{user_id}", tags=["User"])
 async def delete_user(user_id: int, db: Session = Depends(get_db),
@@ -141,7 +146,6 @@ async def delete_user(user_id: int, db: Session = Depends(get_db),
 
 
 """ Authentication ------------------------------------------------------------------------------------------- """
-
 
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
@@ -180,7 +184,6 @@ async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Se
 
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
-
 
 @app.post("/employee/{employee_id}/ticket/", response_model=schemas.Ticket, tags=["Ticket"])
 async def create_ticket_for_employee(employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),

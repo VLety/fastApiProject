@@ -1,11 +1,29 @@
 {
-  "detail": "Project RBAC permissions settings",
+  "detail": "Project RBAC API endpoints permission settings",
   "rbac_roles": [
     "admin",
     "manager",
     "employee"
   ],
-  "com01": "Employees ACL -----------------------------------------------------------------------------------------",
+  "com01": "User ACL ----------------------------------------------------------------------------------------------",
+  "POST_user": [
+    "admin"
+  ],
+  "GET_user": [
+    "admin",
+    "manager"
+  ],
+  "GET_user_user_id": [
+    "admin",
+    "manager"
+  ],
+  "PUT_user_user_id": [
+    "admin"
+  ],
+  "DELETE_user_user_id": [
+    "admin"
+  ],
+  "com02": "Employee ACL -----------------------------------------------------------------------------------------",
   "POST_employee": [
     "admin",
     "manager"
@@ -28,7 +46,8 @@
     "admin",
     "manager"
   ],
-  "POST_ticket": [
+  "com03": "Ticket ACL -------------------------------------------------------------------------------------------",
+    "POST_ticket": [
     "admin",
     "manager",
     "employee"
@@ -37,23 +56,5 @@
     "admin",
     "manager",
     "employee"
-  ],
-  "com02": "Users ACL ----------------------------------------------------------------------------------------------",
-  "POST_user": [
-    "admin"
-  ],
-  "GET_user": [
-    "admin",
-    "manager"
-  ],
-  "GET_user_user_id": [
-    "admin",
-    "manager"
-  ],
-  "PUT_user_user_id": [
-    "admin"
-  ],
-  "DELETE_user_user_id": [
-    "admin"
   ]
 }
