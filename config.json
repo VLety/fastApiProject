@@ -17,6 +17,12 @@
       "scopes": {
         "status": "Read information about My authorization status."
       }
+    },
+    "username": {
+      "min": 5,
+      "max": 16,
+      "pattern": "^[A-Za-z0-9]$",
+      "examples": ["Admin"]
     }
   },
   "cors": {

@@ -13,7 +13,8 @@ transfer data between different layers of an app).
 """
 from datetime import date
 from pydantic import BaseModel, Field
-
+import util
+APP_CONFIG = util.get_config()
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
 class AuthUser(BaseModel):
@@ -42,7 +43,8 @@ class AuthTokenData(BaseModel):
 """ Users ---------------------------------------------------------------------------------------------------------- """
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
-    username: str = Field(pattern=r"^[0-9A-Za-z]$", min_length=5, max_length=16)
+    username: str = Field(examples=APP_CONFIG["auth"]["username"]["examples"],
+                          pattern=r"^[A-Za-z0-9]$", min_length=5, max_length=16)
     first_name: str
     last_name: str
     phone: str
