@@ -44,7 +44,9 @@ class AuthTokenData(BaseModel):
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
     username: str = Field(examples=APP_CONFIG["auth"]["username"]["examples"],
-                          pattern=r"^[A-Za-z0-9]$", min_length=5, max_length=16)
+                          pattern=rf'{APP_CONFIG["auth"]["username"]["pattern"]}',
+                          min_length=APP_CONFIG["auth"]["username"]["min_length"],
+                          max_length=APP_CONFIG["auth"]["username"]["max_length"])
     first_name: str
     last_name: str
     phone: str

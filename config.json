@@ -19,8 +19,8 @@
       }
     },
     "username": {
-      "min": 5,
-      "max": 16,
+      "min_length": 5,
+      "max_length": 16,
       "pattern": "^[A-Za-z0-9]$",
       "examples": ["Admin"]
     }
