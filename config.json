@@ -23,6 +23,12 @@
       "max_length": 16,
       "pattern": "^[A-Za-z0-9]$",
       "examples": ["Admin"]
+    },
+    "password": {
+      "min_length": 10,
+      "max_length": 16,
+      "pattern": "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]).)",
+      "examples": ["passWord@1"]
     }
   },
   "cors": {

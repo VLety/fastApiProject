@@ -12,7 +12,9 @@ a dict), you can declare the specific data you want to return, and it will be ab
 transfer data between different layers of an app).
 """
 from datetime import date
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, ValidationInfo, model_validator
+from typing_extensions import Self
+import re
 import util
 APP_CONFIG = util.get_config()
 
@@ -55,10 +57,20 @@ class UserBase(BaseModel):
     disabled: bool = Field(default=False)
     login_denied: bool = Field(default=False)
 
+
 class UserCreate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
-    password: str = Field(min_length=8, max_length=16)
+    password: str = Field(examples=APP_CONFIG["auth"]["password"]["examples"],
+                          min_length=APP_CONFIG["auth"]["password"]["min_length"],
+                          max_length=APP_CONFIG["auth"]["password"]["max_length"])
+
+    @model_validator(mode='after')
+    def check_passwords(self) -> Self:
+
+        if re.search('[0-9]',self.password) is None:
+            raise ValueError('The password must contain at least one number')
+        return self
 
 
 class UserUpdate(BaseModel):
