@@ -28,7 +28,7 @@ def get_user_by_phone(db: Session, phone: str):
 
 def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
 
-    if user.role:
+    if hasattr(user, 'role'):
         # Remove role list duplication like ["admin", "admin"] and sorting list
         user.role = list(set(user.role))
         user.role.sort(reverse=False)
