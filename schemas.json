@@ -1,0 +1,37 @@
+{
+  "User": {
+    "username": {
+      "min_length": 5,
+      "max_length": 16,
+      "examples": [
+        "Admin"
+      ],
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "password": {
+      "min_length": 8,
+      "max_length": 16,
+      "examples": [
+        "passWord@8"
+      ],
+      "pattern": [
+        {
+          "regex": "[A-Z]",
+          "error": "The password must contain at least one uppercase letter"
+        },
+        {
+          "regex": "[a-z]",
+          "error": "The password must contain at least one lowercase letter"
+        },
+        {
+          "regex": "[0-9]",
+          "error": "The password must contain at least one number"
+        },
+        {
+          "regex": "[!@#$%^&*]",
+          "error": "The password must contain at least one special character"
+        }
+      ]
+    }
+  }
+}

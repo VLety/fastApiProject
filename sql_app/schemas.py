@@ -17,10 +17,10 @@ from typing_extensions import Self
 import re
 import util
 
-APP_CONFIG = util.get_config()
+APP_SCHEMAS = util.get_schemas()
+
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
-
 
 class AuthUser(BaseModel):
     id: int
@@ -50,14 +50,13 @@ class AuthTokenData(BaseModel):
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
-
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
     username: str = Field(
-        min_length=APP_CONFIG["validation"]["username"]["min_length"],
-        max_length=APP_CONFIG["validation"]["username"]["max_length"],
-        examples=APP_CONFIG["validation"]["username"]["examples"],
-        pattern=APP_CONFIG["validation"]["username"]["pattern"],
+        min_length=APP_SCHEMAS["User"]["username"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["username"]["max_length"],
+        examples=APP_SCHEMAS["User"]["username"]["examples"],
+        pattern=APP_SCHEMAS["User"]["username"]["pattern"],
     )
     first_name: str
     last_name: str
@@ -71,16 +70,16 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
-    password: str = Field(min_length=APP_CONFIG["validation"]["password"]["min_length"],
-                          max_length=APP_CONFIG["validation"]["password"]["max_length"],
-                          examples=APP_CONFIG["validation"]["password"]["examples"],
+    password: str = Field(min_length=APP_SCHEMAS["User"]["password"]["min_length"],
+                          max_length=APP_SCHEMAS["User"]["password"]["max_length"],
+                          examples=APP_SCHEMAS["User"]["password"]["examples"],
                           )
     # Model validators: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
     @model_validator(mode='after')
     def check_passwords(self) -> Self:
-        for check in APP_CONFIG["validation"]["password"]["pattern"]:
-            if re.search(check["regex"], self.password) is None:
-                raise ValueError(check["error"])
+        for pattern in APP_SCHEMAS["User"]["password"]["pattern"]:
+            if re.search(pattern["regex"], self.password) is None:
+                raise ValueError(pattern["error"] + ": " + pattern["regex"])
         return self
 
 
@@ -107,7 +106,6 @@ class UserResponse(UserBase):
 
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
-
 
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class

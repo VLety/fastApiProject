@@ -40,6 +40,14 @@ def get_config():
     return config_json
 
 
+def get_schemas():
+    """ GET project schemas from schemas.json file"""
+    file_path_config = f"{get_project_root()}/schemas.json"
+    permissions_json = get_json_file_content(file_path_config)
+
+    return permissions_json
+
+
 def get_permissions():
     """ GET project permissions from permissions.json file"""
     file_path_config = f"{get_project_root()}/permissions.json"
@@ -135,7 +143,6 @@ def sort_list_of_dict_by_key(dict_to_sort: list, sort_key: str, sort_type: str =
 
 
 def mark_sub_string(string: str, sub_string: str, mark_start: str, mark_end: str, case: bool = False) -> str:
-
     def find_index():
         if case:  # Case-sensitive search
             return string.find(sub_string)
