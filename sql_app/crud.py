@@ -27,13 +27,15 @@ def get_user_by_phone(db: Session, phone: str):
 
 
 def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
-    # Remove role list duplication like ["admin", "admin"] and sorting list
-    user.role = list(set(user.role))
-    user.role.sort(reverse=False)
 
-    for role in user.role:  # Check if User's role is allowed
-        if role not in PERMISSIONS["rbac_roles"]:
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
+    if user.role:
+        # Remove role list duplication like ["admin", "admin"] and sorting list
+        user.role = list(set(user.role))
+        user.role.sort(reverse=False)
+        # Check if User's role is allowed
+        for role in user.role:
+            if role not in PERMISSIONS["rbac_roles"]:
+                raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
 
     if db_user is None:  # For NEW User: check if unique User's identification attributes already exists
         db_user = get_user_by_username(db, username=user.username)

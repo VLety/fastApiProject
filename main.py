@@ -136,6 +136,13 @@ async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Sessi
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
+# Update element (PATCH)
+@app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_disabled(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
 # Delete (DELETE) FIRST
 @app.delete("/user/{user_id}", tags=["User"])
 async def delete_user(user_id: int, db: Session = Depends(get_db),
