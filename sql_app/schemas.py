@@ -19,8 +19,8 @@ import util
 
 APP_SCHEMAS = util.get_schemas()
 
-
 """ Authorization -------------------------------------------------------------------------------------------------- """
+
 
 class AuthUser(BaseModel):
     id: int
@@ -50,6 +50,7 @@ class AuthTokenData(BaseModel):
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
+
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
     username: str = Field(
@@ -74,6 +75,7 @@ class UserCreate(UserBase):
                           max_length=APP_SCHEMAS["User"]["password"]["max_length"],
                           examples=APP_SCHEMAS["User"]["password"]["examples"],
                           )
+
     # Model validators: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
     @model_validator(mode='after')
     def check_passwords(self) -> Self:
@@ -123,6 +125,7 @@ class UserResponse(UserBase):
 
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
+
 
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
