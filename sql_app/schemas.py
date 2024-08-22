@@ -16,9 +16,12 @@ from pydantic import BaseModel, Field, ValidationError, ValidationInfo, model_va
 from typing_extensions import Self
 import re
 import util
+
 APP_CONFIG = util.get_config()
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
+
+
 class AuthUser(BaseModel):
     id: int
     username: str
@@ -30,12 +33,15 @@ class AuthUser(BaseModel):
     disabled: bool | None = None
     login_denied: bool | None = None
 
+
 class AuthUserInDB(AuthUser):
     hashed_password: str
+
 
 class AuthToken(BaseModel):
     access_token: str
     token_type: str
+
 
 class AuthTokenData(BaseModel):
     username: str | None = None
@@ -43,12 +49,16 @@ class AuthTokenData(BaseModel):
 
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
+
+
 class UserBase(BaseModel):
     # Make Input json based on current (main) class
-    username: str = Field(examples=APP_CONFIG["auth"]["username"]["examples"],
-                          pattern=rf'{APP_CONFIG["auth"]["username"]["pattern"]}',
-                          min_length=APP_CONFIG["auth"]["username"]["min_length"],
-                          max_length=APP_CONFIG["auth"]["username"]["max_length"])
+    username: str = Field(
+        min_length=APP_CONFIG["validation"]["username"]["min_length"],
+        max_length=APP_CONFIG["validation"]["username"]["max_length"],
+        examples=APP_CONFIG["validation"]["username"]["examples"],
+        pattern=APP_CONFIG["validation"]["username"]["pattern"],
+    )
     first_name: str
     last_name: str
     phone: str
@@ -61,15 +71,16 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     # Make Input json based on main UserBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
-    password: str = Field(examples=APP_CONFIG["auth"]["password"]["examples"],
-                          min_length=APP_CONFIG["auth"]["password"]["min_length"],
-                          max_length=APP_CONFIG["auth"]["password"]["max_length"])
-
+    password: str = Field(min_length=APP_CONFIG["validation"]["password"]["min_length"],
+                          max_length=APP_CONFIG["validation"]["password"]["max_length"],
+                          examples=APP_CONFIG["validation"]["password"]["examples"],
+                          )
+    # Model validators: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
     @model_validator(mode='after')
     def check_passwords(self) -> Self:
-
-        if re.search('[0-9]',self.password) is None:
-            raise ValueError('The password must contain at least one number')
+        for check in APP_CONFIG["validation"]["password"]["pattern"]:
+            if re.search(check["regex"], self.password) is None:
+                raise ValueError(check["error"])
         return self
 
 
@@ -96,6 +107,8 @@ class UserResponse(UserBase):
 
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
+
+
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
     first_name: str
@@ -108,10 +121,12 @@ class EmployeeBase(BaseModel):
     city: str
     address: str
 
+
 class EmployeeCreate(EmployeeBase):
     # Make Input json based on main EmployeeBase(BaseModel) class + current class
     # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
+
 
 class EmployeeUpdate(BaseModel):
     # Make Input json based on main EmployeeBase(BaseModel) class + current class
@@ -126,13 +141,16 @@ class EmployeeUpdate(BaseModel):
     city: str | None = None
     address: str | None = None
 
+
 class TicketBase(BaseModel):
     title: str
     description: str | None = None
     status: str
 
+
 class TicketCreate(TicketBase):
     pass
+
 
 class Ticket(TicketBase):
     id: int
@@ -141,6 +159,7 @@ class Ticket(TicketBase):
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
+
 
 class EmployeeResponse(EmployeeBase):
     # Output response json based on main EmployeeBase(BaseModel) class + current class
@@ -152,5 +171,3 @@ class EmployeeResponse(EmployeeBase):
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
-
-
