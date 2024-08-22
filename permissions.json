@@ -20,13 +20,19 @@
   "PUT_user_user_id": [
     "admin"
   ],
+  "DELETE_user_user_id": [
+    "admin"
+  ],
+  "PATCH_user_user_id_username": [
+    "admin"
+  ],
   "PATCH_user_user_id_role": [
     "admin"
   ],
   "PATCH_user_user_id_disabled": [
     "admin"
   ],
-  "DELETE_user_user_id": [
+  "PATCH_user_user_id_login_denied": [
     "admin"
   ],
   "com02": "Employee ACL -----------------------------------------------------------------------------------------",
@@ -53,7 +59,7 @@
     "manager"
   ],
   "com03": "Ticket ACL -------------------------------------------------------------------------------------------",
-    "POST_ticket": [
+  "POST_ticket": [
     "admin",
     "manager",
     "employee"

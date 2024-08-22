@@ -43,11 +43,11 @@ def authenticate_user(db_user, password: str):
     if not db_user:  # Check if User exist
         return False
 
-    if db_user.login_denied:  # Check if User login allowed
-        return False
-
     if not verify_password(password, db_user.hashed_password):  # heck if User password is valid
         return False
+
+    if db_user.login_denied:  # Check if User login allowed
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["user_login_denied"])
 
     return db_user
 

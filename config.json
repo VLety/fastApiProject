@@ -38,6 +38,7 @@
     "token_has_expired": "Token has expired",
     "not_enough_permissions": "Not enough permissions",
     "user_disabled": "User disabled",
+    "user_login_denied": "User login denied",
     "username_already_registered": "Username already registered",
     "email_already_registered": "Email already registered",
     "phone_already_registered": "Phone already registered",

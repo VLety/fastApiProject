@@ -90,12 +90,25 @@ class UserUpdate(BaseModel):
     email: str
 
 
+class UserUsernameUpdate(BaseModel):
+    username: str = Field(
+        min_length=APP_SCHEMAS["User"]["username"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["username"]["max_length"],
+        examples=APP_SCHEMAS["User"]["username"]["examples"],
+        pattern=APP_SCHEMAS["User"]["username"]["pattern"],
+    )
+
+
 class UserRoleUpdate(BaseModel):
     role: list[str]
 
 
 class UserDisabledUpdate(BaseModel):
     disabled: bool
+
+
+class UserLoginDeniedUpdate(BaseModel):
+    login_denied: bool
 
 
 class UserResponse(UserBase):

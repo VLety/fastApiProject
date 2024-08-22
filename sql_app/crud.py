@@ -10,6 +10,7 @@ PERMISSIONS = util.get_permissions()  # Project access permission data
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
+
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
 
@@ -27,7 +28,6 @@ def get_user_by_phone(db: Session, phone: str):
 
 
 def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
-
     if hasattr(user, 'role'):  # Check role is existed
         # Remove role list duplication like ["admin", "admin"] and sorting list
         user.role = list(set(user.role))
@@ -37,14 +37,15 @@ def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User
             if role not in PERMISSIONS["rbac_roles"]:
                 raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
 
-    if db_user is None:  # For NEW User: check if unique User's identification attributes already exists
-        db_user = get_user_by_username(db, username=user.username)
+    # For NEW User: check if unique User's identification attributes already exists
+    if db_user is None:
+        db_user = get_user_by_username(db=db, username=user.username)
         if db_user:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        db_user = get_user_by_email(db, email=user.email)
+        db_user = get_user_by_email(db=db, email=user.email)
         if db_user:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
-        db_user = get_user_by_phone(db, phone=user.phone)
+        db_user = get_user_by_phone(db=db, phone=user.phone)
         if db_user:
             raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
@@ -77,6 +78,13 @@ def update_user(db: Session, user_id, user):
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
 
+    # Check if username already exist for other users
+    if hasattr(user, 'username'):
+        db_user_by_username = get_user_by_username(db=db, username=user.username)
+        if db_user_by_username:
+            if db_user_by_username.id != user_id:
+                raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+
     # Validate User's attributes
     user = validate_user_attr(db=db, user=user, db_user=db_user)
 
@@ -102,6 +110,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
+
 
 def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()  # type: ignore[call-arg]
@@ -148,7 +157,6 @@ def update_employee(db: Session, employee_id, employee):
 
 
 def delete_employee(db: Session, employee_id):
-
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
@@ -176,8 +184,8 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int):
 
 """ Support functions -------------------------------------------------------------------------------------------- """
 
-def update_db_record_by_id(db, db_record, payload):
 
+def update_db_record_by_id(db, db_record, payload):
     # Set new fild(s) value(s) and not override existence DB field(s)
     for field_name in payload.model_fields_set:
         setattr(db_record, field_name, getattr(payload, field_name))
@@ -189,4 +197,3 @@ def update_db_record_by_id(db, db_record, payload):
     db.commit()
     db.refresh(db_record)
     return db_record
-

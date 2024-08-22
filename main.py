@@ -46,8 +46,113 @@ async def favicon():
     # https://fastapi.tiangolo.com/advanced/custom-response/#fileresponse
     return FileResponse("./static/favicon.ico")
 
+""" Authentication ------------------------------------------------------------------------------------------- """
 
-""" EMPLOYEE CRUD requests --------------------------------------------------------------------------------------- """
+# OAuth2PasswordRequestForm:
+# This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
+# The OAuth2 specification dictates that for a password flow the data should be collected using form data
+# (instead of JSON) and that it should have the specific fields `username` and `password`.
+@app.post("/token", tags=["Authentication"])
+async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
+                                 db: Session = Depends(get_db)
+                                 ) -> schemas.AuthToken:
+    db_user = crud.get_user_by_username(db, username=form_data.username)
+    user = auth.authenticate_user(db_user, form_data.password)
+
+    if not user:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"])
+
+    access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.username, "scopes": form_data.scopes},
+        expires_delta=access_token_expires,
+    )
+    return schemas.AuthToken(access_token=access_token, token_type="bearer")
+
+
+@app.get("/user/me/", response_model=auth.AuthUser, tags=["Authentication"])
+async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+    return current_user
+
+
+# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
+# Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
+# It is just example - in fact we don't need use scope Security for this endpoint...
+@app.get("/user/status/", tags=["Authentication"])
+async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
+                                                                                       scopes=["status"])]):
+    return {"status": "ok"}
+
+
+""" USER ------------------------------------------------------------------------------------------------------- """
+
+# Create (POST)
+@app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_user"]))):
+    return crud.create_user(db=db, user=user)
+
+
+# Read (GET) ALL
+@app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
+async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
+    return crud.get_users(db, skip=skip, limit=limit)
+
+
+# Read (GET) FIRST
+@app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
+async def read_user(user_id: int, db: Session = Depends(get_db),
+                    permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
+    db_user = crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+    return db_user
+
+
+# Update (PUT) FIRST
+@app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
+async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
+# Delete (DELETE) FIRST
+@app.delete("/user/{user_id}", tags=["User"])
+async def delete_user(user_id: int, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
+    return crud.delete_user(db=db, user_id=user_id)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/username", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_username(user_id: int, user: schemas.UserUsernameUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_disabled(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/login_denied", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_login_denied(user_id: int, user: schemas.UserLoginDeniedUpdate, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
+
+""" EMPLOYEE ---------------------------------------------------------------------------------------------------- """
 
 # Create (POST)
 @app.post("/employee/", response_model=schemas.EmployeeResponse, tags=["Employee"])
@@ -94,98 +199,6 @@ async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db
 async def delete_employee(employee_id: int, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_employee_employee_id"]))):
     return crud.delete_employee(db=db, employee_id=employee_id)
-
-
-""" USER CRUD requests --------------------------------------------------------------------------------------- """
-
-# Create (POST)
-@app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
-async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_user"]))):
-    return crud.create_user(db=db, user=user)
-
-
-# Read (GET) ALL
-@app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
-async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
-    return crud.get_users(db, skip=skip, limit=limit)
-
-
-# Read (GET) FIRST
-@app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def read_user(user_id: int, db: Session = Depends(get_db),
-                    permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
-    db_user = crud.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
-    return db_user
-
-
-# Update (PUT) FIRST
-@app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
-    return crud.update_user(db=db, user_id=user_id, user=user)
-
-
-# Update element (PATCH)
-@app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
-    return crud.update_user(db=db, user_id=user_id, user=user)
-
-
-# Update element (PATCH)
-@app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_disabled(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
-    return crud.update_user(db=db, user_id=user_id, user=user)
-
-
-# Delete (DELETE) FIRST
-@app.delete("/user/{user_id}", tags=["User"])
-async def delete_user(user_id: int, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
-    return crud.delete_user(db=db, user_id=user_id)
-
-
-""" Authentication ------------------------------------------------------------------------------------------- """
-
-# OAuth2PasswordRequestForm:
-# This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
-# The OAuth2 specification dictates that for a password flow the data should be collected using form data
-# (instead of JSON) and that it should have the specific fields `username` and `password`.
-@app.post("/token", tags=["Authentication"])
-async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
-                                 db: Session = Depends(get_db)
-                                 ) -> schemas.AuthToken:
-    db_user = crud.get_user_by_username(db, username=form_data.username)
-    user = auth.authenticate_user(db_user, form_data.password)
-
-    if not user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"])
-
-    access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = auth.create_access_token(
-        data={"sub": user.username, "scopes": form_data.scopes},
-        expires_delta=access_token_expires,
-    )
-    return schemas.AuthToken(access_token=access_token, token_type="bearer")
-
-
-@app.get("/user/me/", response_model=auth.AuthUser, tags=["Authentication"])
-async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
-    return current_user
-
-
-# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
-# Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
-# It is just example - in fact we don't need use scope Security for this endpoint...
-@app.get("/user/status/", tags=["Authentication"])
-async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
-                                                                                       scopes=["status"])]):
-    return {"status": "ok"}
 
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
