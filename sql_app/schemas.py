@@ -92,6 +92,21 @@ class UserUpdate(BaseModel):
     email: str
 
 
+class UserPasswordUpdate(BaseModel):
+    password: str = Field(min_length=APP_SCHEMAS["User"]["password"]["min_length"],
+                          max_length=APP_SCHEMAS["User"]["password"]["max_length"],
+                          examples=APP_SCHEMAS["User"]["password"]["examples"],
+                          )
+
+    # Model validators: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
+    @model_validator(mode='after')
+    def check_passwords(self) -> Self:
+        for pattern in APP_SCHEMAS["User"]["password"]["pattern"]:
+            if re.search(pattern["regex"], self.password) is None:
+                raise ValueError(pattern["error"] + ": " + pattern["regex"])
+        return self
+
+
 class UserUsernameUpdate(BaseModel):
     username: str = Field(
         min_length=APP_SCHEMAS["User"]["username"]["min_length"],

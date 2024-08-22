@@ -93,6 +93,26 @@ def update_user(db: Session, user_id, user):
     return db_employee
 
 
+def update_user_password(db: Session, user_id, user):
+
+    # Check if User exists
+    db_user = get_user(db=db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+
+    # Set new password
+    db_user.hashed_password = get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
+
+    # Set update time-date
+    db_user.updated = util.get_current_time_utc("TIME")
+
+    # Update database
+    db.commit()
+    db.refresh(db_user)
+
+    return JSONResponse(content={"message": APP_CONFIG["message"]["password_changed_successfully"]})
+
+
 def delete_user(db: Session, user_id):
     # Check if User exists
     db_user = get_user(db, user_id=user_id)

@@ -48,7 +48,8 @@
   },
   "message": {
     "employee_deleted_successfully": "Employee deleted successfully",
-    "user_deleted_successfully": "User deleted successfully"
+    "user_deleted_successfully": "User deleted successfully",
+    "password_changed_successfully": "Password changed successfully"
   },
   "api_docs": {
     "title": "REST API promotional & education project based on FastAPI framework",
