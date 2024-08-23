@@ -1,18 +1,28 @@
 # Project installation steps for "clear" Ubuntu 24.04 LTS server:
 sudo apt update
 sudo apt -y upgrade
+sudo apt -y git
+sudo apt -y install nginx
 
 #### Python 3.12.3
 python3 -V
+sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 sudo apt -y install python3-pip
 sudo apt -y install python3-venv
 
-#### Install additional Phyton3 libraries (if not exists)
-sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+#### NGINX
+sudo apt -y install nginx
 
 #### Clone project from GitHub repository
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 cd fastApiProject
+python3 -m venv venv
+source venv/bin/activate
+pip3 install "fastapi[standard]"
+pip3 install SQLAlchemy
+pip3 install pyjwt
+pip3 install "passlib[bcrypt]"
+pip3 install "fastapi[standard]"
 
 
 #### Start project
