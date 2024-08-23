@@ -1,8 +1,7 @@
 ## Project setup steps for a basic AWS Ubuntu 24.04 LTS server:
 ### Update system
 ```
-sudo apt update
-sudo apt -y upgrade
+sudo apt update && sudo apt upgrade -y
 ```
 ### Install NGINX
 ```
