@@ -80,7 +80,7 @@ sudo systemctl restart nginx
 ### Setup Systemd
 A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 ```
-sudo systemctl status fastApiProject.service
+sudo nano /etc/systemd/system/fastApiProject.service
 ```
 Type:
 ```
