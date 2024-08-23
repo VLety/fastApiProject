@@ -36,7 +36,7 @@ Copy new SECRET_KEY to the project config.json file:
 "auth": {
     "SECRET_KEY": "7a52be7b1a5f12d3372317d537077514ad26727271f93bd50cb643baa57af6e4",
 ```
-> [!IMPORTANT]
+> [!CAUTION]
 > SECRET_KEY is very important data from security point of view and we must keep it safe.
 
 ### Creating lightweight Python “virtual environments” - VENV:
