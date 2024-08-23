@@ -27,15 +27,17 @@ git clone https://VLety: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@github.com/VLet
 ```
 cd fastApiProject
 ```
-### Create new PRODUCTION SECRET_KEY
+### Create a random secret key that will be used to sign the JWT tokens
 ```
 openssl rand -hex 32
 ```
-Copy new SECRET_KEY to config.json file
+Copy new SECRET_KEY to the project config.json file:
 ```
 "auth": {
-    "SECRET_KEY": "a25558caa5fcb16caa53861021e480c1d1977a98a77b63c2513dccf2b00b9c04",
+    "SECRET_KEY": "7a52be7b1a5f12d3372317d537077514ad26727271f93bd50cb643baa57af6e4",
 ```
+> [!IMPORTANT]
+> SECRET_KEY is very important data from security point of view and we must keep it safe.
 
 ### Creating lightweight Python “virtual environments” - VENV:
 https://docs.python.org/3/library/venv.html
