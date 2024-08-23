@@ -23,11 +23,23 @@ https://stackoverflow.com/questions/2505096/clone-a-private-repository-github
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
+### Move to the project folder
+```
+cd fastApiProject
+```
+### Create new PRODUCTION SECRET_KEY
+```
+openssl rand -hex 32
+```
+Copy new SECRET_KEY to config.json file
+```
+"auth": {
+    "SECRET_KEY": "a25558caa5fcb16caa53861021e480c1d1977a98a77b63c2513dccf2b00b9c04",
+```
 
 ### Creating lightweight Python “virtual environments” - VENV:
 https://docs.python.org/3/library/venv.html
 ```
-cd fastApiProject
 python3 -m venv venv
 source venv/bin/activate
 ```
