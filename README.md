@@ -126,6 +126,14 @@ Set service to autoload when server starts
 ```
 sudo systemctl enable fastApiProject.service
 ```
+Start service
+```
+sudo systemctl start fastApiProject.service
+```
+Check service status
+```
+sudo systemctl status fastApiProject.service
+```
 ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
 
 ## Useful commands:
