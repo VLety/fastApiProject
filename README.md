@@ -89,10 +89,6 @@ Description=Gunicorn instance to serve fastApiProject
 After=network.target
 
 [Service]
-# gunicorn can let systemd know when it is ready
-Type=notify
-NotifyAccess=main
-
 # the specific user that our service will run as
 User=ubuntu
 Group=ubuntu
