@@ -38,6 +38,7 @@ Copy new SECRET_KEY to the project config.json file:
 ```
 > [!WARNING]
 > Do not use the default SECRET_KEY for production environments!
+
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view and we must keep it safe.
 
