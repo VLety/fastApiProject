@@ -1,6 +1,7 @@
 ## Project setup steps for a basic AWS Ubuntu 24.04 LTS server:
 
 For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
+https://docs.gunicorn.org/en/latest/deploy.html#systemd
 
 ### Update system
 ```
