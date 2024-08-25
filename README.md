@@ -1,4 +1,5 @@
-# PoC-Prototype API server solution, based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
+# PoC-Prototype API server solution based on FastAPI framework.
+## Extended description: Applied solutions for API server based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 #### Purpose: Intended for educational and promotional purposes
 #### Audience: Junior-Middle level
 ## Project Tech stacks:
