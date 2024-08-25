@@ -1,3 +1,4 @@
+# Prototype API server solution, based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 ## Project setup steps for a basic AWS Ubuntu 24.04 LTS server:
 
 For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
