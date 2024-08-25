@@ -1,4 +1,9 @@
-# Prototype API server solution, based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
+# PoC-Prototype API server solution, based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
+## Project Tech stacks:
+## FastAPI framework 
+### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
+## Project features:
+### Blabla
 ## Project setup steps for a basic AWS Ubuntu 24.04 LTS server:
 
 For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
