@@ -1,9 +1,9 @@
-# PoC API server solution based on FastAPI framework with AWS setup
+# PoC API server solution based on FastAPI framework with AWS EC2 setup
 > [!NOTE]
 > FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints [more details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
-> Description: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
-> Purpose: Intended for educational and promotional purposes
-> Audience: Junior-Middle level with linux DevOps skills
+* Description: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
+* Purpose: Intended for educational and promotional purposes
+* Audience: Junior-Middle level with linux DevOps skills
 ## Project Tech stacks:
 * FastAPI as a base framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
@@ -12,6 +12,7 @@
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
 ## Project standarts:
 * OpenAPI Specification v3 [read more](https://spec.openapis.org/oas/latest.html)
+* OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
 ### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
 ## Project features:
