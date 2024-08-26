@@ -1,4 +1,4 @@
-# PoC-Prototype API server solution based on FastAPI framework.
+# PoC API server solution based on FastAPI framework.
 ## Extended description: Applied solutions for API server based on: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 #### Purpose: Intended for educational and promotional purposes
 #### Audience: Junior-Middle level
@@ -10,6 +10,7 @@
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
 ## Project standarts:
 * OpenAPI Specification v3 [read more](https://spec.openapis.org/oas/latest.html)
+* Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
 ### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
 ## Project features:
 ### Blabla
