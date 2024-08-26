@@ -4,7 +4,7 @@
 #### Audience: Junior-Middle level
 ## Project Tech stacks:
 * FastAPI as a base framework https://fastapi.tiangolo.com/
-* [SQLAlchemy V2](https://www.sqlalchemy.org)
+* SQLAlchemy V2 [read more](https://www.sqlalchemy.org)
 * Pydantic V2 https://docs.pydantic.dev/latest/#pydantic
 * Annotated(typing) https://docs.python.org/3/library/typing.html#typing.Annotated
 ### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
