@@ -3,10 +3,13 @@
 #### Purpose: Intended for educational and promotional purposes
 #### Audience: Junior-Middle level
 ## Project Tech stacks:
-* FastAPI as a base framework https://fastapi.tiangolo.com/
-* SQLAlchemy V2 [read more](https://www.sqlalchemy.org)
-* Pydantic V2 https://docs.pydantic.dev/latest/#pydantic
-* Annotated(typing) https://docs.python.org/3/library/typing.html#typing.Annotated
+* FastAPI as a base framework [read more](https://fastapi.tiangolo.com)
+* SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
+* Pydantic V2 [read more](https://docs.pydantic.dev/latest/#pydantic)
+* Annotated(typing) [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
+* PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
+## Project standarts:
+* OpenAPI Specification v3 [read more](https://spec.openapis.org/oas/latest.html)
 ### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
 ## Project features:
 ### Blabla
