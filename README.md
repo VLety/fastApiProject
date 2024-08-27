@@ -1,5 +1,5 @@
 # REST API server solution based on FastAPI framework with clean AWS EC2 Ubuntu server setup.
-> Prototype approach.
+Recommended for PoC or Prototype approach.
 
 > [!NOTE]
 > * Purpose: Intended for educational and promotional needs.
