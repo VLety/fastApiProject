@@ -11,7 +11,7 @@
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
 * Gunicorn WSGI HTTP Server [read more](https://docs.gunicorn.org/en/stable/#features)
 * NGINX in Reverse Proxy mode [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
-## Project standarts:
+## Project specification and standarts:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
