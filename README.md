@@ -1,9 +1,9 @@
 # PoC API server solution based on FastAPI framework with AWS EC2 setup
 > [!NOTE]
 > Promotion and educational project REST API server based on the FastAPI framework
-* Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
-* Purpose: Intended for educational and promotional purposes
-* Audience: Junior-Middle level with linux DevOps skills
+> * Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
+> * Purpose: Intended for educational and promotional purposes
+> * Audience: Junior-Middle level with linux DevOps skills
 ## Project Tech stacks:
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
