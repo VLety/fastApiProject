@@ -5,11 +5,13 @@
 * Purpose: Intended for educational and promotional purposes
 * Audience: Junior-Middle level with linux DevOps skills
 ## Project Tech stacks:
-* FastAPI as a base framework [read more](https://fastapi.tiangolo.com)
+* FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
 * Pydantic V2 [read more](https://docs.pydantic.dev/latest/#pydantic)
 * Annotated(typing) [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
+* Gunicorn WSGI HTTP Server
+* NGINX in Reverse Proxy mode
 ## Project standarts:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
