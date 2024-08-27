@@ -1,6 +1,6 @@
 # PoC API server solution based on FastAPI framework with AWS EC2 setup
 > [!NOTE]
-> FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints [more details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
+> Promotion and educational project REST API server based on the FastAPI framework
 * Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
 * Purpose: Intended for educational and promotional purposes
 * Audience: Junior-Middle level with linux DevOps skills
