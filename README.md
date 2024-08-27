@@ -22,6 +22,7 @@ Recommended for PoC or Prototype approach.
 * Pydantic V2 as schemas builder [read more](https://docs.pydantic.dev/latest/#pydantic)
 * Annotated(typing) as metadata management [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT for encode and decode JSON Web Tokens (JWT) [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt)
+* bcrypt blabla.....
 * Uvicorn is an ASGI web server implementation for Python [read more](https://www.uvicorn.org/)
 * NGINX in Reverse Proxy mode [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 ## Project specification and standarts:
