@@ -4,6 +4,7 @@
 > * Audience: Junior-Middle level with linux DevOps skills
 > * Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
 ## Project Tech stacks:
+* Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
 * Pydantic V2 [read more](https://docs.pydantic.dev/latest/#pydantic)
@@ -19,7 +20,7 @@
 * RESTful API server
 * JWT token authentication with expiration period and authorization scopes
 * Flexible project configuration via config files
-* CRUD operations for 3 table: Users and Employees with relational link to Tickets
+* CRUD operations for 3 tables: Users and Employees with relational link to Tickets
 * PATCH (partially update a resource request) for User's name & password changing
 * RBAC permissions model for each API endpoint
 ## Project setup steps for a clear AWS Ubuntu 24.04 LTS EC2 server:
@@ -36,9 +37,9 @@ sudo apt -y install nginx
 ```
 ### Install GIT
 ```
-sudo apt install git
+sudo apt -y install git
 ```
-### Check Python version (3.12.3) and install Pip3 & Venv
+### Check Python version (3.12.3) and install general dependencies, Pip3 and Venv
 ```
 python3 -V
 sudo apt -y install build-essential libssl-dev libffi-dev python3-dev
@@ -69,14 +70,15 @@ Copy new SECRET_KEY to the project config.json file:
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view and we must keep it safe.
 
-### Creating lightweight Python “virtual environments” - VENV:
-https://docs.python.org/3/library/venv.html
+### Create and activate project VENV (lightweight Python “virtual environments”) [read more](https://docs.python.org/3/library/venv.html):
 ```
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Install dependencies for active VENV:
+### Install dependencies for a new active VENV:
+> [!TIP]
+> We will not install Gunicorn separately, since its built-in presence in the FastAPI framework is sufficient for our needs.
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
@@ -85,11 +87,13 @@ pip3 install "passlib[bcrypt]"
 pip3 install "fastapi[standard]"
 ```
 
-### Start project for active VENV
+### Run project in active VENV for testing purpose
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
-
+We should see something like this:
+![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
+Press Ctrl+C to terminal return
 ### Install CertBOT
 ```
 sudo apt install snapd
