@@ -53,8 +53,8 @@
   },
   "api_docs": {
     "title": "PoC API server solution based on FastAPI framework",
-    "version": "0.0.3",
-    "summary": "OAuth2 authentication with basic CRUD operation for users & employees",
+    "version": "0.0.1",
+    "summary": "Promotion and educational project REST API server based on the FastAPI framework",
     "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control authorization model",
     "terms_of_service": "https://spec.openapis.org/oas/latest.html",
     "contact": {
