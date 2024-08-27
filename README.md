@@ -10,8 +10,8 @@
 * Pydantic V2 [read more](https://docs.pydantic.dev/latest/#pydantic)
 * Annotated(typing) [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
-* Gunicorn WSGI HTTP Server
-* NGINX in Reverse Proxy mode
+* Gunicorn WSGI HTTP Server [read more](https://docs.gunicorn.org/en/stable/#features)
+* NGINX in Reverse Proxy mode [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 ## Project standarts:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
@@ -20,9 +20,9 @@
 * RESTful API server
 * JWT token authentication with expiration period and authorization scopes
 * Flexible project configuration via config files
-* CRUD operations for 3 table: Users, Employees with relational link to Tickets
-* PATCH (partially update a resource) request for User's name & password changing
-* RBAC perditions model for each endpoint
+* CRUD operations for 3 table: Users and Employees with relational link to Tickets
+* PATCH (partially update a resource request) for User's name & password changing
+* RBAC permissions model for each API endpoint
 ## Project setup steps for a clear AWS Ubuntu 24.04 LTS EC2 server:
 For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
 https://docs.gunicorn.org/en/latest/deploy.html#systemd
