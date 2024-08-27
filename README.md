@@ -1,6 +1,6 @@
 # PoC API server solution based on FastAPI framework with clean AWS EC2 Ubuntu server setup
 > [!NOTE]
-> * Purpose: Intended for educational and promotional needs.
+> * Purpose: Intended for educational and promotional needs
 > * Audience: Junior-Middle level with linux DevOps skills
 > * Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
 ## Project Tech stacks:
