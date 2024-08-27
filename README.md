@@ -9,8 +9,11 @@ Recommended for PoC or Prototype approach.
 > [!TIP]
 > This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn (with Multiple worker process management). We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP purpose.
 
+> [!TIP]
+> Using Nginx as a proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
+
 > [!IMPORTANT]
-> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, Gunicorn WSGI HTTP Server with Automatic Multiple worker process management instead of Uvicorn and a PostgreSQL database (AWS RDS will be good).
+> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, Gunicorn WSGI HTTP Server with Automatic Multiple worker process management instead of Uvicorn and a PostgreSQL database (AWS RDS will be good enough).
 
 ## Project Tech stacks:
 * Python 3.10+
