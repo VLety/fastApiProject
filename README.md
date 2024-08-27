@@ -1,7 +1,7 @@
 # PoC API server solution based on FastAPI framework with AWS EC2 setup
 > [!NOTE]
 > FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints [more details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
-* Description: FastAPI with Swagger UI, SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
+* Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
 * Purpose: Intended for educational and promotional purposes
 * Audience: Junior-Middle level with linux DevOps skills
 ## Project Tech stacks:
@@ -11,14 +11,17 @@
 * Annotated(typing) [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
 ## Project standarts:
-* OpenAPI Specification v3 [read more](https://spec.openapis.org/oas/latest.html)
+* OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
-### FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. [More details]([docs/CONTRIBUTING.md](https://fastapi.tiangolo.com))
 ## Project features:
-### Blabla
-## Project setup steps for a basic AWS Ubuntu 24.04 LTS server:
-
+* RESTful API server
+* JWT token authentication with expiration period and authorization scopes
+* Flexible project configuration via config files
+* CRUD operations for 3 table: Users, Employees with relational link to Tickets
+* PATCH (partially update a resource) request for User's name & password changing
+* RBAC perditions model for each endpoint
+## Project setup steps for a clear AWS Ubuntu 24.04 LTS EC2 server:
 For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
 https://docs.gunicorn.org/en/latest/deploy.html#systemd
 
