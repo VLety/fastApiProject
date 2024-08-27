@@ -2,7 +2,7 @@
 > [!NOTE]
 > * Purpose: Intended for educational and promotional needs
 > * Audience: Junior-Middle level with linux DevOps skills
-> * Description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
+> * Tech description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
 ## Project Tech stacks:
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
