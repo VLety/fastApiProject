@@ -1,23 +1,25 @@
 # PoC API server solution based on FastAPI framework with clean AWS EC2 Ubuntu server setup
 > [!NOTE]
 > * Purpose: Intended for educational and promotional needs
-> * Audience: Junior-Middle level with linux DevOps skills
+> * Audience: Python Junior+ and Middle level with linux DevOps skills
 > * Tech description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite DB and OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model
+> [!TIP]
+> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn (with Multiple worker process management). We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for our needs.
 ## Project Tech stacks:
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
-* SQLAlchemy V2 [read more](https://www.sqlalchemy.org) SQL toolkit and Object Relational Mapper
-* Pydantic V2 [read more](https://docs.pydantic.dev/latest/#pydantic)
-* Annotated(typing) [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
-* PyJWT [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt) used for encode and decode JSON Web Tokens (JWT)
-* Gunicorn WSGI HTTP Server [read more](https://docs.gunicorn.org/en/stable/#features)
+* SQLAlchemy V2 SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
+* Pydantic V2 as schemas builder [read more](https://docs.pydantic.dev/latest/#pydantic)
+* Annotated(typing) as metadata management [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
+* PyJWT for encode and decode JSON Web Tokens (JWT) [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt)
+* Uvicorn is an ASGI web server implementation for Python [read more](https://www.uvicorn.org/)
 * NGINX in Reverse Proxy mode [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 ## Project specification and standarts:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
 ## Project features:
-* RESTful API server
+* RESTful API server with 
 * JWT token authentication with expiration period and authorization scopes
 * Flexible project configuration via config files
 * CRUD operations for 3 tables: Users and Employees with relational link to Tickets
@@ -85,7 +87,7 @@ pip3 install "passlib[bcrypt]"
 pip3 install "fastapi[standard]"
 ```
 > [!TIP]
-> We will not install Gunicorn separately, since its built-in presence in the FastAPI framework is sufficient for our needs.
+> We will not install a full-fledged Gunicorn WSGI HTTP server separately, since we already have a built-in Uvicorn ASGI web server in the FastAPI framework and this is sufficient for our needs.
 
 ### Run project in active VENV for testing purpose
 ```
