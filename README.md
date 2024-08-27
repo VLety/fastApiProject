@@ -105,8 +105,9 @@ sudo certbot --nginx
 ```
 sudo systemctl restart nginx
 ```
-### Setup Systemd
-A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
+### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
+> [!TIP]
+> A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 ```
 sudo nano /etc/systemd/system/fastApiProject.service
 ```
@@ -142,7 +143,7 @@ ProtectSystem=strict
 [Install]
 WantedBy=multi-user.target
 ```
-Save Ctrl + o and exit Ctrl + y
+Save Ctrl + o and Exit Ctrl + y
 ```
 sudo systemctl daemon-reload
 ```
@@ -158,16 +159,23 @@ Check service status
 ```
 sudo systemctl status fastApiProject.service
 ```
-![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
+> [!TIP]
+> We should see something like this:
+> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
 
 ## Useful commands:
 ### VENV
+Manually activate VENV
 ```
 source venv/bin/activate
 ```
+Manually deactivate (exit) VENV
 ```
 deactivate
 ```
+> [!IMPORTANT]
+> must be in the project directory like: /home/ubuntu/fastApiProject
+
 ### NGINX
 ```
 sudo systemctl restart nginx
