@@ -77,8 +77,6 @@ source venv/bin/activate
 ```
 
 ### Install dependencies for a new active VENV:
-> [!TIP]
-> We will not install Gunicorn separately, since its built-in presence in the FastAPI framework is sufficient for our needs.
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
@@ -86,14 +84,17 @@ pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 pip3 install "fastapi[standard]"
 ```
+> [!TIP]
+> We will not install Gunicorn separately, since its built-in presence in the FastAPI framework is sufficient for our needs.
 
 ### Run project in active VENV for testing purpose
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
-We should see something like this:
-![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
-Press Ctrl+C to terminal return
+> [!TIP]
+> We should see something like this:
+> ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
+
 ### Install CertBOT
 ```
 sudo apt install snapd
