@@ -1,4 +1,5 @@
-# PoC REST API server solution based on FastAPI framework with clean AWS EC2 Ubuntu server setup
+# REST API server solution based on FastAPI framework with clean AWS EC2 Ubuntu server setup.
+> Prototype approach.
 
 > [!NOTE]
 > * Purpose: Intended for educational and promotional needs.
@@ -6,7 +7,7 @@
 > * Tech description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite3 database, OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 
 > [!TIP]
-> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn (with Multiple worker process management). We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP needs.
+> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn (with Multiple worker process management). We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP purpose.
 
 > [!IMPORTANT]
 > However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, Gunicorn WSGI HTTP Server with Automatic Multiple worker process management instead of Uvicorn and a PostgreSQL database (AWS RDS will be good).
