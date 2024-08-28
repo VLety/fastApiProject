@@ -7,7 +7,7 @@ Recommended for PoC or Prototype approach.
 > * Tech description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite3 database, OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 
 > [!TIP]
-> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP purpose. [Read more](https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts) About FastAPI recommended deployment.
+> This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn or Redis to support caching. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, MVP or even production environment purposes. [Read more](https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts) about FastAPI recommended deployment.
 
 > [!NOTE]
 > What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests.
@@ -16,18 +16,19 @@ Recommended for PoC or Prototype approach.
 > Using Nginx as a TLS Termination Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
 > [!IMPORTANT]
-> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, Gunicorn WSGI HTTP Server with automatic multiple worker process management instead of Uvicorn and a PostgreSQL database (AWS RDS will be good enough).
+> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be good enough), optionally add Gunicorn WSGI server with automatic multiple worker process management in front of Uvicorn ASGI if it is really necessary according to the project requirements, but in most cases Uvicorn ASGI is our choice.
 
 ## Project Tech stacks:
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
-* SQLAlchemy V2 SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
+* SQLAlchemy V2 as SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
 * Pydantic V2 as schemas builder [read more](https://docs.pydantic.dev/latest/#pydantic)
 * Annotated(typing) for metadata management [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT for encode and decode JSON Web Tokens (JWT) [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt)
-* Passlib[bcrypt] is a password hashing library for Python [read more](https://passlib.readthedocs.io/en/stable/install.html#optional-libraries)
-* Uvicorn is an ASGI web server implementation for Python [read more](https://www.uvicorn.org/)
-* NGINX in Reverse Proxy mode [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
+* Passlib[bcrypt] for password hashing [read more](https://passlib.readthedocs.io/en/stable/install.html#optional-libraries)
+* Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
+* NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
+* Certbot as Let’s Encrypt certificates manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
 ## Project specification and standarts:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
