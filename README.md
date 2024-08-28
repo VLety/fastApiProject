@@ -43,12 +43,12 @@ Recommended for PoC or Prototype approach.
 * PATCH (partially update a resource request) for User's name & password changing
 * RBAC permissions model for each API endpoint
   
-## Setup and deploy project to the "clear" AWS Ubuntu 24.04 LTS EC2 server:
+## Setup and deploy project to the "clear" AWS Ubuntu EC2 Instance:
 > [!NOTE]
 > We will not consider the installation of EC2 instance in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
 
 > [!TIP]
-> For the EC2 instance, it is recommended to choose the Ubuntu OS type as it comes with Python 3.12 pre-installed.
+> For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed.
 
 > To proceed further, log in to the Linux console...
 
