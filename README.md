@@ -29,10 +29,12 @@ Recommended for PoC or Prototype approach.
 * Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 * Certbot as Let’s Encrypt certificates manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
+  
 ## Project specification and standards:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
+  
 ## Project features:
 * Full-fledged RESTful API server
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
@@ -40,9 +42,10 @@ Recommended for PoC or Prototype approach.
 * CRUD operations for 3 tables: Users and Employees with relational link to Tickets
 * PATCH (partially update a resource request) for User's name & password changing
 * RBAC permissions model for each API endpoint
-## Project setup steps for a clear AWS Ubuntu 24.04 LTS EC2 server:
-For analysis: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
-https://docs.gunicorn.org/en/latest/deploy.html#systemd
+  
+## Setup project to the "clear" AWS Ubuntu 24.04 LTS EC2 server:
+> [!NOTE]
+> We will not consider the installation of EC2 instance in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more]https://aws.amazon.com/ec2/getting-started/).
 
 ### Update system
 ```
