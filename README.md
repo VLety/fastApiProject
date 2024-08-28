@@ -39,7 +39,7 @@
 * Full-fledged RESTful API server
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
 * Flexible project configuration via [config files](config/) 
-* CRUD operations for 3 tables: Users and Employees with relational link to Tickets
+* CRUD operations for 3 tables: Users and Employees with a relational link to Tickets
 * PATCH (partially update a resource request) for User's name & password changing
 * RBAC permissions model for each API endpoint
   
