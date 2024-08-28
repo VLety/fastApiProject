@@ -16,7 +16,7 @@ Recommended for PoC or Prototype approach.
 > Using Nginx as a TLS Termination Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
 > [!IMPORTANT]
-> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be good enough), optionally add Gunicorn WSGI server with automatic multiple worker process management in front of Uvicorn ASGI if it is really necessary according to the project requirements, but in most cases Uvicorn ASGI is our choice.
+> However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be good enough), optionally add Gunicorn WSGI server with automatic multiple worker process management in front of Uvicorn ASGI if it is really necessary according to the project requirements, but in most cases Uvicorn ASGI is our choice [read more](https://www.geeksforgeeks.org/fast-api-gunicorn-vs-uvicorn/).
 
 ## Project Tech stacks:
 * Python 3.10+
