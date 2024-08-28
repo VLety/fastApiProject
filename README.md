@@ -29,19 +29,19 @@ Recommended for PoC or Prototype approach.
 * Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 * Certbot as Let’s Encrypt certificates manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
-## Project specification and standarts:
+## Project specification and standards:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
 ## Project features:
-* Аull-fledged RESTful API server 
+* Full-fledged RESTful API server 
 * JWT token authentication with expiration period and [optional] authorization scopes
 * Flexible project configuration via config files
 * CRUD operations for 3 tables: Users and Employees with relational link to Tickets
 * PATCH (partially update a resource request) for User's name & password changing
 * RBAC permissions model for each API endpoint
 ## Project setup steps for a clear AWS Ubuntu 24.04 LTS EC2 server:
-For analisys: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
+For analysis: https://dylancastillo.co/posts/fastapi-nginx-gunicorn.html#step-5-configure-nginx
 https://docs.gunicorn.org/en/latest/deploy.html#systemd
 
 ### Update system
@@ -85,7 +85,7 @@ Copy new SECRET_KEY to the project config.json file:
 > Do not use the default SECRET_KEY for production environments!
 
 > [!CAUTION]
-> SECRET_KEY is very important data from security point of view and we must keep it safe.
+> SECRET_KEY is very important data from security point of view, and we must keep it safe.
 
 ### Create and activate project VENV (lightweight Python “virtual environments”) [read more](https://docs.python.org/3/library/venv.html):
 ```
