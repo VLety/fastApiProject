@@ -121,7 +121,16 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 > 
 
-#### Run Certbot for NGINX
+#### Add EC2 instance public IP address to your domain DNS
+My variant: blablabla
+
+#### Check how url is working
+My variant: blablabla
+
+#### Create NGINX configuration
+blablabla
+
+#### Run Certbot to create ssl certificate
 ```
 sudo certbot --nginx
 ```
