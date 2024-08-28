@@ -79,10 +79,6 @@ sudo apt -y install python3-venv
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
-#### Move to the project folder
-```
-cd fastApiProject
-```
 #### Generate a random secret key that will be used to sign JWT tokens.
 ```
 openssl rand -hex 32
@@ -93,10 +89,14 @@ openssl rand -hex 32
     "SECRET_KEY": "copy&paste new random secret key here",
 ```
 > [!WARNING]
-> Do not use the default SECRET_KEY for production environments!
+> Do not use the project default SECRET_KEY for production environments!
 
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view, and we must keep it safe.
+#### Move to the project folder
+```
+cd fastApiProject
+```
 
 #### Create and activate lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
 ```
@@ -112,7 +112,7 @@ pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
 
-#### Run project in active VENV for testing purpose
+#### Run project for testing purpose (VENV must be in active mode)
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
@@ -120,16 +120,17 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 > 
+
 #### Run Certbot for NGINX
 ```
 sudo certbot --nginx
 ```
 
-### Restart NGINX
+#### Restart NGINX
 ```
 sudo systemctl restart nginx
 ```
-### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
+#### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 ```
