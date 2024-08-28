@@ -1,4 +1,4 @@
-# REST API server solution based on FastAPI framework.
+# REST API server solution based on FastAPI framework
 > Recommended for PoC or Prototype approach.
 
 > [!NOTE]
