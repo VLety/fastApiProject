@@ -47,21 +47,29 @@ Recommended for PoC or Prototype approach.
 > [!NOTE]
 > We will not consider the installation of EC2 instance in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
 
+> [!TIP]
+> For the EC2 instance, it is recommended to choose the Ubuntu OS type as it comes with Python 3.12 pre-installed.
+
 > To proceed further, log in to the Linux console...
 
-### Update system
+#### Update system
 ```
 sudo apt update && sudo apt upgrade -y
 ```
-### Install NGINX
+#### Install NGINX
 ```
 sudo apt -y install nginx
 ```
-### Install GIT
+#### Install CertBOT
+```
+sudo apt install snapd
+sudo snap install --classic certbot
+```
+#### Install GIT
 ```
 sudo apt -y install git
 ```
-### Check Python version (3.12.3) and install general dependencies, Pip3 and Venv
+#### Check Python version (3.12.3) and install general dependencies, Pip3 and Venv
 ```
 python3 -V
 sudo apt -y install build-essential libssl-dev libffi-dev python3-dev
@@ -115,13 +123,12 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > [!TIP]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
-
-### Install CertBOT
+> 
+#### Run Certbot for NGINX
 ```
-sudo apt install snapd
-sudo snap install --classic certbot
 sudo certbot --nginx
 ```
+
 ### Restart NGINX
 ```
 sudo systemctl restart nginx
