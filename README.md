@@ -13,7 +13,7 @@ Recommended for PoC or Prototype approach.
 > What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests.
 
 > [!TIP]
-> Using Nginx as a proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
+> Using Nginx as a TLS Termination Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
 > [!IMPORTANT]
 > However, for full use of the solution in a production environment, it is recommended to add Docker delivery technology, Gunicorn WSGI HTTP Server with automatic multiple worker process management instead of Uvicorn and a PostgreSQL database (AWS RDS will be good enough).
