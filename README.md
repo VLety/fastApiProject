@@ -69,27 +69,25 @@ sudo snap install --classic certbot
 ```
 sudo apt -y install git
 ```
-#### Check Python version (3.12.3) and install general dependencies, Pip3 and Venv
+#### Install common Python Dependencies
 ```
-python3 -V
 sudo apt -y install build-essential libssl-dev libffi-dev python3-dev
 sudo apt -y install python3-pip
 sudo apt -y install python3-venv
 ```
-### Clone project from GitHub repository
-https://stackoverflow.com/questions/2505096/clone-a-private-repository-github
+#### Clone a project from a GitHub repository
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
-### Move to the project folder
+#### Move to the project folder
 ```
 cd fastApiProject
 ```
-### Create a random secret key that will be used to sign the JWT tokens
+#### Generate a random secret key that will be used to sign JWT tokens.
 ```
 openssl rand -hex 32
 ```
-Copy new SECRET_KEY to the project config.json file:
+#### Copy new SECRET_KEY to the project ./config/config.json file:
 ```
 "auth": {
     "SECRET_KEY": "copy&paste new random secret key here",
@@ -100,23 +98,21 @@ Copy new SECRET_KEY to the project config.json file:
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view, and we must keep it safe.
 
-### Create and activate project VENV (lightweight Python “virtual environments”) [read more](https://docs.python.org/3/library/venv.html):
+#### Create and activate lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
 ```
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Install dependencies for a new active VENV:
+#### Install project dependencies (VENV must be in active mode):
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
-> [!TIP]
-> We will not install a full-fledged Gunicorn WSGI HTTP server separately, since we already have a built-in Uvicorn ASGI web server in the FastAPI framework and this is sufficient for our needs.
 
-### Run project in active VENV for testing purpose
+#### Run project in active VENV for testing purpose
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
