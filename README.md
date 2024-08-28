@@ -89,7 +89,7 @@ openssl rand -hex 32
     "SECRET_KEY": "copy&paste new random secret key here",
 ```
 > [!WARNING]
-> Do not use the project default SECRET_KEY for production environments!
+> Do not use the project default SECRET_KEY for production environment!
 
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view, and we must keep it safe.
