@@ -34,8 +34,8 @@ Recommended for PoC or Prototype approach.
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
 ## Project features:
-* RESTful API server with 
-* JWT token authentication with expiration period and authorization scopes
+* Аull-fledged RESTful API server 
+* JWT token authentication with expiration period and [optional] authorization scopes
 * Flexible project configuration via config files
 * CRUD operations for 3 tables: Users and Employees with relational link to Tickets
 * PATCH (partially update a resource request) for User's name & password changing
