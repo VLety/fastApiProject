@@ -34,7 +34,7 @@ def get_json_file_content(file_path):
 
 def get_config():
     """ GET project config from config.json file"""
-    file_path_config = f"{get_project_root()}/config.json"
+    file_path_config = f"{get_project_root()}/config/config.json"
     config_json = get_json_file_content(file_path_config)
 
     return config_json
@@ -42,7 +42,7 @@ def get_config():
 
 def get_schemas():
     """ GET project schemas from schemas.json file"""
-    file_path_config = f"{get_project_root()}/schemas.json"
+    file_path_config = f"{get_project_root()}/config/schemas.json"
     permissions_json = get_json_file_content(file_path_config)
 
     return permissions_json
@@ -50,7 +50,7 @@ def get_schemas():
 
 def get_permissions():
     """ GET project permissions from permissions.json file"""
-    file_path_config = f"{get_project_root()}/permissions.json"
+    file_path_config = f"{get_project_root()}/config/permissions.json"
     permissions_json = get_json_file_content(file_path_config)
 
     return permissions_json
@@ -58,7 +58,7 @@ def get_permissions():
 
 def get_credential():
     """ GET project config from credential.json file"""
-    file_path_config = f"{get_project_root()}/credential.json"
+    file_path_config = f"{get_project_root()}/config/credential.json"
     credential_json = get_json_file_content(file_path_config)
 
     return credential_json
