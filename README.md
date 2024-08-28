@@ -7,10 +7,10 @@ Recommended for PoC or Prototype approach.
 > * Tech description: FastAPI & Swagger UI (with automatic interactive documentation), SQLite3 database, OAuth2 authorization with Password (and hashing), Bearer with JWT tokens together with Role-based access control (RBAC) permissions model.
 
 > [!TIP]
-> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged [WSGI](https://wsgi.tutorial.codepoint.net/intro) HTTP Server such as Gunicorn. We will simply use the Uvicorn [ASGI](https://asgi.readthedocs.io/en/latest/) web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP purpose.
+> This solution is presented in the most simple to learn form without using Docker technology or a full-fledged WSGI HTTP Server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework and this is sufficient for PoC, Prototyping or even MVP purpose.
 
 > [!NOTE]
-> What is the difference between WSGI and ASGI server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. [ASGI](https://asgi.readthedocs.io/en/latest/) is asynchronous, handling multiple requests concurrently without blocking other requests.
+> What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests.
 
 > [!TIP]
 > Using Nginx as a proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
