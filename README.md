@@ -93,18 +93,18 @@ openssl rand -hex 32
 
 > [!CAUTION]
 > SECRET_KEY is very important data from security point of view, and we must keep it safe.
-#### Move to the project folder
+#### Let's go to our project catalog
 ```
 cd fastApiProject
 ```
 
-#### Create and activate lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
+#### Create and Activate lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
 ```
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-#### Install project dependencies (VENV must be in active mode):
+#### Install project dependencies (VENV must be in Active mode):
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
@@ -112,7 +112,7 @@ pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
 
-#### Run project for testing purpose (VENV must be in active mode)
+#### Run project for testing purpose (VENV must be in Active mode)
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
@@ -121,8 +121,9 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 > 
 
-#### Add EC2 instance public IP address to your domain DNS
-My variant: blablabla
+#### Add the EC2 instance's public IP address to your domain's DNS
+My variant:
+![image](https://github.com/user-attachments/assets/438fd008-8857-4cc0-b22d-e08cb40a2464)
 
 #### Check how url is working
 My variant: blablabla
