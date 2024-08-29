@@ -1,4 +1,5 @@
 {
+  "about": "The file is intended to store Pydantic JSON schemas including validation.",
   "User": {
     "username": {
       "min_length": 5,

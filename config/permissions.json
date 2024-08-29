@@ -1,5 +1,5 @@
 {
-  "detail": "Project RBAC API endpoints permission settings",
+  "about": "The file is intended to store RBAC API endpoints permission settings.",
   "rbac_roles": [
     "admin",
     "manager",
