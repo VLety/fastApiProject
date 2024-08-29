@@ -110,9 +110,9 @@ openssl rand -hex 32
 
 > [!TIP]
 > Optionally via initial setup you can change necessary project settings for:
-> config.json: The file is intended to store the main project configuration settings.
-> schemas.json: The file is intended to store Pydantic JSON schemas validation.
-> permissions.json: The file is intended to store RBAC API endpoints permission settings.
+> * config.json: The file is intended to store the main project configuration settings.
+> * schemas.json: The file is intended to store Pydantic JSON schemas validation.
+> * permissions.json: The file is intended to store RBAC API endpoints permission settings.
 
 ### Create a virtual environment for the project and install the required dependencies
 #### Let's go to our project catalog
