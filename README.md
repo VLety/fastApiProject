@@ -75,10 +75,6 @@ sudo apt -y install build-essential libssl-dev libffi-dev python3-dev
 sudo apt -y install python3-pip
 sudo apt -y install python3-venv
 ```
-#### Clone a project from a GitHub repository
-```
-git clone https://VLety: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@github.com/VLety/fastApiProject.git
-```
 
 ### Initial project configuration
 > [!CAUTION]
@@ -86,6 +82,11 @@ git clone https://VLety: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@github.com/VLet
 
 > [!IMPORTANT]
 > There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
+
+#### Clone a project from a GitHub repository
+```
+git clone https://VLety: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@github.com/VLety/fastApiProject.git
+```
 
 #### Rename all 3 default template files to .json extention in the project config folder
 ```
