@@ -36,7 +36,7 @@
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
   
 ## Project features:
-* Full-fledged RESTful API server
+* Full-fledged RESTful API server with Swagger UI
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
 * Flexible project customization and tuning using configuration files
 * CRUD operations on 3 objects: User, Employee and Ticket which is relational to Employee
