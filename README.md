@@ -80,9 +80,20 @@ sudo apt -y install python3-venv
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
 
-### Project configuration
-> [!NOTE]
-> Useful information that users should know, even when skimming content.
+### Initial project configuration
+> [!CAUTION]
+> Never add configuration files to the repository! This is due to potential security issues and problems with delivering updates.
+
+> [!IMPORTANT]
+> There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
+
+#### Rename all 3 template files to json extention in the project ./config folder
+```
+cd /home/ubuntu/fastApiProject/config/
+mv config.json.default config.json
+mv permissions.json.default permissions.json
+mv schemas.json.default schemas.json
+```
 
 #### Generate a random secret key that will be used to sign JWT tokens.
 ```
