@@ -135,7 +135,7 @@ pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
 
-### Run project for testing purpose (VENV must be in Active mode)
+#### Run project for testing purpose (VENV must be in Active mode)
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
