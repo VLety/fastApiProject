@@ -1,5 +1,5 @@
 # REST API server solution based on FastAPI framework
-> Recommended for PoC or Prototype approach.
+> Recommended for PoC or Prototype approach
 
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
