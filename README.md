@@ -95,11 +95,11 @@ mv permissions.json.default permissions.json
 mv schemas.json.default schemas.json
 ```
 
-#### Generate a random secret key that will be used to sign JWT tokens.
+#### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
 ```
 openssl rand -hex 32
 ```
-#### Copy new SECRET_KEY to the project ./config/config.json file:
+#### Copy new SECRET_KEY to the project /config/config.json file:
 ```
 "auth": {
     "SECRET_KEY": "copy&paste new random secret key here",
@@ -107,8 +107,6 @@ openssl rand -hex 32
 > [!WARNING]
 > Do not use the project default SECRET_KEY for production environment!
 
-> [!CAUTION]
-> SECRET_KEY is very important data from security point of view, and we must keep it safe.
 #### Let's go to our project catalog
 ```
 cd fastApiProject
