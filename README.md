@@ -87,7 +87,7 @@ git clone https://VLety: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@github.com/VLet
 > [!IMPORTANT]
 > There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
 
-#### Rename all 3 template files to json extention in the project config folder
+#### Rename all 3 default template files to json extention in the project config folder
 ```
 cd /home/ubuntu/fastApiProject/config/
 mv config.json.default config.json
@@ -99,25 +99,33 @@ mv schemas.json.default schemas.json
 ```
 openssl rand -hex 32
 ```
-#### Copy new SECRET_KEY to the project /config/config.json file:
+#### Copy new SECRET_KEY to the project /config/config.json file
 ```
 "auth": {
-    "SECRET_KEY": "copy&paste new random secret key here",
+    "SECRET_KEY": "paste new secret key here",
 ```
 > [!WARNING]
 > Do not use the project default SECRET_KEY for production environment!
 
+> [!TIP]
+> Optionally via initial setup you can change necessary project settings for:
+> config.json: The file is intended to store the main project configuration settings.
+> schemas.json: The file is intended to store Pydantic JSON schemas validation.
+> permissions.json: The file is intended to store RBAC API endpoints permission settings.
+
+### Create a virtual environment for the project and install the required dependencies
 #### Let's go to our project catalog
 ```
-cd fastApiProject
+cd /home/ubuntu/fastApiProject/
 ```
-
-#### Create and Activate lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
+#### Create lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
 ```
 python3 -m venv venv
+```
+#### Activate VENV
+```
 source venv/bin/activate
 ```
-
 #### Install project dependencies (VENV must be in Active mode):
 ```
 pip3 install "fastapi[standard]"
@@ -126,14 +134,13 @@ pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
 
-#### Run project for testing purpose (VENV must be in Active mode)
+### Run project for testing purpose (VENV must be in Active mode)
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 > [!TIP]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
-> 
 
 #### Add the public IP address of your EC2 instance to your domain's DNS A record.
 My variant:
