@@ -87,7 +87,7 @@ git clone https://VLety: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@github.com/VLet
 > [!IMPORTANT]
 > There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
 
-#### Rename all 3 template files to json extention in the project ./config folder
+#### Rename all 3 template files to json extention in the project config folder
 ```
 cd /home/ubuntu/fastApiProject/config/
 mv config.json.default config.json
