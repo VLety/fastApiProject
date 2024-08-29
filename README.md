@@ -79,6 +79,11 @@ sudo apt -y install python3-venv
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
+
+### Project configuration
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
 #### Generate a random secret key that will be used to sign JWT tokens.
 ```
 openssl rand -hex 32
