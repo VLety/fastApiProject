@@ -82,7 +82,7 @@ git clone https://VLety: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@github.com/VLet
 
 ### Initial project configuration
 > [!CAUTION]
-> Never add configuration files to the repository! This is due to potential security issues and problems with delivering updates.
+> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
 
 > [!IMPORTANT]
 > There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
