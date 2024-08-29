@@ -121,7 +121,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 > 
 
-#### Add the EC2 instance's public IP address to your domain's DNS
+#### Add the public IP address of your EC2 instance to your domain's DNS A record.
 My variant:
 ![image](https://github.com/user-attachments/assets/438fd008-8857-4cc0-b22d-e08cb40a2464)
 
