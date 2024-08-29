@@ -151,7 +151,9 @@ My variant:
 My variant: blablabla
 
 #### Create NGINX configuration
-blablabla
+create new configuration file in site-available
+copy symlink to site-enabled
+blblabla
 
 #### Run Certbot to create ssl certificate
 ```
