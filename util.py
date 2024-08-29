@@ -32,6 +32,14 @@ def get_json_file_content(file_path):
     return json_content
 
 
+def get_setup() -> json:
+    """ GET project setup from setup.json file"""
+    file_path_config = f"{get_project_root()}/setup/setup.json"
+    json_obj = get_json_file_content(file_path_config)
+
+    return json_obj
+
+
 def get_config():
     """ GET project config from config.json file"""
     file_path_config = f"{get_project_root()}/config/config.json"
