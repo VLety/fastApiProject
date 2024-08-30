@@ -21,7 +21,7 @@ def get_user_by_name(db: Session, username: str):
 
 def update_users_passwords(db: Session = get_db):
 
-    for user in get_setup()["users"]:
+    for user in get_setup()["default_users"]:
         username = user["username"]
         plain_password = user["password"]
         hashed_password = get_password_hash(plain_password)

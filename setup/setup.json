@@ -1,5 +1,5 @@
 {
-  "users": [
+  "default_users": [
     {
       "username": "admin",
       "password": "passWord@1"
