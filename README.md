@@ -88,12 +88,14 @@ sudo apt -y install python3-venv
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
 
-#### Rename all 3 default template files to .json extention in the project config folder
+#### Setup project configuration files
+Copy all 3 config template files from ./setup/config folder to the base project's ./config folder and change their extension to .json 
 ```
+cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
 cd /home/ubuntu/fastApiProject/config/
-mv config.json.default config.json
-mv permissions.json.default permissions.json
-mv schemas.json.default schemas.json
+mv -f config.json.template config.json
+mv -f permissions.json.template permissions.json
+mv -f schemas.json.template schemas.json
 ```
 
 #### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
