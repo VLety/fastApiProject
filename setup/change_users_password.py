@@ -4,10 +4,14 @@ import sys
 import os
 
 # SET PYTHONPATH one level top (project root path)
-sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
+PARENT_DIRECTORY = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+print("PARENT_DIRECTORY:", PARENT_DIRECTORY)
+sys.path.append(PARENT_DIRECTORY)  #  Add to PYTHONPATH
 
 # Add Project Package(s) based on PYTHONPATH
-from util import get_setup, get_config, get_current_time_utc
+from util import get_setup, get_config, get_current_time_utc, get_project_root
+print("get_project_root:", get_project_root())
+
 from sql_app.models import User
 from sql_app.database import get_db
 
