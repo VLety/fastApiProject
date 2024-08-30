@@ -179,17 +179,62 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
-#### Add the public IP address of your EC2 instance to your domain's DNS A record.
+> [!NOTE]
+> Project configuration is done
+
+### Setup NGINX configuration and API server URL
+
+#### Add the public IP address of project EC2 instance to your domain's DNS A record.
 My variant:
 ![image](https://github.com/user-attachments/assets/438fd008-8857-4cc0-b22d-e08cb40a2464)
 
-#### Check how url is working
-My variant: blablabla
+### Create NGINX configuration
+> [!IMPORTANT]
+> FastAPI latency is lower when interacting with nginx via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with nginx via a socket.
 
-#### Create NGINX configuration
-create new configuration file in site-available
-copy symlink to site-enabled
-blblabla
+#### Create new NGINX configuration file
+sudo nano /etc/nginx/sites-available/fast_api_cfg
+```
+http {
+    server {
+        listen 80;
+        client_max_body_size 4G;
+    
+        # Project server URL
+        server_name fastapi.key-info.com.ua;
+    
+        location / {
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_redirect off;
+            proxy_buffering off;
+            
+            # Proxying direction
+            proxy_pass http://uvicorn;
+        }
+        location /static {
+            # Path for static files
+            root /home/ubuntu/fastApiProject/static;
+        }
+    }
+    map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+    }
+    upstream uvicorn {
+    server unix:/tmp/uvicorn.sock;
+    }
+}
+```
+Save Ctrl+o, Exit Ctrl+x
+
+#### Copy NGINX configuration file symlink to site-enabled folder
+```
+ln -sf /etc/nginx/sites-available/fast_api_cfg /etc/nginx/modules-enabled/fast_api_cfg
+```
 
 #### Run Certbot to create ssl certificate
 ```
