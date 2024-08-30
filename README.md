@@ -233,7 +233,7 @@ Save Ctrl+o, Exit Ctrl+x
 
 #### Copy NGINX configuration file symlink to site-enabled folder
 ```
-ln -sf /etc/nginx/sites-available/fast_api_cfg /etc/nginx/modules-enabled/fast_api_cfg
+sudo ln -sf /etc/nginx/sites-available/fast_api_cfg /etc/nginx/sites-enabled/fast_api_cfg
 ```
 
 #### Run Certbot to create ssl certificate
