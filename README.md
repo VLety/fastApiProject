@@ -151,7 +151,7 @@ Open the ./setup/setup.json file, change the passwords for all 3 users and save 
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
 > [!TIP]
-> ![image](https://github.com/user-attachments/assets/9a2ac8c9-cca6-425b-b51e-8e4a9765eadd)
+> ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)
 > Save Ctrl+o, Exit Ctrl+x
 
 #### Update new passwords in database
