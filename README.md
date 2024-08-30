@@ -160,9 +160,10 @@ source venv/bin/activate
 ```
 Run password update
 ```
-Python3 change_users_password.py
+python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
-
+We should get something like this:
+![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
 #### Run project for testing purpose (VENV must be in Active mode)
 ```
