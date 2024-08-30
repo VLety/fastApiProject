@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from util import get_setup, get_config, get_current_time_utc, get_project_root
 import sys
+import os
 
-# Add Project Package
-sys.path.append(str(get_project_root()))  # Using like PYTHONPATH for current script
+# SET PYTHONPATH one level top (project root path)
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
+
+# Add Project Package(s) based on PYTHONPATH
+from util import get_setup, get_config, get_current_time_utc
 from sql_app.models import User
 from sql_app.database import get_db
 
