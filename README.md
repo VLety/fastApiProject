@@ -96,8 +96,10 @@ cd /home/ubuntu/fastApiProject/config/
 mv -f config.json.template config.json
 mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
-ls -l
 ```
+As a result, we should have such a list of files
+![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
+
 
 #### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
 ```
