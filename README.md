@@ -88,6 +88,27 @@ sudo apt -y install python3-venv
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
 
+### Create a virtual environment for the project and install the required dependencies
+#### Let's go to our project catalog
+```
+cd /home/ubuntu/fastApiProject/
+```
+#### Create lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
+```
+python3 -m venv venv
+```
+#### Activate VENV
+```
+source venv/bin/activate
+```
+#### Install project dependencies (VENV must be in Active mode):
+```
+pip3 install "fastapi[standard]"
+pip3 install SQLAlchemy
+pip3 install pyjwt
+pip3 install "passlib[bcrypt]"
+```
+
 #### Setup project configuration files
 Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
 ```
@@ -119,26 +140,25 @@ openssl rand -hex 32
 > * schemas.json: The file is used to configure Pydantic JSON schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 
-### Create a virtual environment for the project and install the required dependencies
-#### Let's go to our project catalog
+#### Setup password for default users
+We have 3 default users: admin, manager and employee.
+Open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+```
+sudo nano /home/ubuntu/fastApiProject/setup/setup.json
+```
+![image](https://github.com/user-attachments/assets/9a2ac8c9-cca6-425b-b51e-8e4a9765eadd)
+Save Ctrl+o, Exit Ctrl+x
+#### Update new passwords in database
+Activate project's VENV
 ```
 cd /home/ubuntu/fastApiProject/
-```
-#### Create lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
-```
-python3 -m venv venv
-```
-#### Activate VENV
-```
 source venv/bin/activate
 ```
-#### Install project dependencies (VENV must be in Active mode):
+Run password update
 ```
-pip3 install "fastapi[standard]"
-pip3 install SQLAlchemy
-pip3 install pyjwt
-pip3 install "passlib[bcrypt]"
+Python3 change_users_password.py
 ```
+
 
 #### Run project for testing purpose (VENV must be in Active mode)
 ```
