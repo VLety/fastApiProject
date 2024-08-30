@@ -241,6 +241,12 @@ Save Ctrl+o, Exit Ctrl+x
 sudo ln -sf /etc/nginx/sites-available/fast_api_cfg /etc/nginx/sites-enabled/fast_api_cfg
 ```
 
+#### Check NGINX configuration file to find potential errors
+```
+sudo nginx -t -c /etc/nginx/sites-enabled/fast_api_cfg
+```
+![image](https://github.com/user-attachments/assets/3af15e27-8f7d-4e0a-9f4d-da5007e3d8ba)
+
 #### Run Certbot to create ssl certificate
 ```
 sudo certbot --nginx
