@@ -150,8 +150,10 @@ Open the ./setup/setup.json file, change the passwords for all 3 users and save 
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
-![image](https://github.com/user-attachments/assets/9a2ac8c9-cca6-425b-b51e-8e4a9765eadd)
-Save Ctrl+o, Exit Ctrl+x
+> [!TIP]
+> ![image](https://github.com/user-attachments/assets/9a2ac8c9-cca6-425b-b51e-8e4a9765eadd)
+> Save Ctrl+o, Exit Ctrl+x
+
 #### Update new passwords in database
 Activate project's VENV
 ```
@@ -162,8 +164,9 @@ Run password update
 ```
 python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
-We should get something like this:
-![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
+> [!TIP]
+> We should see something like this: 
+> ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
 #### Run project for testing purpose (VENV must be in Active mode)
 ```
