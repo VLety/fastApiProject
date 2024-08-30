@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from sql_app import models
-from sql_app.database import get_db
+from ..sql_app import models
+from ..sql_app.database import get_db
 from util import get_setup, get_config, get_current_time_utc
 
 APP_CONFIG = get_config()
