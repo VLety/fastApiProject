@@ -154,6 +154,9 @@ sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 > ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)
 > Save Ctrl+o, Exit Ctrl+x
 
+> [!IMPORTANT]
+> Project password requirements: Minimum password length is 8 characters. Maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
+
 #### Update new passwords in database
 Activate project's VENV
 ```
