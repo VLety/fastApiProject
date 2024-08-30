@@ -1,8 +1,12 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
+from util import get_setup, get_config, get_current_time_utc, get_project_root
+import sys
+
+# Add Project Package
+sys.path.append(str(get_project_root()))  # Using like PYTHONPATH for current script
 from sql_app.models import User
 from sql_app.database import get_db
-from util import get_setup, get_config, get_current_time_utc
 
 APP_CONFIG = get_config()
 SUCCESSFUL_MESSAGE = "Password for Username 'user_name' successfully updated: "
