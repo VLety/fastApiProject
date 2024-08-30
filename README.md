@@ -189,8 +189,13 @@ My variant:
 ![image](https://github.com/user-attachments/assets/438fd008-8857-4cc0-b22d-e08cb40a2464)
 
 ### Create NGINX configuration
-> [!IMPORTANT]
-> FastAPI latency is lower when interacting with nginx via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with nginx via a socket.
+> [!TIP]
+> FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
+
+#### Delete default NGINX configuration file symlink
+```
+sudo rm /etc/nginx/sites-enabled/default
+```
 
 #### Create new NGINX configuration file
 sudo nano /etc/nginx/sites-available/fast_api_cfg
