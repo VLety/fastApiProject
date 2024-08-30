@@ -1,16 +1,15 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 import sys
-import os
+import pathlib
 
-# SET PYTHONPATH one level top (project root path)
-PARENT_DIRECTORY = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-print("PARENT_DIRECTORY:", PARENT_DIRECTORY)
-sys.path.append(PARENT_DIRECTORY)  #  Add to PYTHONPATH
+# SET PYTHONPATH based on the directory from which the program is run
+PROJECT_ROOT = str(pathlib.Path().resolve())
+print("PROJECT_ROOT:", PROJECT_ROOT)
+sys.path.append(PROJECT_ROOT)  #  Add to PYTHONPATH
 
 # Add Project Package(s) based on PYTHONPATH
-from util import get_setup, get_config, get_current_time_utc, get_project_root
-print("get_project_root:", get_project_root())
+from util import get_setup, get_config, get_current_time_utc
 
 from sql_app.models import User
 from sql_app.database import get_db
