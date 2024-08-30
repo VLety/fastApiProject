@@ -5,14 +5,17 @@ import pathlib
 
 # SET PYTHONPATH based on the directory from which the program is run
 PROJECT_ROOT = str(pathlib.Path().resolve())
-print("PROJECT_ROOT:", PROJECT_ROOT)
 sys.path.append(PROJECT_ROOT)  #  Add to PYTHONPATH
 
 # Add Project Package(s) based on PYTHONPATH
-from util import get_setup, get_config, get_current_time_utc
-
-from sql_app.models import User
-from sql_app.database import get_db
+try:
+    from util import get_setup, get_config, get_current_time_utc
+    from sql_app.models import User
+    from sql_app.database import get_db
+except Exception as error:
+    print("Exception:", error)
+    print("Current PROJECT_ROOT:", PROJECT_ROOT)
+    print("This program should be run from the root folder of the project!")
 
 APP_CONFIG = get_config()
 SUCCESSFUL_MESSAGE = "Password for Username 'user_name' successfully updated: "
@@ -30,7 +33,7 @@ def get_user_by_name(db: Session, username: str):
 
 
 def update_users_passwords(db: Session = get_db):
-
+    print("We are starting to update user passwords >>>")
     for user in get_setup()["default_users"]:
         username = user["username"]
         plain_password = user["password"]
@@ -53,6 +56,8 @@ def update_users_passwords(db: Session = get_db):
 
             print(SUCCESSFUL_MESSAGE.replace("user_name", username) + plain_password)
 
+    print(">>> User password update completed successfully!")
 
-# calling next() on your generator to get a session out of the generator.
+
+# calling next() on your generator to get a session out of the generator - FastAPI do this initially
 update_users_passwords(db=next(get_db()))
