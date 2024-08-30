@@ -96,6 +96,7 @@ cd /home/ubuntu/fastApiProject/config/
 mv -f config.json.template config.json
 mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
+ls -l
 ```
 
 #### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
