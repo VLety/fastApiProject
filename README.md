@@ -108,6 +108,10 @@ pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
+#### Deactivate (exit) VENV
+```
+deactivate
+```
 
 #### Setup project configuration files
 Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
