@@ -1,0 +1,75 @@
+{
+  "about": "The file is used to configure RBAC permissions for API endpoints.",
+  "rbac_roles": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "com01": "User ACL ----------------------------------------------------------------------------------------------",
+  "POST_user": [
+    "admin"
+  ],
+  "GET_user": [
+    "admin",
+    "manager"
+  ],
+  "GET_user_user_id": [
+    "admin",
+    "manager"
+  ],
+  "PUT_user_user_id": [
+    "admin"
+  ],
+  "DELETE_user_user_id": [
+    "admin"
+  ],
+    "PATCH_user_user_id_password": [
+    "admin"
+  ],
+  "PATCH_user_user_id_username": [
+    "admin"
+  ],
+  "PATCH_user_user_id_role": [
+    "admin"
+  ],
+  "PATCH_user_user_id_disabled": [
+    "admin"
+  ],
+  "PATCH_user_user_id_login_denied": [
+    "admin"
+  ],
+  "com02": "Employee ACL -----------------------------------------------------------------------------------------",
+  "POST_employee": [
+    "admin",
+    "manager"
+  ],
+  "GET_employee": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "GET_employee_employee_id": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "PUT_employee_employee_id": [
+    "admin",
+    "manager"
+  ],
+  "DELETE_employee_employee_id": [
+    "admin",
+    "manager"
+  ],
+  "com03": "Ticket ACL -------------------------------------------------------------------------------------------",
+  "POST_ticket": [
+    "admin",
+    "manager",
+    "employee"
+  ],
+  "GET_ticket": [
+    "admin",
+    "manager",
+    "employee"
+  ]
+}
