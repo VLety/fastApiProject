@@ -101,7 +101,7 @@ As a result, we should have such a list of files
 ![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
 
 
-#### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
+#### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
 openssl rand -hex 32
 ```
