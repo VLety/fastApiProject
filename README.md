@@ -89,7 +89,7 @@ git clone https://VLety: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@github.com/VLet
 ```
 
 #### Setup project configuration files
-Copy all 3 config template files from ./setup/config folder to the base project's ./config folder and change their extension to .json 
+Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
 cd /home/ubuntu/fastApiProject/config/
