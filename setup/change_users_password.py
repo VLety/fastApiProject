@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from ..sql_app import models
-from ..sql_app.database import get_db
+from sql_app.models import User
+from sql_app.database import get_db
 from util import get_setup, get_config, get_current_time_utc
 
 APP_CONFIG = get_config()
@@ -16,7 +16,7 @@ def get_password_hash(plain_password: str) -> str:
 
 
 def get_user_by_name(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
+    return db.query(User).filter(User.username == username).first()
 
 
 def update_users_passwords(db: Session = get_db):
