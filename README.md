@@ -88,32 +88,6 @@ sudo apt -y install python3-venv
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
 
-#### Rename all 3 default template files to .json extention in the project config folder
-```
-cd /home/ubuntu/fastApiProject/config/
-mv config.json.default config.json
-mv permissions.json.default permissions.json
-mv schemas.json.default schemas.json
-```
-
-#### Generate a new secret key that will be used to encrypt/decrypt JWT tokens
-```
-openssl rand -hex 32
-```
-#### Copy new SECRET_KEY to the project /config/config.json file
-```
-"auth": {
-    "SECRET_KEY": "paste new secret key here",
-```
-> [!WARNING]
-> Do not use the project default SECRET_KEY for production environment!
-
-> [!TIP]
-> Optionally via initial setup you can change necessary project settings for:
-> * config.json: The file is intended to store the main project configuration settings.
-> * schemas.json: The file is used to configure Pydantic JSON schemas validation.
-> * permissions.json: The file is used to configure RBAC permissions for API endpoints.
-
 ### Create a virtual environment for the project and install the required dependencies
 #### Let's go to our project catalog
 ```
@@ -134,6 +108,61 @@ pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
+#### Deactivate (exit) VENV
+```
+deactivate
+```
+
+#### Setup project configuration files
+Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
+```
+cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
+cd /home/ubuntu/fastApiProject/config/
+mv -f config.json.template config.json
+mv -f permissions.json.template permissions.json
+mv -f schemas.json.template schemas.json
+```
+As a result, we should have such a list of files
+![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
+
+
+#### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
+```
+openssl rand -hex 32
+```
+#### Copy new SECRET_KEY to the project /config/config.json file
+```
+"auth": {
+    "SECRET_KEY": "paste new secret key here",
+```
+> [!WARNING]
+> Do not use the project default SECRET_KEY for production environment!
+
+> [!TIP]
+> Optionally via initial setup you can change necessary project settings for:
+> * config.json: The file is intended to store the main project configuration settings.
+> * schemas.json: The file is used to configure Pydantic JSON schemas validation.
+> * permissions.json: The file is used to configure RBAC permissions for API endpoints.
+
+#### Setup password for default users
+We have 3 default users: admin, manager and employee.
+Open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+```
+sudo nano /home/ubuntu/fastApiProject/setup/setup.json
+```
+![image](https://github.com/user-attachments/assets/9a2ac8c9-cca6-425b-b51e-8e4a9765eadd)
+Save Ctrl+o, Exit Ctrl+x
+#### Update new passwords in database
+Activate project's VENV
+```
+cd /home/ubuntu/fastApiProject/
+source venv/bin/activate
+```
+Run password update
+```
+Python3 change_users_password.py
+```
+
 
 #### Run project for testing purpose (VENV must be in Active mode)
 ```
