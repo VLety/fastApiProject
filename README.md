@@ -200,44 +200,73 @@ sudo rm /etc/nginx/sites-enabled/default
 #### Create new NGINX configuration file
 sudo nano /etc/nginx/sites-available/fast_api_cfg
 ```
-events {
-    worker_connections 1024;
+server {
+	listen 80;
+    
+	# Project server URL
+    server_name	fastapi.key-info.com.ua;
+
+    server_tokens off;
+    client_max_body_size 8M;
+
+    gzip on;
+    gzip_proxied any;
+    gzip_disable "msie6";
+    gzip_comp_level 6;
+    gzip_min_length 200; # check your average response size and configure accordingly
+
+    location / {
+
+		# Unix Socket mode
+		proxy_pass http://fastApiProject;
+
+		proxy_redirect off;
+		proxy_buffering off;
+		proxy_ignore_client_abort on;
+
+		# NGINX timeout should be about 5 seconds longer than the same Uvicorn setting
+		proxy_connect_timeout 65s;
+		proxy_read_timeout 65s;
+		proxy_send_timeout 65s;
+		
+		# Proxy header section
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection $connection_upgrade;
+		proxy_set_header X-Real-IP $remote_addr;
+		
+		# NGINX to pass through the 'server' header of upstream server (Uvicorn)
+		proxy_pass_header Server;
+		
+		# Sets the HTTP protocol version for proxying. By default, version 1.0 is used.
+		# Version 1.1 is recommended for use with keepalive connections and NTLM authentication. 
+		proxy_http_version 1.1;
+	}
+	
+	location /static {
+		# Path for static files
+		root /home/ubuntu/fastApiProject/static;
+    }
+
+    keepalive_requests 5000;  
+    keepalive_timeout 120;
+    set_real_ip_from 10.0.0.0/8;
+    set_real_ip_from 172.16.0.0/12;
+    set_real_ip_from 192.168.0.0/16;
+    real_ip_header X-Forwarded-For;
+    real_ip_recursive on;
 }
-http {
-    server {
-        listen 80;
-        client_max_body_size 4G;
-    
-        # Project server URL
-        server_name fastapi.key-info.com.ua;
-    
-        location / {
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_redirect off;
-            proxy_buffering off;
-            
-            # Proxying direction
-            proxy_pass http://uvicorn;
-        }
 
-        location /static {
-            # Path for static files
-            root /home/ubuntu/fastApiProject/static;
-        }
-    }
-
-    map $http_upgrade $connection_upgrade {
-    default upgrade;
+map $http_upgrade $connection_upgrade {
+	default upgrade;
     '' close;
-    }
+}
 
-    upstream uvicorn {
-    server unix:/tmp/uvicorn.sock;
-    }
+# Uvicorn file descriptor referencing
+upstream fastApiProject{
+    server unix:/tmp/fastApiProject.sock;
 }
 ```
 Save Ctrl+o, Exit Ctrl+x
