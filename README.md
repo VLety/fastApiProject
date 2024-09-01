@@ -265,11 +265,12 @@ sudo systemctl restart nginx
 #### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
-Make folder to store socket files
+> The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
+Create a folder to store the socket file descriptor
 ```
 sudo mkdir /var/sockets
 ```
-Create Systemd file
+Create a Systemd service file
 ```
 sudo nano /etc/systemd/system/fastApiProject.service
 ```
