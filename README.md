@@ -295,7 +295,7 @@ sudo systemctl restart nginx
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-
+> Logging --> https://www.uvicorn.org/settings/#logging
 ```
 Create a Systemd service file
 ```
