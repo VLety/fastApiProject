@@ -266,9 +266,7 @@ sudo systemctl restart nginx
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-Create a folder to store the socket file descriptor
-```
-sudo mkdir /var/sockets
+
 ```
 Create a Systemd service file
 ```
@@ -277,31 +275,35 @@ sudo nano /etc/systemd/system/fastApiProject.service
 Type:
 ```
 [Unit]
-Description=Gunicorn instance to serve fastApiProject
+Description=Uvicorn instance to serve fastApiProject
 After=network.target
 
 [Service]
-# the specific user that our service will run as
+# The specific user that our service will run as
+# Need R/W/X access to the project folder
 User=ubuntu
 Group=ubuntu
-# this user can be transiently created by systemd
-# DynamicUser=true
 
-# set project & venv PATH
+# Set project & venv PATH
 WorkingDirectory=/home/ubuntu/fastApiProject
 Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
 
 # RUN instance
-ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
 
 # Support parameters
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
-PrivateTmp=true
 
-# if your app does not need administrative capabilities, let systemd know
-ProtectSystem=strict
+# Socket file .sock access type (requires false for NGINX access)
+PrivateTmp=false
+
+# This user can be transiently created by systemd
+# DynamicUser=true
+
+# If your app does not need administrative capabilities, let systemd know
+# ProtectSystem=strict
 
 [Install]
 WantedBy=multi-user.target
