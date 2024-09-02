@@ -377,10 +377,10 @@ sudo snap install --classic certbot
 sudo certbot --nginx
 ```
 > [!NOTE]
-> We should see something like this (also enter your email address for important Certbot messages):
-> ![image](https://github.com/user-attachments/assets/62acf224-5c52-49ae-b70d-2d4ab0ced739)
-> If we now look at the NGINX configuration file, we will see the changes thanks to which we got the HTTPS connection.
-> ![image](https://github.com/user-attachments/assets/a2c65902-73f4-4977-bd10-bf0f78ea85c7)
+> We should see something like this (also enter your email address for important Certbot messages):<br />
+> ![image](https://github.com/user-attachments/assets/62acf224-5c52-49ae-b70d-2d4ab0ced739)<br />
+> If we now look at the NGINX configuration file, we will see the changes thanks to which we got the HTTPS connection.<br />
+> ![image](https://github.com/user-attachments/assets/a2c65902-73f4-4977-bd10-bf0f78ea85c7)<br />
 > The Certbot packages on your system come with a cron job that will renew your certificates automatically before they expire (certificate are valid for 90 days). You will not need to run Certbot again, unless you change your configuration. You can test automatic renewal for your certificates by running this command:
 > ```
 > sudo certbot renew --dry-run
