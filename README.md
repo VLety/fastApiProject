@@ -109,13 +109,14 @@ deactivate
 > [!IMPORTANT]
 > There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
 
-Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
+Copy all 4 config template files from ./setup/config to the base project's ./config folder and rename them by removing the "template" extension.
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
 cd /home/ubuntu/fastApiProject/config/
 mv -f config.json.template config.json
 mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
+mv -f log.ini.template log.ini
 ```
 > [!NOTE]
 > As a result, we should have such a list of files:
