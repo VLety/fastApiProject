@@ -42,13 +42,16 @@
 * CRUD operations on 3 objects: User, Employee and Ticket which is relational to Employee
 * PATCH operations on User object for name & password changing
 * RBAC permissions model for each API endpoint
-  
+
+> [!IMPORTANT]
+> In our project setup and installation we will use the name "fastApiProject" everywhere and my domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
+
 ## Setup and deploy project to the "clear" AWS Ubuntu EC2 Instance:
 > [!NOTE]
-> We will not consider the installation of EC2 instance in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
+> We will not consider the installation of EC2 instance via AWS console in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
 
 > [!TIP]
-> For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed.
+> For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed bur you can try other linux OS.
 
 > To proceed further, log in to the Linux console...
 
@@ -56,15 +59,7 @@
 ```
 sudo apt update && sudo apt upgrade -y
 ```
-#### Install NGINX
-```
-sudo apt -y install nginx
-```
-#### Install CertBOT
-```
-sudo apt install snapd
-sudo snap install --classic certbot
-```
+
 #### Install GIT
 ```
 sudo apt -y install git
@@ -77,11 +72,6 @@ sudo apt -y install python3-venv
 ```
 
 ### Initial project configuration
-> [!CAUTION]
-> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
-
-> [!IMPORTANT]
-> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
 
 #### Clone a project from a GitHub repository
 ```
@@ -112,7 +102,13 @@ pip3 install "passlib[bcrypt]"
 deactivate
 ```
 
-#### Setup project configuration files
+#### Setup configuration files
+> [!CAUTION]
+> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
+
+> [!IMPORTANT]
+> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
+
 Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
@@ -124,7 +120,6 @@ mv -f schemas.json.template schemas.json
 > [!NOTE]
 > As a result, we should have such a list of files:
 > ![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
-
 
 #### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
@@ -145,8 +140,7 @@ openssl rand -hex 32
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 
 #### Setup password for default users
-We have 3 default users: admin, manager and employee.
-Open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+We have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
@@ -171,7 +165,8 @@ python /home/ubuntu/fastApiProject/setup/change_users_password.py
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
-#### Run project for testing purpose (VENV must be in Active mode)
+#### Run project for testing purpose
+> VENV must be in Active mode
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
@@ -180,9 +175,82 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> **Project configuration is done**
+> **Initial project configuration is complete successfully!****
 
-### Setup NGINX configuration
+#### Add Systemd service
+> [!TIP]
+> A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
+> The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
+> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and see current status.
+> Logging --> https://www.uvicorn.org/settings/#logging
+
+> [Read more](https://www.uvicorn.org/settings/#settings) about Uvicorn RUN instance settings
+
+Create a Systemd service file
+```
+sudo nano /etc/systemd/system/fastApiProject.service
+```
+Type:
+```
+[Unit]
+Description=Uvicorn instance to serve fastApiProject
+After=network.target
+
+[Service]
+# The specific user that our service will run as
+# Need R/W/X access to the project folder
+User=ubuntu
+Group=ubuntu
+
+# Set project & venv PATH
+WorkingDirectory=/home/ubuntu/fastApiProject
+Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
+
+# RUN instance
+ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
+
+# Support parameters
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+
+# Socket .sock file access type (requires false for NGINX access)
+PrivateTmp=false
+
+# This user can be transiently created by systemd
+# DynamicUser=true
+
+# If your app does not need administrative capabilities, let systemd know
+# ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target
+```
+Save Ctrl + o and Exit Ctrl + y
+```
+sudo systemctl daemon-reload
+```
+Set service to autoload when server starts
+```
+sudo systemctl enable fastApiProject.service
+```
+Start service
+```
+sudo systemctl start fastApiProject.service
+```
+Check service status
+```
+sudo systemctl status fastApiProject.service
+```
+> [!TIP]
+> We should see something like this:
+> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
+
+### NGINX setup
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt -y install nginx
+```
 
 #### Add the public IP address of EC2 instance to your domain's DNS A record.
 > My variant:
@@ -286,119 +354,59 @@ sudo systemctl status nginx.service
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
-#### Check project url as HTTP Connection type
-> [!NOTE]
+#### Check the project's HTTP URL
 > My variant: http://fastapiproject.key-info.com.ua/api/v1/docs
-> ![image](https://github.com/user-attachments/assets/82fe40ac-1c95-446f-aa4a-237d8510ba62)
+> ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
 
 > [!TIP]
-> **Congratulations - your NGINX configuration is COMPLETE!**
+> **NGINX setup is complete successfully!**
 
-#### Run Certbot to create ssl certificate
+#### CertBOT setup
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt install snapd
+sudo snap install --classic certbot
+```
+#### Run Certbot to create project's SSL certificate
+> In our project, the role of the TLS terminator will be performed by the NGINX server
 ```
 sudo certbot --nginx
 ```
+> [!NOTE]
+> We should see something like this (also enter your email address for important Certbot messages):
+> ![image](https://github.com/user-attachments/assets/62acf224-5c52-49ae-b70d-2d4ab0ced739)
+
+> If we now look at the NGINX configuration file, we will see the changes thanks to which we got the HTTPS connection.
+> ![image](https://github.com/user-attachments/assets/a2c65902-73f4-4977-bd10-bf0f78ea85c7)
 
 #### Restart NGINX
+> Restart NGINX for HTTPS changes update
 ```
 sudo systemctl restart nginx
 ```
-#### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
+#### Check the project's HTTPS URL
+> My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
+
 > [!TIP]
-> A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
-> The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-> Logging --> https://www.uvicorn.org/settings/#logging
+> **Project setup and deployment completed successfully!**
 
-Create a Systemd service file
-```
-sudo nano /etc/systemd/system/fastApiProject.service
-```
-Type:
-```
-[Unit]
-Description=Uvicorn instance to serve fastApiProject
-After=network.target
-
-[Service]
-# The specific user that our service will run as
-# Need R/W/X access to the project folder
-User=ubuntu
-Group=ubuntu
-
-# Set project & venv PATH
-WorkingDirectory=/home/ubuntu/fastApiProject
-Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
-
-# RUN instance
-ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
-
-# Support parameters
-ExecReload=/bin/kill -s HUP $MAINPID
-KillMode=mixed
-TimeoutStopSec=5
-
-# Socket file .sock access type (requires false for NGINX access)
-PrivateTmp=false
-
-# This user can be transiently created by systemd
-# DynamicUser=true
-
-# If your app does not need administrative capabilities, let systemd know
-# ProtectSystem=strict
-
-[Install]
-WantedBy=multi-user.target
-```
-Save Ctrl + o and Exit Ctrl + y
-```
-sudo systemctl daemon-reload
-```
-Set service to autoload when server starts
-```
-sudo systemctl enable fastApiProject.service
-```
-Start service
-```
-sudo systemctl start fastApiProject.service
-```
-Check service status
-```
-sudo systemctl status fastApiProject.service
-```
-> [!TIP]
-> We should see something like this:
-> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
-
-## Useful commands:
-### VENV
-Manually activate VENV
-```
-source venv/bin/activate
-```
-Manually deactivate (exit) VENV
-```
-deactivate
-```
-> [!IMPORTANT]
-> must be in the project directory like: /home/ubuntu/fastApiProject
+> [!NOTE]
+> **Useful commands:**
+> * Activate VENV
+> ```
+> cd /home/ubuntu/fastApiProject/
+> source venv/bin/activate
+> ```
+> * Run project in port mode
+>  ```
+>  
+>  ```
+> * Deactivate VENV (exit)
+> ```
+> deactivate
+> ```
 
 ### NGINX
 ```
 sudo systemctl restart nginx
 ```
-> [!NOTE]
-> Useful information that users should know, even when skimming content.
-
-> [!TIP]
-> Helpful advice for doing things better or more easily.
-
-> [!IMPORTANT]
-> Key information users need to know to achieve their goal.
-
-> [!WARNING]
-> Urgent info that needs immediate user attention to avoid problems.
-
-> [!CAUTION]
-> Advises about risks or negative outcomes of certain actions.
-
-https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
