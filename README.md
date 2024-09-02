@@ -175,7 +175,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> **Initial project configuration is complete successfully!****
+> **Initial project configuration is complete successfully!**
 
 #### Add Systemd service
 > [!TIP]
@@ -207,7 +207,7 @@ WorkingDirectory=/home/ubuntu/fastApiProject
 Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
 
 # RUN instance
-ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
+ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --workers 3 --log-config /home/ubuntu/fastApiProject/config/log.ini --forwarded-allow-ips='*' --uds /tmp/fastApiProject.sock
 
 # Support parameters
 ExecReload=/bin/kill -s HUP $MAINPID
