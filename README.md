@@ -385,18 +385,16 @@ sudo certbot --nginx
 > sudo certbot renew --dry-run
 > ```
 
-#### Restart NGINX
-> Restart NGINX for HTTPS changes update
+Restart NGINX for HTTPS changes update
 ```
 sudo systemctl restart nginx
 ```
-#### Check the project's HTTPS URL
+> Check the project's HTTPS URL
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!TIP]
-> **Project setup and deployment completed successfully!**
+> **PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!**
 
-> [!NOTE]
 > **Useful commands:**
 > * Activate VENV
 > ```
