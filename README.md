@@ -4,7 +4,7 @@
 
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
-> * Audience: Python Junior+ or Middle level with linux DevOps skills.
+> * Audience: Python Junior+/Middle level with linux DevOps skills.
 > * Tech features: FastAPI RESTful server with Swagger UI, SQLite3 database, OAuth2 authorization with Bearer JWT token combined with a Role-based access control (RBAC) permissions for every endpoint.
 
 > [!Note]
