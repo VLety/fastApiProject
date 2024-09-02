@@ -107,7 +107,7 @@ deactivate
 > Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
 
 > [!IMPORTANT]
-> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
+> There are many approaches to avoid "config problem" - we will use the initial creation of configuration files from the project config templates.
 
 Copy all 4 config template files from ./setup/config to the base project's ./config folder and rename them by removing the "template" extension.
 ```
@@ -126,11 +126,18 @@ Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
 openssl rand -hex 32
 ```
+
 Copy new SECRET_KEY to the project /config/config.json file
+```
+nano /home/ubuntu/fastApiProject/config/config.json
+```
+Change SECRET_KEY value
 ```
 "auth": {
     "SECRET_KEY": "paste new secret key here",
 ```
+> Save: Ctrl+o, Exit: Ctrl+x
+
 > [!WARNING]
 > Do not use the project default SECRET_KEY for production environment!
 
