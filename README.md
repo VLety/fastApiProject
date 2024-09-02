@@ -72,11 +72,6 @@ sudo apt -y install python3-venv
 ```
 
 ### Initial project configuration
-> [!CAUTION]
-> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
-
-> [!IMPORTANT]
-> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
 
 #### Clone a project from a GitHub repository
 ```
@@ -108,6 +103,12 @@ deactivate
 ```
 
 #### Setup configuration files
+> [!CAUTION]
+> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
+
+> [!IMPORTANT]
+> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
+
 Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
@@ -119,7 +120,6 @@ mv -f schemas.json.template schemas.json
 > [!NOTE]
 > As a result, we should have such a list of files:
 > ![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
-
 
 #### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
@@ -140,8 +140,7 @@ openssl rand -hex 32
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 
 #### Setup password for default users
-We have 3 default users: admin, manager and employee.
-Open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+We have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
@@ -182,8 +181,10 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and current status.
+> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and see current status.
 > Logging --> https://www.uvicorn.org/settings/#logging
+
+> [Read more](https://www.uvicorn.org/settings/#settings) about Uvicorn RUN instance settings
 
 Create a Systemd service file
 ```
