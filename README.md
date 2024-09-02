@@ -42,7 +42,10 @@
 * CRUD operations on 3 objects: User, Employee and Ticket which is relational to Employee
 * PATCH operations on User object for name & password changing
 * RBAC permissions model for each API endpoint
-  
+
+> [!IMPORTANT]
+> In our project setup and installation we will use the name "fastApiProject" everywhere and the name of my domain fastapiproject.key-info.com.ua which is done for clarity. But for your needs you should of course use your own names and your own domain.
+
 ## Setup and deploy project to the "clear" AWS Ubuntu EC2 Instance:
 > [!NOTE]
 > We will not consider the installation of EC2 instance in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
@@ -393,6 +396,10 @@ sudo systemctl restart nginx
 > cd /home/ubuntu/fastApiProject/
 > source venv/bin/activate
 > ```
+> * Run project in port mode
+>  ```
+>  
+>  ```
 > * Deactivate VENV (exit)
 > ```
 > deactivate
