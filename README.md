@@ -46,7 +46,7 @@
 * RBAC permissions model for each API endpoint
 
 > [!IMPORTANT]
-> In our project setup and installation we will use the name "fastApiProject" everywhere and my domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
+> In our project setup and installation we will use the name "fastApiProject" everywhere and domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
 
 ## Setup and deploy project to the "clear" AWS Ubuntu EC2 Instance:
 > [!NOTE]
