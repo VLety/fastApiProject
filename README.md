@@ -147,7 +147,7 @@ Initially we have 3 default users: admin, manager and employee. So please open t
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
 > ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)<br />
-> Save Ctrl+o, Exit Ctrl+x
+> Save: Ctrl+o, Exit: Ctrl+x
 
 > [!TIP]
 > Default password requirements (can change requirements in config file): minimum password length is 8 characters - maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
@@ -175,15 +175,13 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> **Initial project configuration is complete successfully!**
+> **Initial project configuration completed successfully!**
 
 #### Add Systemd service
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and see current status.
-> Logging --> https://www.uvicorn.org/settings/#logging
-
+> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and check current status.
 > [Read more](https://www.uvicorn.org/settings/#settings) about Uvicorn RUN instance settings
 
 Create a Systemd service file
@@ -226,7 +224,9 @@ PrivateTmp=false
 [Install]
 WantedBy=multi-user.target
 ```
-Save Ctrl + o and Exit Ctrl + y
+> Save: Ctrl+o and Exit: Ctrl+y<br />
+
+Cause systemd to reload units from disk
 ```
 sudo systemctl daemon-reload
 ```
@@ -234,16 +234,16 @@ Set service to autoload when server starts
 ```
 sudo systemctl enable fastApiProject.service
 ```
-Start service
+Start project service
 ```
 sudo systemctl start fastApiProject.service
 ```
-Check service status
+Check project service status
 ```
 sudo systemctl status fastApiProject.service
 ```
-> [!TIP]
-> We should see something like this:
+
+> We should see something like this:<br />
 > ![image](https://github.com/user-attachments/assets/6e71d759-2f0e-4925-8fd3-e07189f8e3e7)
 
 ### NGINX setup
@@ -260,13 +260,15 @@ sudo apt -y install nginx
 > [!NOTE]
 > FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
 
-#### Delete default NGINX configuration file symlink
+Delete default NGINX configuration file symlink
 ```
 sudo rm /etc/nginx/sites-enabled/default
 ```
-
-#### Create new NGINX configuration file
+Create new NGINX configuration file
+```
 sudo nano /etc/nginx/sites-available/fastApiProject
+```
+Type:
 ```
 server {
     listen 80;
@@ -336,21 +338,20 @@ upstream fastApiProject{
     server unix:/tmp/fastApiProject.sock;
 }
 ```
-Save Ctrl+o, Exit Ctrl+x
+> Save: Ctrl+o, Exit: Ctrl+x
 
-#### Copy NGINX configuration file as symlink to the site-enabled folder
+Copy NGINX configuration file as symlink to the site-enabled folder
 ```
 sudo ln -sf /etc/nginx/sites-available/fastApiProject /etc/nginx/sites-enabled/fastApiProject
 ```
-#### Restart NGINX
+Restart NGINX
 ```
 sudo systemctl restart nginx.service
 ```
-#### Check NGINX status
+Check NGINX status
 ```
 sudo systemctl status nginx.service
 ```
-> [!NOTE]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
@@ -362,14 +363,15 @@ sudo systemctl status nginx.service
 > **NGINX setup completed successfully!**
 
 #### Certbot setup
+Install Certbot
 ```
 sudo apt update && sudo apt upgrade -y
 sudo apt install snapd
 sudo snap install --classic certbot
 ```
 
-#### Run Certbot to create project's SSL certificate
-> In our project, the role of the TLS terminator will be performed by the NGINX server
+Run Certbot to create project's SSL certificate
+> In our project, the role of the TLS terminator will be performed by the NGINX server.
 ```
 sudo certbot --nginx
 ```
