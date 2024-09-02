@@ -20,7 +20,7 @@
 > [!CAUTION]
 > However, to fully utilize the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be enough), optionally add Redis for caching support and Gunicorn WSGI server with automatic management of multiple worker processes in front of Uvicorn ASGI server, if it is really necessary according to the project requirements.
 
-## Project Tech stacks:
+## Project Tech stacks
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 as SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
@@ -32,12 +32,12 @@
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 * Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
   
-## Project specification and standards:
+## Project specification and standards
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
   
-## Project features:
+## Project features
 * Full-fledged RESTful API server with Swagger UI
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
 * Flexible project customization and tuning using configuration files
@@ -48,7 +48,7 @@
 > [!IMPORTANT]
 > In our project setup and installation we will use the name "fastApiProject" everywhere and domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
 
-## Setup and deploy project to the "clear" AWS EC2 Ubuntu instance:
+## Setup and deploy project to the "clear" AWS EC2 Ubuntu instance
 > [!TIP]
 > For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed but you can try other linux OS.
 > We will not consider the installation of EC2 instance via AWS console in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
@@ -404,7 +404,7 @@ sudo systemctl restart nginx
 > [!TIP]
 > **PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!**
 
-## Useful commands:
+## Useful commands
 > * Activate VENV
 > ```
 > cd /home/ubuntu/fastApiProject/
