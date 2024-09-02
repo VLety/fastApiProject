@@ -120,7 +120,7 @@ mv -f log.ini.template log.ini
 ```
 > [!NOTE]
 > As a result, we should have such a list of files:
-> ![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
+> ![image](https://github.com/user-attachments/assets/5b63b47a-531b-4418-9251-2e5f35c1633b)
 
 #### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
