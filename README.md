@@ -141,8 +141,8 @@ Copy new SECRET_KEY to the project /config/config.json file
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 > * log.ini: The file is used to configure server logging.
 
-**Change password for default users**<br />
-Initially we have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+Change password for default users<br />
+> Initially we have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
@@ -150,10 +150,10 @@ sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 > Save: Ctrl+o, Exit: Ctrl+x
 
 > [!TIP]
-> Default password requirements (can change requirements in config file): minimum password length is 8 characters - maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
+> Default password requirements (can change the requirements in the schemas.json file): minimum password length is 8 characters - maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
 
-**Update new passwords in database**<br />
-Activate project's VENV
+Update new passwords in database<br />
+> Activate project's VENV
 ```
 cd /home/ubuntu/fastApiProject/
 source venv/bin/activate
