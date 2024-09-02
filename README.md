@@ -284,7 +284,7 @@ sudo systemctl status nginx.service
 ```
 > [!NOTE]
 > We should see something like this:
-> ![image](https://github.com/user-attachments/assets/47ddc3e0-22c5-4d84-b2df-47a8dbadb24c)
+> ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
 #### Check project url as HTTP Connection type
 > [!TIP]
