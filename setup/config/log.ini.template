@@ -2,14 +2,14 @@
 keys=root
 
 [handlers]
-keys=logfile,logconsole
+keys=logfile,errorfile,logconsole
 
 [formatters]
 keys=logformatter
 
 [logger_root]
 level=INFO
-handlers=logfile, logconsole
+handlers=logfile,errorfile,logconsole
 
 [formatter_logformatter]
 format=[%(asctime)s.%(msecs)03d] %(levelname)s [%(thread)d] - %(message)s
@@ -19,6 +19,13 @@ class=handlers.RotatingFileHandler
 level=INFO
 args=('/home/ubuntu/fastApiProject/logs/logfile.log','a')
 formatter=logformatter
+
+[handler_errorfile]
+class=handlers.RotatingFileHandler
+level=ERROR
+args=('/home/ubuntu/fastApiProject/logs/error.log','a')
+formatter=logformatter
+
 
 [handler_logconsole]
 class=handlers.logging.StreamHandler
