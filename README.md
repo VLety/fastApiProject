@@ -168,7 +168,7 @@ Run password update
 python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
 > [!TIP]
-> We should see something like this: 
+> We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
 #### Run project for testing purpose (VENV must be in Active mode)
@@ -198,7 +198,7 @@ sudo rm /etc/nginx/sites-enabled/default
 ```
 
 #### Create new NGINX configuration file
-sudo nano /etc/nginx/sites-available/fast_api_cfg
+sudo nano /etc/nginx/sites-available/fastApiProject
 ```
 server {
 	listen 80;
@@ -271,16 +271,21 @@ upstream fastApiProject{
 ```
 Save Ctrl+o, Exit Ctrl+x
 
-#### Copy NGINX configuration file symlink to site-enabled folder
+#### Copy NGINX configuration file as symlink to site-enabled folder
 ```
-sudo ln -sf /etc/nginx/sites-available/fast_api_cfg /etc/nginx/sites-enabled/fast_api_cfg
+sudo ln -sf /etc/nginx/sites-available/fastApiProject /etc/nginx/sites-enabled/fastApiProject
 ```
-
-#### Check NGINX configuration file to find potential errors
+#### Restart NGINX
 ```
-sudo nginx -t -c /etc/nginx/sites-enabled/fast_api_cfg
+sudo systemctl restart nginx.service
 ```
-![image](https://github.com/user-attachments/assets/3af15e27-8f7d-4e0a-9f4d-da5007e3d8ba)
+#### Check NGINX status
+```
+sudo systemctl status nginx.service
+```
+> [!TIP]
+> We should see something like this:
+> ![image](https://github.com/user-attachments/assets/47ddc3e0-22c5-4d84-b2df-47a8dbadb24c)
 
 #### Run Certbot to create ssl certificate
 ```
