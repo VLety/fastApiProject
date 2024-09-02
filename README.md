@@ -286,8 +286,7 @@ sudo systemctl status nginx.service
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
-#### Check the project's HTTP url
-> [!NOTE]
+#### Check the project's HTTP URL
 > My variant: http://fastapiproject.key-info.com.ua/api/v1/docs
 > ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
 
