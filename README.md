@@ -185,8 +185,8 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 ### Setup NGINX configuration
 
 #### Add the public IP address of EC2 instance to your domain's DNS A record.
-My variant:
-![image](https://github.com/user-attachments/assets/4db86061-fae4-4d85-ae94-2a7911802b96)
+> My variant:
+> ![image](https://github.com/user-attachments/assets/4db86061-fae4-4d85-ae94-2a7911802b96)
 
 ### Create NGINX configuration
 > [!NOTE]
