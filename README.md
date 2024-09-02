@@ -372,7 +372,7 @@ Check the project's HTTP URL
 > [!TIP]
 > **NGINX setup completed successfully!**
 
-#### Certbot setup
+### Certbot setup
 Install Certbot
 ```
 sudo apt update && sudo apt upgrade -y
@@ -404,7 +404,7 @@ sudo systemctl restart nginx
 > [!TIP]
 > **PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!**
 
-### Useful commands:
+## Useful commands:
 > * Activate VENV
 > ```
 > cd /home/ubuntu/fastApiProject/
