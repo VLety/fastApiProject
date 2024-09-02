@@ -3,7 +3,7 @@
 
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
-> * Audience: Python Junior+ and Middle level with linux DevOps skills.
+> * Audience: Python Junior+ or Middle level with linux DevOps skills.
 > * Tech description: RESTful API server with Swagger UI, SQLite3 database, OAuth2 authorization with Bearer JWT token combined with a Role-based access control (RBAC) permission schema for every endpoint.
 
 > [!Note]
