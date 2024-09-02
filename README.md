@@ -139,6 +139,7 @@ openssl rand -hex 32
 > * config.json: The file is intended to store the main project configuration settings.
 > * schemas.json: The file is used to configure Pydantic JSON schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
+> * log.ini: The file is used to configure server logging.
 
 #### Setup password for default users
 We have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
