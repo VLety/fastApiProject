@@ -48,25 +48,23 @@
 > [!IMPORTANT]
 > In our project setup and installation we will use the name "fastApiProject" everywhere and domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
 
-## Setup and deploy project to the "clear" AWS Ubuntu EC2 Instance:
-> [!NOTE]
-> We will not consider the installation of EC2 instance via AWS console in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
-
+## Setup and deploy project to the "clear" AWS EC2 Ubuntu instance:
 > [!TIP]
-> For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed bur you can try other linux OS.
+> For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed but you can try other linux OS.
+> We will not consider the installation of EC2 instance via AWS console in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
 
 > To proceed further, log in to the Linux console...
 
-#### Update system
+### Install base software
+Update system
 ```
 sudo apt update && sudo apt upgrade -y
 ```
-
-#### Install GIT
+Install GIT
 ```
 sudo apt -y install git
 ```
-#### Install common Python Dependencies
+Install common Python Dependencies
 ```
 sudo apt -y install build-essential libssl-dev libffi-dev python3-dev
 sudo apt -y install python3-pip
@@ -75,7 +73,7 @@ sudo apt -y install python3-venv
 
 ### Initial project configuration
 
-#### Clone a project from a GitHub repository
+Clone a project from a GitHub repository
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
@@ -83,15 +81,15 @@ Let's go to our project catalog
 ```
 cd /home/ubuntu/fastApiProject/
 ```
-#### Create lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
+Create lightweight Python “virtual environments” (VENV) [read more](https://docs.python.org/3/library/venv.html):
 ```
 python3 -m venv venv
 ```
-#### Activate VENV
+Activate VENV
 ```
 source venv/bin/activate
 ```
-#### Install project dependencies:
+#### Install Python dependencies:
 VENV must be in Active mode
 ```
 pip3 install "fastapi[standard]"
@@ -99,7 +97,7 @@ pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
-#### Deactivate VENV
+Deactivate VENV
 ```
 deactivate
 ```
@@ -120,15 +118,15 @@ mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
 mv -f log.ini.template log.ini
 ```
-> [!NOTE]
-> As a result, we should have such a list of files:
-> ![image](https://github.com/user-attachments/assets/5b63b47a-531b-4418-9251-2e5f35c1633b)
 
-#### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
+> As a result, we should have such a list of files:<br />
+> ![image](https://github.com/user-attachments/assets/5b63b47a-531b-4418-9251-2e5f35c1633b)<br /><br />
+
+Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
 openssl rand -hex 32
 ```
-#### Copy new SECRET_KEY to the project /config/config.json file
+Copy new SECRET_KEY to the project /config/config.json file
 ```
 "auth": {
     "SECRET_KEY": "paste new secret key here",
@@ -137,25 +135,24 @@ openssl rand -hex 32
 > Do not use the project default SECRET_KEY for production environment!
 
 > [!TIP]
-> Optionally via initial setup you can change necessary project settings for:
+> If you wish, you can change the necessary project parameters using the initial setup, please go through:
 > * config.json: The file is intended to store the main project configuration settings.
 > * schemas.json: The file is used to configure Pydantic JSON schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 > * log.ini: The file is used to configure server logging.
 
-#### Setup password for default users
+**Change password for default users**<br />
 We have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
-> [!NOTE]
-> ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)
+> ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)<br />
 > Save Ctrl+o, Exit Ctrl+x
 
 > [!TIP]
 > Project password requirements: Minimum password length is 8 characters. Maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
 
-#### Update new passwords in database
+**Update new passwords in database**<br />
 Activate project's VENV
 ```
 cd /home/ubuntu/fastApiProject/
@@ -165,7 +162,6 @@ Run password update
 ```
 python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
-> [!NOTE]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
@@ -174,8 +170,8 @@ python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
-> [!NOTE]
-> We should see something like this:
+
+> We should see something like this:<br />
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
