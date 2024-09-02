@@ -90,7 +90,7 @@ Activate VENV
 source venv/bin/activate
 ```
 #### Install Python dependencies:
-VENV must be in Active mode
+> VENV must be in Active mode
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
