@@ -8,7 +8,7 @@
 > * Tech features: FastAPI RESTful server with Swagger UI, SQLite3 database, OAuth2 authorization with Bearer JWT token combined with a Role-based access control (RBAC) permissions for every endpoint.
 
 > [!Note]
-> This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.
+> This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.<br />
 > [Read more](https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts) about FastAPI recommended deployment.
 
 > [!Note]
