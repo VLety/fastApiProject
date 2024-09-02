@@ -392,6 +392,7 @@ sudo systemctl restart nginx
 > Check the project's HTTPS URL<br />
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
+> [!TIP]
 > **PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!**
 
 ### Useful commands:
