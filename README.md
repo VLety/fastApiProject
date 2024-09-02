@@ -56,15 +56,7 @@
 ```
 sudo apt update && sudo apt upgrade -y
 ```
-#### Install NGINX
-```
-sudo apt -y install nginx
-```
-#### Install CertBOT
-```
-sudo apt install snapd
-sudo snap install --classic certbot
-```
+
 #### Install GIT
 ```
 sudo apt -y install git
@@ -112,7 +104,7 @@ pip3 install "passlib[bcrypt]"
 deactivate
 ```
 
-#### Setup project configuration files
+#### Setup configuration files
 Copy all 3 config template files from ./setup/config to the base project's ./config folder and change their extension to .json 
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
@@ -171,7 +163,8 @@ python /home/ubuntu/fastApiProject/setup/change_users_password.py
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
-#### Run project for testing purpose (VENV must be in Active mode)
+#### Run project for testing purpose
+> VENV must be in Active mode
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
@@ -180,9 +173,80 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> **Project configuration is done**
+> **Initial project configuration is complete successfully!****
 
-### Setup NGINX configuration
+#### Add Systemd service
+> [!TIP]
+> A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
+> The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
+> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and current status.
+> Logging --> https://www.uvicorn.org/settings/#logging
+
+Create a Systemd service file
+```
+sudo nano /etc/systemd/system/fastApiProject.service
+```
+Type:
+```
+[Unit]
+Description=Uvicorn instance to serve fastApiProject
+After=network.target
+
+[Service]
+# The specific user that our service will run as
+# Need R/W/X access to the project folder
+User=ubuntu
+Group=ubuntu
+
+# Set project & venv PATH
+WorkingDirectory=/home/ubuntu/fastApiProject
+Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
+
+# RUN instance
+ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
+
+# Support parameters
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+
+# Socket .sock file access type (requires false for NGINX access)
+PrivateTmp=false
+
+# This user can be transiently created by systemd
+# DynamicUser=true
+
+# If your app does not need administrative capabilities, let systemd know
+# ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target
+```
+Save Ctrl + o and Exit Ctrl + y
+```
+sudo systemctl daemon-reload
+```
+Set service to autoload when server starts
+```
+sudo systemctl enable fastApiProject.service
+```
+Start service
+```
+sudo systemctl start fastApiProject.service
+```
+Check service status
+```
+sudo systemctl status fastApiProject.service
+```
+> [!TIP]
+> We should see something like this:
+> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
+
+### NGINX setup
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt -y install nginx
+```
 
 #### Add the public IP address of EC2 instance to your domain's DNS A record.
 > My variant:
@@ -291,8 +355,14 @@ sudo systemctl status nginx.service
 > ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
 
 > [!TIP]
-> **Congratulations - your NGINX configuration is COMPLETE!**
+> **NGINX setup is complete successfully!**
 
+#### CertBOT setup
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt install snapd
+sudo snap install --classic certbot
+```
 #### Run Certbot to create project's SSL certificate
 > In our project, the role of the TLS terminator will be performed by the NGINX server
 ```
@@ -313,85 +383,20 @@ sudo systemctl restart nginx
 #### Check the project's HTTPS URL
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
-#### Add Systemd service
 > [!TIP]
-> A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
-> The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
-> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and current status.
-> Logging --> https://www.uvicorn.org/settings/#logging
+> **Project setup and deployment completed successfully!**
 
-Create a Systemd service file
-```
-sudo nano /etc/systemd/system/fastApiProject.service
-```
-Type:
-```
-[Unit]
-Description=Uvicorn instance to serve fastApiProject
-After=network.target
-
-[Service]
-# The specific user that our service will run as
-# Need R/W/X access to the project folder
-User=ubuntu
-Group=ubuntu
-
-# Set project & venv PATH
-WorkingDirectory=/home/ubuntu/fastApiProject
-Environment="PATH=/home/ubuntu/fastApiProject/venv/bin"
-
-# RUN instance
-ExecStart=/home/ubuntu/fastApiProject/venv/bin/uvicorn main:app --forwarded-allow-ips='*' --workers 3 --uds /tmp/fastApiProject.sock
-
-# Support parameters
-ExecReload=/bin/kill -s HUP $MAINPID
-KillMode=mixed
-TimeoutStopSec=5
-
-# Socket file .sock access type (requires false for NGINX access)
-PrivateTmp=false
-
-# This user can be transiently created by systemd
-# DynamicUser=true
-
-# If your app does not need administrative capabilities, let systemd know
-# ProtectSystem=strict
-
-[Install]
-WantedBy=multi-user.target
-```
-Save Ctrl + o and Exit Ctrl + y
-```
-sudo systemctl daemon-reload
-```
-Set service to autoload when server starts
-```
-sudo systemctl enable fastApiProject.service
-```
-Start service
-```
-sudo systemctl start fastApiProject.service
-```
-Check service status
-```
-sudo systemctl status fastApiProject.service
-```
-> [!TIP]
-> We should see something like this:
-> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
-
-## Useful commands:
-### VENV
-Manually activate VENV
-```
-source venv/bin/activate
-```
-Manually deactivate (exit) VENV
-```
-deactivate
-```
-> [!IMPORTANT]
-> must be in the project directory like: /home/ubuntu/fastApiProject
+> [!NOTE]
+> **Useful commands:**
+> Activate VENV
+> ```
+> cd /home/ubuntu/fastApiProject/
+> source venv/bin/activate
+> ```
+> Deactivate VENV (exit)
+> ```
+> deactivate
+> ```
 
 ### NGINX
 ```
