@@ -389,13 +389,12 @@ Restart NGINX for HTTPS changes update
 ```
 sudo systemctl restart nginx
 ```
-> Check the project's HTTPS URL
+> Check the project's HTTPS URL<br />
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
-> [!TIP]
 > **PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!**
 
-> **Useful commands:**
+### Useful commands:
 > * Activate VENV
 > ```
 > cd /home/ubuntu/fastApiProject/
