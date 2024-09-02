@@ -1,5 +1,6 @@
 # REST API server solution based on FastAPI framework
 > Recommended for PoC or Prototype approach
+> The delivery result of this project can be seen here https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
