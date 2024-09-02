@@ -28,7 +28,7 @@
 * Passlib[bcrypt] for password hashing [read more](https://passlib.readthedocs.io/en/stable/install.html#optional-libraries)
 * Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
-* Certbot as Let’s Encrypt certificates manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
+* Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
   
 ## Project specification and standards:
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
