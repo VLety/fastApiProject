@@ -204,7 +204,7 @@ server {
 	listen 80;
     
 	# Project server URL
-    server_name	fastapi.key-info.com.ua;
+    server_name	fastApiProject.key-info.com.ua;
 
     server_tokens off;
     client_max_body_size 8M;
