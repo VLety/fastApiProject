@@ -52,7 +52,7 @@
     "password_changed_successfully": "Password changed successfully"
   },
   "api_docs": {
-    "title": "PoC API server solution based on FastAPI framework",
+    "title": "REST API server solution based on FastAPI framework",
     "version": "0.0.1",
     "summary": "Promotion and educational project REST API server based on the FastAPI framework",
     "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control authorization model",
