@@ -201,25 +201,15 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo nano /etc/nginx/sites-available/fastApiProject
 ```
 server {
-	listen 80;
+    listen 80;
     
-	# Project server URL
+    # Project server URL
     server_name	fastApiProject.key-info.com.ua;
-
-    server_tokens off;
-    client_max_body_size 8M;
-
-    gzip on;
-    gzip_proxied any;
-    gzip_disable "msie6";
-    gzip_comp_level 6;
-    gzip_min_length 200; # check your average response size and configure accordingly
 
     location / {
 
 		# Unix Socket mode
 		proxy_pass http://fastApiProject;
-
 		proxy_redirect off;
 		proxy_buffering off;
 		proxy_ignore_client_abort on;
@@ -244,12 +234,15 @@ server {
 		# Version 1.1 is recommended for use with keepalive connections and NTLM authentication. 
 		proxy_http_version 1.1;
 	}
-	
-	location /static {
-		# Path for static files
-		root /home/ubuntu/fastApiProject/static;
-    }
 
+	# Path for project static files
+	location /static {
+		root /home/ubuntu/fastApiProject/static;
+        }
+
+    # Optional project settings which you need to select at your own discretion
+    server_tokens off;
+    client_max_body_size 8M;
     keepalive_requests 5000;  
     keepalive_timeout 120;
     set_real_ip_from 10.0.0.0/8;
@@ -257,6 +250,12 @@ server {
     set_real_ip_from 192.168.0.0/16;
     real_ip_header X-Forwarded-For;
     real_ip_recursive on;
+
+    gzip on; # gzip settings
+    gzip_proxied any;
+    gzip_disable "msie6";
+    gzip_comp_level 6;
+    gzip_min_length 200; # check your average response size and configure accordingly
 }
 
 map $http_upgrade $connection_upgrade {
@@ -264,7 +263,7 @@ map $http_upgrade $connection_upgrade {
     '' close;
 }
 
-# Uvicorn file descriptor referencing
+# Uvicorn service file descriptor referencing
 upstream fastApiProject{
     server unix:/tmp/fastApiProject.sock;
 }
