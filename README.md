@@ -246,7 +246,7 @@ sudo systemctl status fastApiProject.service
 ```
 > [!TIP]
 > We should see something like this:
-> ![image](https://github.com/user-attachments/assets/5fa696b6-d8cc-4330-9de4-1d277f2b1e47)
+> ![image](https://github.com/user-attachments/assets/6e71d759-2f0e-4925-8fd3-e07189f8e3e7)
 
 ### NGINX setup
 ```
