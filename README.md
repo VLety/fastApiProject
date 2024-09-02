@@ -293,19 +293,31 @@ sudo systemctl status nginx.service
 > [!TIP]
 > **Congratulations - your NGINX configuration is COMPLETE!**
 
-#### Run Certbot to create ssl certificate
+#### Run Certbot to create project's SSL certificate
+> In our project, the role of the TLS terminator will be performed by the NGINX server
 ```
 sudo certbot --nginx
 ```
+> [!NOTE]
+> We should see something like this (also enter your email address for important Certbot messages):
+> ![image](https://github.com/user-attachments/assets/62acf224-5c52-49ae-b70d-2d4ab0ced739)
+
+> If we now look at the NGINX configuration file, we will see the changes thanks to which we got the HTTPS connection.
+> ![image](https://github.com/user-attachments/assets/a2c65902-73f4-4977-bd10-bf0f78ea85c7)
 
 #### Restart NGINX
+> Restart NGINX for HTTPS changes update
 ```
 sudo systemctl restart nginx
 ```
-#### Setup Systemd to manage API server as service with following actions: start, restart, stop and status
+#### Check the project's HTTPS URL
+> My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
+
+#### Add Systemd service
 > [!TIP]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
+> We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and current status.
 > Logging --> https://www.uvicorn.org/settings/#logging
 
 Create a Systemd service file
