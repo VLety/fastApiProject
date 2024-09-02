@@ -367,7 +367,7 @@ sudo systemctl status nginx.service
 
 Check the project's HTTP URL
 > My variant: http://fastapiproject.key-info.com.ua/api/v1/docs
-> ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
+> ![image](https://github.com/user-attachments/assets/5cc4b4d1-a30c-4a47-aebe-d557991937a5)
 
 > [!TIP]
 > **NGINX setup completed successfully!**
