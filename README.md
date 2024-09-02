@@ -271,7 +271,7 @@ upstream fastApiProject{
 ```
 Save Ctrl+o, Exit Ctrl+x
 
-#### Copy NGINX configuration file as symlink to site-enabled folder
+#### Copy NGINX configuration file as symlink to the site-enabled folder
 ```
 sudo ln -sf /etc/nginx/sites-available/fastApiProject /etc/nginx/sites-enabled/fastApiProject
 ```
