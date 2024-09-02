@@ -178,7 +178,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > **Initial project configuration completed successfully!**
 
 #### Add Systemd service
-> [!TIP]
+> [!NOTE]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
 > We will use the Systemd service to manage the state of our API server: starting, restarting, stopping and check current status.
@@ -230,14 +230,17 @@ Cause systemd to reload units from disk
 ```
 sudo systemctl daemon-reload
 ```
+
 Set service to autoload when server starts
 ```
 sudo systemctl enable fastApiProject.service
 ```
+
 Start project service
 ```
 sudo systemctl start fastApiProject.service
 ```
+
 Check project service status
 ```
 sudo systemctl status fastApiProject.service
@@ -246,28 +249,33 @@ sudo systemctl status fastApiProject.service
 > We should see something like this:<br />
 > ![image](https://github.com/user-attachments/assets/6e71d759-2f0e-4925-8fd3-e07189f8e3e7)
 
+> [!TIP]
+> **Systemd service added successfully!**
+
 ### NGINX setup
+> [!NOTE]
+> FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
+
+Install NGINX
 ```
 sudo apt update && sudo apt upgrade -y
 sudo apt -y install nginx
 ```
 
-#### Add the public IP address of EC2 instance to your domain's DNS A record.
+Add the public IP address of EC2 instance to your domain's DNS A record.
 > My variant:
 > ![image](https://github.com/user-attachments/assets/cd75e648-5fb3-494d-92af-11871afb4807)
-
-### Create NGINX configuration
-> [!NOTE]
-> FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
 
 Delete default NGINX configuration file symlink
 ```
 sudo rm /etc/nginx/sites-enabled/default
 ```
+
 Create new NGINX configuration file
 ```
 sudo nano /etc/nginx/sites-available/fastApiProject
 ```
+
 Type:
 ```
 server {
@@ -344,10 +352,12 @@ Copy NGINX configuration file as symlink to the site-enabled folder
 ```
 sudo ln -sf /etc/nginx/sites-available/fastApiProject /etc/nginx/sites-enabled/fastApiProject
 ```
+
 Restart NGINX
 ```
 sudo systemctl restart nginx.service
 ```
+
 Check NGINX status
 ```
 sudo systemctl status nginx.service
@@ -355,7 +365,7 @@ sudo systemctl status nginx.service
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
-#### Check the project's HTTP URL
+Check the project's HTTP URL
 > My variant: http://fastapiproject.key-info.com.ua/api/v1/docs
 > ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
 
