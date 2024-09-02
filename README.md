@@ -363,14 +363,15 @@ sudo systemctl status nginx.service
 > ![image](https://github.com/user-attachments/assets/e6e4c0d6-8737-4b12-9fce-f4ea4c44db0b)
 
 > [!TIP]
-> **NGINX setup is complete successfully!**
+> **NGINX setup completed successfully!**
 
-#### CertBOT setup
+#### Certbot setup
 ```
 sudo apt update && sudo apt upgrade -y
 sudo apt install snapd
 sudo snap install --classic certbot
 ```
+
 #### Run Certbot to create project's SSL certificate
 > In our project, the role of the TLS terminator will be performed by the NGINX server
 ```
