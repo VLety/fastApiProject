@@ -81,15 +81,13 @@ sudo apt -y install python3-venv
 > Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
 
 > [!IMPORTANT]
-> There are many approaches to avoid this problem, and we will use the initial creation of configuration files from the project templates.
+> There are many approaches to avoid config problem - we will use the initial creation of configuration files from the project templates.
 
 #### Clone a project from a GitHub repository
 ```
 git clone https://VLety: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@github.com/VLety/fastApiProject.git
 ```
-
-### Create a virtual environment for the project and install the required dependencies
-#### Let's go to our project catalog
+Let's go to our project catalog
 ```
 cd /home/ubuntu/fastApiProject/
 ```
@@ -101,14 +99,15 @@ python3 -m venv venv
 ```
 source venv/bin/activate
 ```
-#### Install project dependencies (VENV must be in Active mode):
+#### Install project dependencies:
+VENV must be in Active mode
 ```
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 ```
-#### Deactivate (exit) VENV
+#### Deactivate VENV
 ```
 deactivate
 ```
@@ -122,8 +121,9 @@ mv -f config.json.template config.json
 mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
 ```
-As a result, we should have such a list of files
-![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
+> [!NOTE]
+> As a result, we should have such a list of files:
+> ![image](https://github.com/user-attachments/assets/1881eaa7-63d2-47f5-9cdc-7d33991099a5)
 
 
 #### Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
@@ -150,11 +150,11 @@ Open the ./setup/setup.json file, change the passwords for all 3 users and save 
 ```
 sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
-> [!TIP]
+> [!NOTE]
 > ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)
 > Save Ctrl+o, Exit Ctrl+x
 
-> [!IMPORTANT]
+> [!TIP]
 > Project password requirements: Minimum password length is 8 characters. Maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
 
 #### Update new passwords in database
@@ -167,7 +167,7 @@ Run password update
 ```
 python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
-> [!TIP]
+> [!NOTE]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
@@ -175,21 +175,21 @@ python /home/ubuntu/fastApiProject/setup/change_users_password.py
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
-> [!TIP]
+> [!NOTE]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
-> [!NOTE]
-> Project configuration is done
+> [!TIP]
+> **Project configuration is done**
 
-### Setup NGINX configuration and API server URL
+### Setup NGINX configuration
 
 #### Add the public IP address of project EC2 instance to your domain's DNS A record.
 My variant:
 ![image](https://github.com/user-attachments/assets/438fd008-8857-4cc0-b22d-e08cb40a2464)
 
 ### Create NGINX configuration
-> [!TIP]
+> [!NOTE]
 > FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
 
 #### Delete default NGINX configuration file symlink
@@ -283,9 +283,15 @@ sudo systemctl restart nginx.service
 ```
 sudo systemctl status nginx.service
 ```
-> [!TIP]
+> [!NOTE]
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/47ddc3e0-22c5-4d84-b2df-47a8dbadb24c)
+
+#### Check project url as HTTP Connection type
+> [!TIP]
+> My variant: http://fastapi.key-info.com.ua/api/v1/docs
+> ![image](https://github.com/user-attachments/assets/0b8d3cc4-6915-4074-9d0e-818858330f65)
+> **Setup NGINX configuration is DONE**
 
 #### Run Certbot to create ssl certificate
 ```
