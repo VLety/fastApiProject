@@ -287,10 +287,12 @@ sudo systemctl status nginx.service
 > ![image](https://github.com/user-attachments/assets/222a6303-86b4-408e-9fe2-4e80e76110d0)
 
 #### Check project url as HTTP Connection type
-> [!TIP]
+> [!NOTE]
 > My variant: http://fastapiproject.key-info.com.ua/api/v1/docs
 > ![image](https://github.com/user-attachments/assets/82fe40ac-1c95-446f-aa4a-237d8510ba62)
-> **Setup NGINX configuration is DONE**
+
+> [!TIP]
+> **Congratulations - your NGINX configuration is COMPLETE!**
 
 #### Run Certbot to create ssl certificate
 ```
