@@ -220,7 +220,7 @@ ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
 
-# Socket .sock file access type (requires false for NGINX access)
+# Socket .sock file access type (access from NGINX side requires false)
 PrivateTmp=false
 
 # This user can be transiently created by systemd
