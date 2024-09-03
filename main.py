@@ -125,7 +125,7 @@ async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depe
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
-# Delete (DELETE) FIRST
+# Delete (DELETE)
 @app.delete("/user/{user_id}", tags=["User"])
 async def delete_user(user_id: int, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
@@ -194,7 +194,7 @@ async def read_all_employees(skip: int = 0, limit: int = 100, db: Session = Depe
     return crud.get_employees(db, skip=skip, limit=limit)
 
 
-# Read (GET) FIRST
+# Read (GET)
 @app.get("/employee/{employee_id}", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def read_employee(employee_id: int, db: Session = Depends(get_db),
                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee_employee_id"]))):
@@ -239,7 +239,7 @@ async def read_all_tickets(skip: int = 0, limit: int = 100, db: Session = Depend
     return items
 
 
-# Read (GET) FIRST
+# Read (GET)
 @app.get("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
 async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
