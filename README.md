@@ -185,7 +185,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > [!TIP]
 > **Initial project configuration completed successfully!**
 
-#### Add Systemd service
+### Add Systemd service
 > [!NOTE]
 > A tool that is starting to be common on linux systems is Systemd. It is a system services manager that allows for strict process management, resources and permissions control.
 > The Linux/Unix socket approach is used to create a communication endpoint and return a file descriptor referencing that endpoint.
