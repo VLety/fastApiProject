@@ -8,8 +8,8 @@ import util
 APP_CONFIG = util.get_config()
 PERMISSIONS = util.get_permissions()  # Project access permission data
 
-""" Users ---------------------------------------------------------------------------------------------------------- """
 
+""" Users -------------------------------------------------------------------------------------------------------- """
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
@@ -129,8 +129,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
-""" Employees + Tickets -------------------------------------------------------------------------------------------- """
-
+""" Employees -------------------------------------------------------------------------------------------------- """
 
 def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
@@ -190,13 +189,7 @@ def delete_employee(db: Session, employee_id):
     return JSONResponse(content={"message": APP_CONFIG["message"]["employee_deleted_successfully"]})
 
 
-def get_ticket(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Ticket).offset(skip).limit(limit).all()
-
-
-def get_my_ticket(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.Ticket).filter(models.Ticket.owner_id == owner_id).offset(skip).limit(limit).all()
-
+""" Tickets ---------------------------------------------------------------------------------------------------- """
 
 def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
     db_item = models.Ticket(**ticket.model_dump(), owner_id=user_id, employee_id=employee_id)
@@ -204,6 +197,18 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, emplo
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+def get_tickets(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Ticket).offset(skip).limit(limit).all()
+
+
+def get_ticket(db: Session, ticket_id: int):
+    return db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
+
+
+def get_my_tickets(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
+    return db.query(models.Ticket).filter(models.Ticket.owner_id == owner_id).offset(skip).limit(limit).all()
 
 
 """ Support functions -------------------------------------------------------------------------------------------- """

@@ -103,12 +103,12 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
 
 # Read (GET) ALL
 @app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
-async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
+async def read_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
     return crud.get_users(db, skip=skip, limit=limit)
 
 
-# Read (GET) FIRST
+# Read (GET)
 @app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
 async def read_user(user_id: int, db: Session = Depends(get_db),
                     permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
@@ -118,7 +118,7 @@ async def read_user(user_id: int, db: Session = Depends(get_db),
     return db_user
 
 
-# Update (PUT) FIRST
+# Update (PUT)
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
 async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
@@ -189,8 +189,8 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
 
 # Read (GET) ALL
 @app.get("/employee/", response_model=list[schemas.EmployeeResponse], tags=["Employee"])
-async def read_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
+async def read_all_employees(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                             permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
     return crud.get_employees(db, skip=skip, limit=limit)
 
 
@@ -204,7 +204,7 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
     return db_employee
 
 
-# Update (PUT) FIRST
+# Update (PUT)
 @app.put("/employee/{employee_id}", response_model=schemas.EmployeeResponse, tags=["Employee"])
 async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
@@ -220,25 +220,47 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
 
-
+# Create (POST)
 @app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
 async def create_ticket_for_employee(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
                                      employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
+    db_employee = crud.get_employee(db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
     return crud.create_ticket(db=db, ticket=ticket, user_id=current_user.id, employee_id=employee_id)
 
 
-@app.get("/tickets/", response_model=list[schemas.Ticket], tags=["Ticket"])
-async def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
-    items = crud.get_ticket(db, skip=skip, limit=limit)
+# Read (GET) ALL
+@app.get("/ticket/", response_model=list[schemas.Ticket], tags=["Ticket"])
+async def read_all_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+    items = crud.get_tickets(db, skip=skip, limit=limit)
     return items
 
 
-@app.get("/tickets/my", response_model=list[schemas.Ticket], tags=["Ticket"])
+# Read (GET) FIRST
+@app.get("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
+async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
+                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+    db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
+    if db_ticket is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["ticket_not_found"])
+    return db_ticket
+
+
+# Read (GET) MY
+@app.get("/ticket/my/", response_model=list[schemas.Ticket], tags=["Ticket"])
 async def read_my_tickets(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
                           skip: int = 0, limit: int = 100,
                           db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
-    items = crud.get_my_ticket(db, skip=skip, limit=limit, owner_id=current_user.id)
+    items = crud.get_my_tickets(db, skip=skip, limit=limit, owner_id=current_user.id)
     return items
+
+
+# Update (PUT)
+@app.put("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
+async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
+    return crud.update_employee(db=db, employee_id=employee_id, employee=employee)
