@@ -84,6 +84,12 @@ async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Se
     return {"status": "ok"}
 
 
+@app.get("/user/scope_example/", tags=["Authentication"])
+async def read_scope_example(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
+                                                                                       scopes=["scope_example"])]):
+    return {"status": "Access allowed base on scope_example."}
+
+
 """ USER ------------------------------------------------------------------------------------------------------- """
 
 # Create (POST)
