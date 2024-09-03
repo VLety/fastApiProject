@@ -234,7 +234,7 @@ WantedBy=multi-user.target
 ```
 > Save: Ctrl+o and Exit: Ctrl+y<br />
 
-Cause systemd to reload units from disk
+Cause Systemd to reload units update from disk
 ```
 sudo systemctl daemon-reload
 ```
