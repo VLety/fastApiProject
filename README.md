@@ -151,10 +151,10 @@ Change SECRET_KEY value
 Change password for default users<br />
 > Initially we have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
-sudo nano /home/ubuntu/fastApiProject/setup/setup.json
+nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
 > Example:
-> ![image](https://github.com/user-attachments/assets/c5cc0078-0d87-4271-8b0d-98ea54ad538a)<br />
+> ![image](https://github.com/user-attachments/assets/b01f9934-44bf-4bdc-97ac-e5a8935c5fca)<br />
 > Save: Ctrl+o, Exit: Ctrl+x
 
 > [!TIP]
