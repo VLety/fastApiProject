@@ -46,7 +46,7 @@
 * RBAC permissions model for each API endpoint
 
 > [!IMPORTANT]
-> In our project setup and installation we will use the name "fastApiProject" everywhere and domain name is fastapiproject.key-info.com.ua, which is done for clarity. But for your needs you should of course use your own names and your own domain.
+> In our project setup we will use everywhere the name "fastApiProject", linux user "ubuntu" and url "fastapiproject.key-info.com.ua", what is done for simplicity. But for your needs you can/can/must use your own name/user/url.
 
 ## Setup and deploy project to the "clear" AWS EC2 Ubuntu instance
 > [!TIP]
@@ -412,7 +412,7 @@ sudo systemctl restart nginx
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!TIP]
-> ## PROJECT SETUP AND DEPLOYMENT COMPLETED SUCCESSFULLY!
+> ## Project setup and deployment completed successfully!
 
 ## Useful commands
 > * Activate VENV
