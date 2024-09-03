@@ -262,7 +262,7 @@ sudo systemctl status fastApiProject.service
 
 ### NGINX setup
 > [!NOTE]
-> FastAPI latency is lower when interacting with NGINX via a socket than when interacting via a port, but both solutions work. We will go the way of interacting with NGINX via a socket.
+> FastAPI latency is lower when communicating with NGINX via a socket than when communicating via a port, but both solutions will work. We will go the way of NGINX communicating with Uvicorn via a socket connection.
 
 Install NGINX
 ```
