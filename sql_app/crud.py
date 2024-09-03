@@ -194,8 +194,8 @@ def get_ticket(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Ticket).offset(skip).limit(limit).all()
 
 
-def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int):
-    db_item = models.Ticket(**ticket.model_dump(), owner_id=user_id)
+def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
+    db_item = models.Ticket(**ticket.model_dump(), owner_id=user_id, employee_id=employee_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

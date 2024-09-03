@@ -41,6 +41,8 @@ class User(Base):
     created = Column(VARCHAR(19), index=True)
     updated = Column(VARCHAR(19), index=True)
 
+    tickets = relationship("Ticket", back_populates="owner")  # Set table relation
+
 
 class Employee(Base):
     __tablename__ = "employees"  # Set relevant table name or skip this string if class name is equal table name
@@ -59,7 +61,7 @@ class Employee(Base):
     created = Column(String(19), index=True)
     updated = Column(String(19), index=True)
 
-    tickets = relationship("Ticket", back_populates="owner")  # Set table relation
+    tickets = relationship("Ticket", back_populates="employee")  # Set table relation
 
 
 class Ticket(Base):
@@ -70,6 +72,8 @@ class Ticket(Base):
     title = Column(String, index=True)
     description = Column(String, index=True)
     status = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("employees.id"))
+    employee_id = Column(Integer, ForeignKey("employees.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("Employee", back_populates="tickets")  # Set table relation
+    employee = relationship("Employee", back_populates="tickets")  # Set table relation
+    owner = relationship("User", back_populates="tickets")  # Set table relation

@@ -177,7 +177,7 @@ class EmployeeUpdate(BaseModel):
 
 class TicketBase(BaseModel):
     title: str
-    description: str | None = None
+    description: str
     status: str
 
 
@@ -188,9 +188,10 @@ class TicketCreate(TicketBase):
 class Ticket(TicketBase):
     id: int
     owner_id: int
+    employee_id: int
 
     class Config:
-        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode'
         from_attributes = True  # Pydantic V2 version
 
 

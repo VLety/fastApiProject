@@ -215,14 +215,22 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
 
-@app.post("/employee/{employee_id}/ticket/", response_model=schemas.Ticket, tags=["Ticket"])
-async def create_ticket_for_employee(employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
+@app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
+async def create_ticket_for_employee(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+                                     employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
-    return crud.create_ticket(db=db, ticket=ticket, user_id=employee_id)
+    return crud.create_ticket(db=db, ticket=ticket, user_id=current_user.id, employee_id=employee_id)
 
 
 @app.get("/tickets/", response_model=list[schemas.Ticket], tags=["Ticket"])
 async def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
+                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+    items = crud.get_ticket(db, skip=skip, limit=limit)
+    return items
+
+
+@app.get("/tickets/my", response_model=list[schemas.Ticket], tags=["Ticket"])
+async def read_my_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
                        permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     items = crud.get_ticket(db, skip=skip, limit=limit)
     return items
