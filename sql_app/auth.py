@@ -81,7 +81,7 @@ async def get_current_user(security_scopes: SecurityScopes,
     )
 
     try:
-        # payload: {'sub': 'admin', 'scopes': [], 'exp': 1723557087}
+        # payload: {'sub': 'admin', 'scopes': ['scope_example'], 'exp': 1723557087}
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
@@ -100,6 +100,7 @@ async def get_current_user(security_scopes: SecurityScopes,
     if db_user is None:
         raise credentials_exception
 
+    # security scope validation
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
             credentials_exception.detail = APP_CONFIG["raise_error"]["not_enough_permissions"]

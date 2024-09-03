@@ -53,7 +53,7 @@ async def favicon():
 # The OAuth2 specification dictates that for a password flow the data should be collected using form data
 # (instead of JSON) and that it should have the specific fields `username` and `password`.
 @app.post("/token", tags=["Authentication"])
-async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRequestForm, Depends()],
+async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
                                  ) -> schemas.AuthToken:
     db_user = crud.get_user_by_username(db, username=form_data.username)
@@ -71,7 +71,7 @@ async def login_for_access_token(form_data: auth.Annotated[auth.OAuth2PasswordRe
 
 
 @app.get("/user/me/", response_model=auth.AuthUser, tags=["Authentication"])
-async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+async def read_users_me(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
 
@@ -79,15 +79,14 @@ async def read_users_me(current_user: auth.Annotated[auth.AuthUser, Depends(auth
 # Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
 # It is just example - in fact we don't need use scope Security for this endpoint...
 @app.get("/user/status/", tags=["Authentication"])
-async def read_system_status(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
-                                                                                       scopes=["status"])]):
+async def read_system_status(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
 @app.get("/user/scope_example/", tags=["Authentication"])
-async def read_scope_example(current_user: auth.Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
+async def read_scope_example(current_user: Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
                                                                                        scopes=["scope_example"])]):
-    return {"status": "Access allowed base on scope_example."}
+    return {"status": "Access allowed base on scopes = scope_example"}
 
 
 """ USER ------------------------------------------------------------------------------------------------------- """
