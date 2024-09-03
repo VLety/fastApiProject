@@ -284,7 +284,9 @@ Create new NGINX configuration file
 sudo nano /etc/nginx/sites-available/fastApiProject
 ```
 
-Type (don't forget to specify your domain for the parameter/value string **server_name fastApiProject.key-info.com.ua;**):
+Type:
+> [!IMPORTANT]
+> Don't forget to specify your domain url for the **server_name fastApiProject.key-info.com.ua;** string!
 ```
 server {
     listen 80;
