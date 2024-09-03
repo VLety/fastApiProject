@@ -119,7 +119,7 @@ mv -f schemas.json.template schemas.json
 mv -f log.ini.template log.ini
 ```
 
-> As a result, we should have such a list of files:<br />
+> As a result, we should get the following list of files:<br />
 > ![image](https://github.com/user-attachments/assets/5b63b47a-531b-4418-9251-2e5f35c1633b)<br /><br />
 
 Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
