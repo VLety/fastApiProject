@@ -262,17 +262,17 @@ sudo systemctl status fastApiProject.service
 
 ### NGINX setup
 > [!NOTE]
-> FastAPI latency is lower when communicating with NGINX via a socket than when communicating via a port, but both solutions will work. We will go the way of NGINX communicating with Uvicorn via a socket connection.
+> FastAPI latency is lower when communicating with NGINX via a socket than when communicating via a port, but both solutions will work. We will go the way of NGINX communicating with Uvicorn via a socket connection.<br />
+
+Add the public IP address of EC2 instance to your domain's DNS A record.
+> My variant:
+> ![image](https://github.com/user-attachments/assets/cd75e648-5fb3-494d-92af-11871afb4807)
 
 Install NGINX
 ```
 sudo apt update && sudo apt upgrade -y
 sudo apt -y install nginx
 ```
-
-Add the public IP address of EC2 instance to your domain's DNS A record.
-> My variant:
-> ![image](https://github.com/user-attachments/assets/cd75e648-5fb3-494d-92af-11871afb4807)
 
 Delete default NGINX configuration file symlink
 ```
