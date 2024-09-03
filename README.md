@@ -142,7 +142,7 @@ Change SECRET_KEY value
 > Do not use the project default SECRET_KEY for production environment!
 
 > [!TIP]
-> If you wish, you can change the necessary project parameters using the initial setup, please go through:
+> If you wish, you can change the necessary project parameters using the initial setup, please going through:
 > * config.json: The file is intended to store the main project configuration settings.
 > * schemas.json: The file is used to configure Pydantic JSON schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
