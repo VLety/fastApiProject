@@ -46,7 +46,9 @@ async def favicon():
     # https://fastapi.tiangolo.com/advanced/custom-response/#fileresponse
     return FileResponse("./static/favicon.ico")
 
+
 """ Authentication ------------------------------------------------------------------------------------------- """
+
 
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
@@ -85,11 +87,12 @@ async def read_system_status(current_user: Annotated[auth.AuthUser, Depends(auth
 
 @app.get("/user/scope_example/", tags=["Authentication"])
 async def read_scope_example(current_user: Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
-                                                                                       scopes=["scope_example"])]):
+                                                                                  scopes=["scope_example"])]):
     return {"status": "Access allowed base on scopes = scope_example"}
 
 
 """ USER ------------------------------------------------------------------------------------------------------- """
+
 
 # Create (POST)
 @app.post("/user/", response_model=schemas.UserResponse, tags=["User"])
@@ -132,39 +135,41 @@ async def delete_user(user_id: int, db: Session = Depends(get_db),
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/password", tags=["User"])
 async def update_user_password(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
+                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
     return crud.update_user_password(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/username", response_model=schemas.UserResponse, tags=["User"])
 async def update_user_username(user_id: int, user: schemas.UserUsernameUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
+                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
 async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
+                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
 async def update_user_disabled(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
+                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/login_denied", response_model=schemas.UserResponse, tags=["User"])
 async def update_user_login_denied(user_id: int, user: schemas.UserLoginDeniedUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
+                                   permission: bool = Depends(
+                                       auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 """ EMPLOYEE ---------------------------------------------------------------------------------------------------- """
+
 
 # Create (POST)
 @app.post("/employee/", response_model=schemas.EmployeeResponse, tags=["Employee"])
@@ -215,6 +220,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
 
+
 @app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
 async def create_ticket_for_employee(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
                                      employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
@@ -230,7 +236,9 @@ async def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(ge
 
 
 @app.get("/tickets/my", response_model=list[schemas.Ticket], tags=["Ticket"])
-async def read_my_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
-                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
-    items = crud.get_ticket(db, skip=skip, limit=limit)
+async def read_my_tickets(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+                          skip: int = 0, limit: int = 100,
+                          db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
+    items = crud.get_my_ticket(db, skip=skip, limit=limit, owner_id=current_user.id)
     return items

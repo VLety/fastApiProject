@@ -133,7 +133,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_employee(db: Session, employee_id: int):
-    return db.query(models.Employee).filter(models.Employee.id == employee_id).first()  # type: ignore[call-arg]
+    return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
 
 
 def get_employee_by_email(db: Session, email: str):
@@ -192,6 +192,10 @@ def delete_employee(db: Session, employee_id):
 
 def get_ticket(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Ticket).offset(skip).limit(limit).all()
+
+
+def get_my_ticket(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
+    return db.query(models.Ticket).filter(models.Ticket.owner_id == owner_id).offset(skip).limit(limit).all()
 
 
 def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
