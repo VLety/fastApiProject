@@ -261,6 +261,9 @@ async def read_my_tickets(current_user: Annotated[auth.AuthUser, Depends(auth.ge
 
 # Update (PUT)
 @app.put("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
-async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_employee_employee_id"]))):
-    return crud.update_employee(db=db, employee_id=employee_id, employee=employee)
+async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_ticket_ticket_id"]))):
+    db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
+    if db_ticket is None:
+        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["ticket_not_found"])
+    return crud.update_ticket(db=db, db_ticket=db_ticket, ticket=ticket)

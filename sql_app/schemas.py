@@ -162,8 +162,7 @@ class EmployeeCreate(EmployeeBase):
 
 
 class EmployeeUpdate(BaseModel):
-    # Make Input json based on main EmployeeBase(BaseModel) class + current class
-    # password: str  # We can add here additional parameter that is not present in UserBase Class
+
     first_name: str | None = None
     last_name: str | None = None
     nick_name: str | None = None
@@ -193,6 +192,12 @@ class Ticket(TicketBase):
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode'
         from_attributes = True  # Pydantic V2 version
+
+
+class TicketUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    status: str | None = None
 
 
 class EmployeeResponse(EmployeeBase):

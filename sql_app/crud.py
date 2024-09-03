@@ -8,8 +8,8 @@ import util
 APP_CONFIG = util.get_config()
 PERMISSIONS = util.get_permissions()  # Project access permission data
 
-
 """ Users -------------------------------------------------------------------------------------------------------- """
+
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
@@ -89,12 +89,11 @@ def update_user(db: Session, user_id, user):
     user = validate_user_attr(db=db, user=user, db_user=db_user)
 
     # Update User record in database
-    db_employee = update_db_record_by_id(db, db_user, user)
+    db_employee = update_db_record(db, db_user, user)
     return db_employee
 
 
 def update_user_password(db: Session, user_id, user):
-
     # Check if User exists
     db_user = get_user(db=db, user_id=user_id)
     if db_user is None:
@@ -131,6 +130,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 """ Employees -------------------------------------------------------------------------------------------------- """
 
+
 def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
 
@@ -148,16 +148,22 @@ def get_employees(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_employee(db: Session, employee: schemas.EmployeeCreate):
-    db_employee = models.Employee(first_name=employee.first_name,
-                                  last_name=employee.last_name,
-                                  nick_name=employee.nick_name,
-                                  phone=employee.phone,
-                                  email=employee.email,
-                                  birthday=str(employee.birthday),
-                                  country=employee.country,
-                                  city=employee.city,
-                                  address=employee.address,
-                                  created=util.get_current_time_utc("TIME"))
+
+    # We can do record setup in a short way like:
+    db_employee = models.Employee(**employee.model_dump(), created=util.get_current_time_utc("TIME"))
+
+    # Also we can do record setup in a long way but more clearly in detail like:
+    # db_employee = models.Employee(first_name=employee.first_name,
+    #                               last_name=employee.last_name,
+    #                               nick_name=employee.nick_name,
+    #                               phone=employee.phone,
+    #                               email=employee.email,
+    #                               birthday=str(employee.birthday),
+    #                               country=employee.country,
+    #                               city=employee.city,
+    #                               address=employee.address,
+    #                               created=util.get_current_time_utc("TIME"))
+
     db.add(db_employee)
     db.commit()
     db.refresh(db_employee)
@@ -171,7 +177,7 @@ def update_employee(db: Session, employee_id, employee):
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
     # Update Employee record in database
-    db_employee = update_db_record_by_id(db, db_employee, employee)
+    db_employee = update_db_record(db, db_employee, employee)
     return db_employee
 
 
@@ -191,8 +197,12 @@ def delete_employee(db: Session, employee_id):
 
 """ Tickets ---------------------------------------------------------------------------------------------------- """
 
+
 def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
-    db_item = models.Ticket(**ticket.model_dump(), owner_id=user_id, employee_id=employee_id)
+    db_item = models.Ticket(**ticket.model_dump(),
+                            owner_id=user_id,
+                            employee_id=employee_id,
+                            created=util.get_current_time_utc("TIME"))
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
@@ -211,10 +221,16 @@ def get_my_tickets(db: Session, owner_id: int, skip: int = 0, limit: int = 100):
     return db.query(models.Ticket).filter(models.Ticket.owner_id == owner_id).offset(skip).limit(limit).all()
 
 
+def update_ticket(db: Session, db_ticket, ticket: schemas.TicketUpdate):
+    # Update Ticket record in database
+    db_ticket = update_db_record(db=db, db_record=db_ticket, payload=ticket)
+    return db_ticket
+
+
 """ Support functions -------------------------------------------------------------------------------------------- """
 
 
-def update_db_record_by_id(db, db_record, payload):
+def update_db_record(db: Session, db_record, payload):
     # Set new fild(s) value(s) and not override existence DB field(s)
     for field_name in payload.model_fields_set:
         setattr(db_record, field_name, getattr(payload, field_name))

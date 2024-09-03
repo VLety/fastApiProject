@@ -38,6 +38,7 @@ class User(Base):
     disabled = Column(BOOLEAN, default=False)
     login_denied = Column(BOOLEAN, default=False)
     hashed_password = Column(VARCHAR(64))
+
     created = Column(VARCHAR(19), index=True)
     updated = Column(VARCHAR(19), index=True)
 
@@ -58,6 +59,7 @@ class Employee(Base):
     country = Column(String(64), index=True)
     city = Column(String(64), index=True)
     address = Column(String(254), index=True)
+
     created = Column(String(19), index=True)
     updated = Column(String(19), index=True)
 
@@ -74,6 +76,9 @@ class Ticket(Base):
     status = Column(String, index=True)
     employee_id = Column(Integer, ForeignKey("employees.id"))
     owner_id = Column(Integer, ForeignKey("users.id"))
+
+    created = Column(String(19), index=True)
+    updated = Column(String(19), index=True)
 
     employee = relationship("Employee", back_populates="tickets")  # Set table relation
     owner = relationship("User", back_populates="tickets")  # Set table relation
