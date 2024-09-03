@@ -158,7 +158,7 @@ sudo nano /home/ubuntu/fastApiProject/setup/setup.json
 > Save: Ctrl+o, Exit: Ctrl+x
 
 > [!TIP]
-> Default password requirements (can change the requirements in the schemas.json file): minimum password length is 8 characters - maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
+> Default password requirements (can be changed in the schemas.json file): minimum password length is 8 characters - maximum password length is 16 characters. At least one uppercase and one lowercase letter, one number and one special character.
 
 Update new passwords in database<br />
 > Activate project's VENV
