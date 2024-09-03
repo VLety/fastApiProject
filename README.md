@@ -104,7 +104,7 @@ deactivate
 
 #### Setup configuration files
 > [!CAUTION]
-> Never add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
+> Never ever add configuration files to the repository! This is due to potential security issues and problems with updates delivery.
 
 > [!IMPORTANT]
 > There are many approaches to avoid "config problem" - we will use the initial creation of configuration files from the project config templates.
