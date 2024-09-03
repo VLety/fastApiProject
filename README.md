@@ -149,7 +149,7 @@ Change SECRET_KEY value
 > * log.ini: The file is used to configure server logging.
 
 Change password for default users<br />
-> Initially we have 3 default users: admin, manager and employee. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
+> Initially we have 3 default users: admin, manager and support. So please open the ./setup/setup.json file, change the passwords for all 3 users and save the file with the new passwords.
 ```
 nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
