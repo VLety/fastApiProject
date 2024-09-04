@@ -81,7 +81,7 @@ sudo apt -y install python3-pip
 sudo apt -y install python3-venv
 ```
 
-### Initial project configuration
+### Setup project configuration
 
 Clone a project from a GitHub repository
 ```
