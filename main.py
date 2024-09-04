@@ -49,6 +49,7 @@ async def favicon():
 
 """ Authentication (no RBAC for this section) ------------------------------------------------------------------- """
 
+
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
 # The OAuth2 specification dictates that for a password flow the data should be collected using form data
@@ -132,10 +133,14 @@ async def delete_user(user_id: int, db: Session = Depends(get_db),
 
 
 # Update attribute (PATCH)
-@app.patch("/user/password/", tags=["User"])
-async def update_my_password(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
-                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
-    return crud.update_user_password(db=db, user_id=user_id, user=user)
+@app.patch("/user/password", tags=["User"])
+async def update_my_password(user_id: int,
+                             user: schemas.UserPasswordUpdate,
+                             current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+                             db: Session = Depends(get_db),
+                             permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
+
+    return crud.update_user_password(db=db, user_id=current_user.id, user=user)
 
 
 # Update attribute (PATCH)
@@ -226,6 +231,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 """ Ticket ---------------------------------------------------------------------------------------------------- """
 
+
 # Create (POST)
 @app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
 async def create_ticket_for_employee(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
@@ -268,7 +274,7 @@ async def read_my_tickets(current_user: Annotated[auth.AuthUser, Depends(auth.ge
 # Update (PUT)
 @app.put("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
 async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db),
-                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_ticket_ticket_id"]))):
+                        permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_ticket_ticket_id"]))):
     db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
     if db_ticket is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["ticket_not_found"])
