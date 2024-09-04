@@ -193,7 +193,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> #### Setup configuration completed successfully!
+> #### Setup project configuration completed successfully!
 
 ### Add Systemd service
 > [!NOTE]
