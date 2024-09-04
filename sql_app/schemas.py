@@ -103,13 +103,6 @@ class UserUpdate(UserBaseAttributes):
     phone: Optional[str] | None = None
     email: Optional[str] | None = None
 
-class UserUsernameUpdate(UserUsername):
-    pass
-
-
-class UserPasswordUpdate(UserPassword):
-    pass
-
 
 class UserRoleUpdate(BaseModel):
     role: list[str]

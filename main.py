@@ -128,7 +128,7 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
 
 # Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
-async def change_my_password(user: schemas.UserPasswordUpdate,
+async def change_my_password(user: schemas.UserPassword,
                              current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
@@ -137,7 +137,7 @@ async def change_my_password(user: schemas.UserPasswordUpdate,
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/password", tags=["User"])
-async def update_user_password_by_id(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
+async def update_user_password_by_id(user_id: int, user: schemas.UserPassword, db: Session = Depends(get_db),
                                      permission: bool = Depends(
                                          auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
     return crud.update_user_password(db=db, user_id=user_id, user=user)
@@ -145,7 +145,7 @@ async def update_user_password_by_id(user_id: int, user: schemas.UserPasswordUpd
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/username", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_username_by_id(user_id: int, user: schemas.UserUsernameUpdate, db: Session = Depends(get_db),
+async def update_user_username_by_id(user_id: int, user: schemas.UserUsername, db: Session = Depends(get_db),
                                      permission: bool = Depends(
                                          auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
