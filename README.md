@@ -422,7 +422,7 @@ sudo systemctl restart nginx
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!TIP]
-> ## Project setup and deployment completed successfully!
+> ### Project setup and deployment completed successfully!
 
 ## Useful commands
 > * Activate VENV
