@@ -47,8 +47,7 @@ async def favicon():
     return FileResponse("./static/favicon.ico")
 
 
-""" Authentication ------------------------------------------------------------------------------------------- """
-
+""" Authentication (no RBAC for this section) ------------------------------------------------------------------- """
 
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
@@ -77,14 +76,14 @@ async def read_users_me(current_user: Annotated[auth.AuthUser, Depends(auth.get_
     return current_user
 
 
-# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
-# Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
-# It is just example - in fact we don't need use scope Security for this endpoint...
 @app.get("/user/status/", tags=["Authentication"])
 async def read_system_status(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
+# OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
+# Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
+# It is just example - in fact we don't need use scope Security for this project...
 @app.get("/user/scope_example/", tags=["Authentication"])
 async def read_scope_example(current_user: Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
                                                                                   scopes=["scope_example"])]):
@@ -130,6 +129,13 @@ async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depe
 async def delete_user(user_id: int, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
     return crud.delete_user(db=db, user_id=user_id)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/password/", tags=["User"])
+async def update_my_password(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
+                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
+    return crud.update_user_password(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
