@@ -13,6 +13,7 @@ transfer data between different layers of an app).
 """
 from datetime import date
 from pydantic import BaseModel, Field, ValidationError, ValidationInfo, model_validator
+from typing import Optional
 from typing_extensions import Self
 import re
 import util
@@ -96,11 +97,11 @@ class UserCreate(UserSecureAttributes, UserBaseAttributes, UserPassword, UserUse
     pass
 
 
-class UserUpdate(BaseModel):
-    first_name: str | None = None
-    last_name: str | None = None
-    phone: str | None = None
-    email: str | None = None
+class UserUpdate(UserBaseAttributes):
+    first_name: Optional[str] | None = None
+    last_name: Optional[str] | None = None
+    phone: Optional[str] | None = None
+    email: Optional[str] | None = None
 
 class UserUsernameUpdate(UserUsername):
     pass
