@@ -5,7 +5,6 @@
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
 > * Audience: Python Junior+/Middle level with linux DevOps skills.
-> * Tech features: FastAPI RESTful server with Swagger UI, SQLite3 database, OAuth2 authorization with Bearer JWT token combined with a Role-based access control (RBAC) permissions for every endpoint.
 
 > [!Note]
 > This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.<br />
@@ -30,7 +29,7 @@
 > * OAuth2 authorization with Role-based access control (RBAC) model.
 > * Ability for easily integration with others backend solutions and frontend UI/UX part.
 
-## Project Tech stacks
+## Project Tech stack
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 as SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
@@ -47,12 +46,13 @@
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
   
-## Project features
+## Project Tech features
 * Full-fledged RESTful API server with Swagger UI
+* OAuth 2.0 authorization protocol
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
 * Flexible project customization and tuning using configuration files
-* CRUD operations on 3 objects: User, Employee and Ticket which is relational to Employee
-* PATCH operations on User object for name & password changing
+* CRUD operations for 3 objects: User, Employee and Ticket
+* PATCH operations on User object (name or password changing etc)
 * RBAC permissions model for each API endpoint
 
 > [!IMPORTANT]
