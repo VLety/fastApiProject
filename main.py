@@ -103,7 +103,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
 
 # Read (GET) ALL
 @app.get("/user/", response_model=list[schemas.UserResponse], tags=["User"])
-async def read_all_users(skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"],
+async def read_all_users(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                          db: Session = Depends(get_db),
                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user"]))):
     return crud.get_users(db, skip=skip, limit=limit)
@@ -203,7 +203,7 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
 
 # Read (GET) ALL
 @app.get("/employee/", response_model=list[schemas.EmployeeResponse], tags=["Employee"])
-async def read_all_employees(skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"],
+async def read_all_employees(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee"]))):
     return crud.get_employees(db, skip=skip, limit=limit)
@@ -249,7 +249,7 @@ async def create_ticket_for_employee(current_user: Annotated[schemas.AuthUser, D
 
 # Read (GET) ALL
 @app.get("/ticket/", response_model=list[schemas.Ticket], tags=["Ticket"])
-async def read_all_tickets(skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"],
+async def read_all_tickets(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                            db: Session = Depends(get_db),
                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     items = crud.get_tickets(db, skip=skip, limit=limit)
@@ -269,7 +269,7 @@ async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
 # Read (GET) MY
 @app.get("/ticket/my/", response_model=list[schemas.Ticket], tags=["Ticket"])
 async def read_my_tickets(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
-                          skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"],
+                          skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                           db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     items = crud.get_my_tickets(db, skip=skip, limit=limit, owner_id=current_user.id)

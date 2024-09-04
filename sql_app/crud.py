@@ -124,9 +124,9 @@ def delete_user(db: Session, user_id):
     return JSONResponse(content={"message": APP_CONFIG["message"]["user_deleted_successfully"]})
 
 
-def get_users(db: Session, skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]):
-    if limit > APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]:
-        limit = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]
+def get_users(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]):
+    if limit > APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]:
+        limit = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
@@ -145,9 +145,9 @@ def get_employee_by_phone(db: Session, phone: str):
     return db.query(models.Employee).filter(models.Employee.phone == phone).first()  # type: ignore[call-arg]
 
 
-def get_employees(db: Session, skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]):
-    if limit > APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]:
-        limit = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]
+def get_employees(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]):
+    if limit > APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]:
+        limit = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]
     return db.query(models.Employee).offset(skip).limit(limit).all()
 
 
@@ -213,9 +213,9 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, emplo
     return db_item
 
 
-def get_tickets(db: Session, skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]):
-    if limit > APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]:
-        limit = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]
+def get_tickets(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]):
+    if limit > APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]:
+        limit = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]
     return db.query(models.Ticket).offset(skip).limit(limit).all()
 
 
@@ -223,9 +223,9 @@ def get_ticket(db: Session, ticket_id: int):
     return db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
 
 
-def get_my_tickets(db: Session, owner_id: int, skip: int = 0, limit: int = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]):
-    if limit > APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]:
-        limit = APP_CONFIG["RESPOND_BODY_ITEMS_LIMIT"]
+def get_my_tickets(db: Session, owner_id: int, skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]):
+    if limit > APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]:
+        limit = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]
     return db.query(models.Ticket).filter(models.Ticket.owner_id == owner_id).offset(skip).limit(limit).all()
 
 
