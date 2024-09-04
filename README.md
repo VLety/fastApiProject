@@ -163,7 +163,7 @@ Change password for default users<br />
 ```
 nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
-> Example:
+> Example:<br />
 > ![image](https://github.com/user-attachments/assets/b01f9934-44bf-4bdc-97ac-e5a8935c5fca)<br />
 > Save: Ctrl+o, Exit: Ctrl+x
 
