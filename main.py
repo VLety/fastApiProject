@@ -72,23 +72,23 @@ async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequest
     return schemas.AuthToken(access_token=access_token, token_type="bearer")
 
 
-@app.get("/user/me/", response_model=auth.AuthUser, tags=["Authentication"])
-async def read_users_me(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+@app.get("/me/", response_model=auth.AuthUser, tags=["Authentication"])
+async def read_about_me(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
 
-@app.get("/user/status/", tags=["Authentication"])
-async def read_system_status(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
+@app.get("/status/", tags=["Authentication"])
+async def read_my_status(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
 # OAuth2 Security scheme with scope https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-security-scheme
 # Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
 # It is just example - in fact we don't need use scope Security for this project...
-@app.get("/user/scope_example/", tags=["Authentication"])
+@app.get("/token/scope_example/", tags=["Authentication"])
 async def read_scope_example(current_user: Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
                                                                                   scopes=["scope_example"])]):
-    return {"status": "Access allowed base on scopes = scope_example"}
+    return {"status": "Access allowed base on token's 'scopes': ['scope_example']"}
 
 
 """ USER ------------------------------------------------------------------------------------------------------- """
@@ -110,8 +110,8 @@ async def read_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(
 
 # Read (GET)
 @app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def read_user(user_id: int, db: Session = Depends(get_db),
-                    permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
+async def read_user_by_id(user_id: int, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
@@ -120,62 +120,64 @@ async def read_user(user_id: int, db: Session = Depends(get_db),
 
 # Update (PUT)
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
+async def update_user_by_id(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
+                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Delete (DELETE)
 @app.delete("/user/{user_id}", tags=["User"])
-async def delete_user(user_id: int, db: Session = Depends(get_db),
-                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
+async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
+                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
     return crud.delete_user(db=db, user_id=user_id)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
-async def update_my_password(user_id: int,
-                             user: schemas.UserPasswordUpdate,
+async def change_my_password(user: schemas.UserPasswordUpdate,
                              current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
-
     return crud.update_user_password(db=db, user_id=current_user.id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/password", tags=["User"])
-async def update_user_password(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
-                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
+async def update_user_password_by_id(user_id: int, user: schemas.UserPasswordUpdate, db: Session = Depends(get_db),
+                                     permission: bool = Depends(
+                                         auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
     return crud.update_user_password(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/username", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_username(user_id: int, user: schemas.UserUsernameUpdate, db: Session = Depends(get_db),
-                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
+async def update_user_username_by_id(user_id: int, user: schemas.UserUsernameUpdate, db: Session = Depends(get_db),
+                                     permission: bool = Depends(
+                                         auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_role(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
-                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
+async def update_user_role_by_id(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
+                                 permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_disabled(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
-                               permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
+async def update_user_disabled_by_id(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
+                                     permission: bool = Depends(
+                                         auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/login_denied", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_login_denied(user_id: int, user: schemas.UserLoginDeniedUpdate, db: Session = Depends(get_db),
-                                   permission: bool = Depends(
-                                       auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
+async def update_user_login_denied_by_id(user_id: int, user: schemas.UserLoginDeniedUpdate,
+                                         db: Session = Depends(get_db),
+                                         permission: bool = Depends(
+                                             auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
