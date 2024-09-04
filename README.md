@@ -5,7 +5,6 @@
 > [!IMPORTANT]
 > * Purpose: Intended for educational and promotional needs.
 > * Audience: Python Junior+/Middle level with linux DevOps skills.
-> * Tech features: FastAPI RESTful server with Swagger UI, SQLite3 database, OAuth2 authorization with Bearer JWT token combined with a Role-based access control (RBAC) permissions for every endpoint.
 
 > [!Note]
 > This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.<br />
@@ -20,7 +19,17 @@
 > [!CAUTION]
 > However, to fully utilize the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be enough), optionally add Redis for caching support and Gunicorn WSGI server with automatic management of multiple worker processes in front of Uvicorn ASGI server, if it is really necessary according to the project requirements.
 
-## Project Tech stacks
+## Project IDEA
+> [!Note]
+> ### User story
+> Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.
+> Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the employees are supported. The creation and processing of the **Ticket** is the responsibility of the support department.
+> ### Technical requirements
+> * REST API server with Swagger UI.
+> * OAuth2 authorization with Role-based access control (RBAC) model.
+> * Ability for easily integration with others backend solutions and frontend UI/UX part.
+
+## Project Tech stack
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
 * SQLAlchemy V2 as SQL toolkit and Object Relational Mapper [read more](https://www.sqlalchemy.org)
@@ -37,12 +46,13 @@
 * OAuth 2.0 authorization protocol [read more](https://oauth.net/2/)
 * Role-Based Access Control (RBAC) permissions model [read more](https://auth0.com/docs/manage-users/access-control/rbac)
   
-## Project features
+## Project Tech features
 * Full-fledged RESTful API server with Swagger UI
+* OAuth 2.0 authorization protocol
 * JWT token authentication with expiration period and [optional authorization scopes](https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes)
 * Flexible project customization and tuning using configuration files
-* CRUD operations on 3 objects: User, Employee and Ticket which is relational to Employee
-* PATCH operations on User object for name & password changing
+* CRUD operations for 3 objects: User, Employee and Ticket
+* PATCH operations on User object (name or password changing etc)
 * RBAC permissions model for each API endpoint
 
 > [!IMPORTANT]
@@ -71,7 +81,7 @@ sudo apt -y install python3-pip
 sudo apt -y install python3-venv
 ```
 
-### Initial project configuration
+### Setup project configuration
 
 Clone a project from a GitHub repository
 ```
@@ -153,7 +163,7 @@ Change password for default users<br />
 ```
 nano /home/ubuntu/fastApiProject/setup/setup.json
 ```
-> Example:
+> Example:<br />
 > ![image](https://github.com/user-attachments/assets/b01f9934-44bf-4bdc-97ac-e5a8935c5fca)<br />
 > Save: Ctrl+o, Exit: Ctrl+x
 
@@ -183,7 +193,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
 > [!TIP]
-> **Initial project configuration completed successfully!**
+> #### Setup project configuration completed successfully!
 
 ### Add Systemd service
 > [!NOTE]
@@ -286,7 +296,7 @@ sudo nano /etc/nginx/sites-available/fastApiProject
 
 Type:
 > [!IMPORTANT]
-> Don't forget to specify your domain url for the **server_name fastApiProject.key-info.com.ua;** string!
+> Don't forget to specify your domain url for the **server_name fastApiProject.key-info.com.ua;** configuration string
 ```
 server {
     listen 80;
@@ -412,7 +422,7 @@ sudo systemctl restart nginx
 > My variant: https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!TIP]
-> ## Project setup and deployment completed successfully!
+> ### Project setup and deployment completed successfully!
 
 ## Useful commands
 > * Activate VENV
