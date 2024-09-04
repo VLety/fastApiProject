@@ -20,6 +20,15 @@
 > [!CAUTION]
 > However, to fully utilize the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be enough), optionally add Redis for caching support and Gunicorn WSGI server with automatic management of multiple worker processes in front of Uvicorn ASGI server, if it is really necessary according to the project requirements.
 
+## Project IDEA
+> [!Note]
+> ### User story
+> Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.
+> Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the Employees are supported. The creation and processing of the Ticket is the responsibility of the support department.
+> ### Technical requirements
+> OAuth2 authorization with Role-based access control (RBAC) model.
+> Ability for easily integration with others backend solutions and frontend UI/UX part.
+
 ## Project Tech stacks
 * Python 3.10+
 * FastAPI as a base project framework [read more](https://fastapi.tiangolo.com)
