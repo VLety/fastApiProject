@@ -18,6 +18,7 @@ import re
 import util
 
 APP_SCHEMAS = util.get_schemas()
+PERMISSIONS = util.get_permissions()
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
 
@@ -63,7 +64,7 @@ class UserBase(BaseModel):
     last_name: str
     phone: str
     email: str
-    role: list[str]
+    role: list[str] = Field(examples=[PERMISSIONS["rbac_roles"]])
     disabled: bool = Field(default=False)
     login_denied: bool = Field(default=False)
 

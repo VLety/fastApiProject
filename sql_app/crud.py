@@ -6,7 +6,7 @@ from .auth import get_password_hash
 import util
 
 APP_CONFIG = util.get_config()
-PERMISSIONS = util.get_permissions()  # Project access permission data
+PERMISSIONS = util.get_permissions()
 
 """ Users -------------------------------------------------------------------------------------------------------- """
 

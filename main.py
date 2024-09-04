@@ -1,7 +1,4 @@
-"""
-RESTful OpenAPI Specification (OAS) application programming interface (API) based on FastAPI framework
-Documentation: api-url/docs
-"""
+""" REST API server solution based on FastAPI framework """
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -15,10 +12,6 @@ APP_CONFIG = util.get_config()  # Project config data
 PERMISSIONS = util.get_permissions()  # Project access permission data
 models.Base.metadata.create_all(bind=engine)  # Create all empty tables by "if not exist" condition
 
-# Behind a Proxy root_path argument
-# https://fastapi.tiangolo.com/advanced/behind-a-proxy/#behind-a-proxy
-# Metadata and Docs URLs
-# https://fastapi.tiangolo.com/tutorial/metadata/#metadata-and-docs-urls
 app = FastAPI(root_path=APP_CONFIG["root_path"],
               title=APP_CONFIG["api_docs"]["title"],
               version=APP_CONFIG["api_docs"]["version"],
