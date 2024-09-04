@@ -296,7 +296,7 @@ sudo nano /etc/nginx/sites-available/fastApiProject
 
 Type:
 > [!IMPORTANT]
-> Don't forget to specify your domain url for the **server_name fastApiProject.key-info.com.ua;** string!
+> Don't forget to specify your domain url for the **server_name fastApiProject.key-info.com.ua;** configuration string
 ```
 server {
     listen 80;
