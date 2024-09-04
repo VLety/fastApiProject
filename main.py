@@ -72,13 +72,13 @@ async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequest
     return schemas.AuthToken(access_token=access_token, token_type="bearer")
 
 
-@app.get("/me/", response_model=auth.AuthUser, tags=["Authentication"])
-async def read_about_me(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)]):
+@app.get("/me/", response_model=schemas.UserResponse, tags=["Authentication"])
+async def read_about_me(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)]):
     return current_user
 
 
 @app.get("/status/", tags=["Authentication"])
-async def read_my_status(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_active_user)]):
+async def read_my_status(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
@@ -86,7 +86,7 @@ async def read_my_status(current_user: Annotated[auth.AuthUser, Depends(auth.get
 # Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
 # It is just example - in fact we don't need use scope Security for this project...
 @app.get("/token/scope_example/", tags=["Authentication"])
-async def read_scope_example(current_user: Annotated[auth.AuthUser, auth.Security(auth.get_current_active_user,
+async def read_scope_example(current_user: Annotated[schemas.AuthUser, auth.Security(auth.get_current_active_user,
                                                                                   scopes=["scope_example"])]):
     return {"status": "Access allowed base on token's 'scopes': ['scope_example']"}
 
