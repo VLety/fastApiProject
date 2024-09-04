@@ -135,7 +135,7 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
 # Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
 async def change_my_password(user: schemas.UserPasswordUpdate,
-                             current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+                             current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
     return crud.update_user_password(db=db, user_id=current_user.id, user=user)
@@ -236,7 +236,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 # Create (POST)
 @app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
-async def create_ticket_for_employee(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+async def create_ticket_for_employee(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
                                      employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
@@ -265,7 +265,7 @@ async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
 
 # Read (GET) MY
 @app.get("/ticket/my/", response_model=list[schemas.Ticket], tags=["Ticket"])
-async def read_my_tickets(current_user: Annotated[auth.AuthUser, Depends(auth.get_current_user)],
+async def read_my_tickets(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
                           skip: int = 0, limit: int = 100,
                           db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
