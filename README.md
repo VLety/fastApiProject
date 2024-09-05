@@ -53,7 +53,17 @@
 * Flexible project customization and tuning using configuration files
 * CRUD operations for 3 objects: User, Employee and Ticket
 * PATCH operations on User object (name or password changing etc)
-* RBAC permissions model for each API endpoint
+* User RBAC permissions model for each API endpoint with additional security attributes: Disabled and LoginDenied
+
+> [!TIP]
+> ## Learn more about the project security model
+> The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:
+> * Login (get a valid token) based on username and password **/api/v1/token**
+> * Get information about me (based on a valid user token) **/api/v1/me**
+> * Get my current status (based on a valid user token) **/api/v1/status**
+> Disabled users with valid token cannot access any endpoints regardless of their role (except for the Authentication section) - but can Login (get valid token).
+> LoginDenied users cannot Login (get valid token).
+> Default token expiration period equal "ACCESS_TOKEN_EXPIRE_MINUTES": 60 (we can changer this setting ./config/config.json file).
 
 > [!IMPORTANT]
 > In our project setup we will use everywhere the name "fastApiProject", linux user "ubuntu" and url "fastapiproject.key-info.com.ua", what is done for simplicity. But for your needs you can/can/must use your own name/user/url.
