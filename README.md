@@ -24,6 +24,8 @@
 > ### User story
 > Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.
 > Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the employees are supported. The creation and processing of the **Ticket** is the responsibility of the support department.
+> Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying logins (separate from the user's roles).
+
 > ### Technical requirements
 > * REST API server with Swagger UI.
 > * OAuth2 authorization with Role-based access control (RBAC) model.
@@ -62,16 +64,16 @@
 > * Get information about me (based on a valid user token) **/api/v1/me**
 > * Get my current status (based on a valid user token) **/api/v1/status**
 > Disabled users with valid token cannot access any endpoints regardless of their role (except for the Authentication section) - but can Login (get valid token).
-> LoginDenied users cannot Login (get valid token).
+> LoginDenied users cannot Login (cannot get valid token).
 > Default token expiration period equal "ACCESS_TOKEN_EXPIRE_MINUTES": 60 (we can changer this setting ./config/config.json file).
-
-> [!IMPORTANT]
-> In our project setup we will use everywhere the name "fastApiProject", linux user "ubuntu" and url "fastapiproject.key-info.com.ua", what is done for simplicity. But for your needs you can/can/must use your own name/user/url.
 
 ## Setup and deploy project to the "clear" AWS EC2 Ubuntu instance
 > [!TIP]
 > For the EC2 instance, it is recommended to choose the Ubuntu 24.04 LTS OS type as it comes with Python 3.12 pre-installed but you can try other linux OS.
 > We will not consider the installation of EC2 instance via AWS console in this article as this is a separate topic, assuming that the necessary knowledge already exists. For PoC or Prototype project deployments, the [AWS Free Tier](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) will be sufficient [read more](https://aws.amazon.com/ec2/getting-started/).
+
+> [!IMPORTANT]
+> In our project setup we will use everywhere the name "fastApiProject", linux user "ubuntu" and url "fastapiproject.key-info.com.ua", what is done for simplicity. But for your needs you can/can/must use your own name/user/url.
 
 > To proceed further, log in to the EC2 instance linux server console...
 
