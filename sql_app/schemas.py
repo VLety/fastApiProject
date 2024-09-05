@@ -36,7 +36,7 @@ class AuthTokenData(BaseModel):
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
-class UserUsername(BaseModel):
+class UserUsernameAttr(BaseModel):
     username: str = Field(
         min_length=APP_SCHEMAS["User"]["username"]["min_length"],
         max_length=APP_SCHEMAS["User"]["username"]["max_length"],
@@ -45,7 +45,7 @@ class UserUsername(BaseModel):
     )
 
 
-class UserPassword(BaseModel):
+class UserPasswordAttr(BaseModel):
     password: str = Field(min_length=APP_SCHEMAS["User"]["password"]["min_length"],
                           max_length=APP_SCHEMAS["User"]["password"]["max_length"],
                           examples=APP_SCHEMAS["User"]["password"]["examples"],
@@ -60,48 +60,46 @@ class UserPassword(BaseModel):
         return self
 
 
-class UserBaseAttributes(BaseModel):
+class UserContactsAttr(BaseModel):
     first_name: str
     last_name: str
     phone: str
     email: str
 
 
-class UserSecureAttributes(BaseModel):
+class UserRoleAttr(BaseModel):
     role: list[str] = Field(examples=[PERMISSIONS["rbac_roles"]])
+
+
+class UserDisabledAttr(BaseModel):
     disabled: bool = Field(default=False)
+
+
+class UserLoginDeniedAttr(BaseModel):
     login_denied: bool = Field(default=False)
 
 
-class UserBase(UserSecureAttributes, UserBaseAttributes, UserUsername):
+class UserSecureAttr(UserRoleAttr, UserDisabledAttr, UserLoginDeniedAttr):
     pass
 
 
-class UserCreate(UserSecureAttributes, UserBaseAttributes, UserPassword, UserUsername):
+class UserBase(UserSecureAttr, UserContactsAttr, UserUsernameAttr):
     pass
 
 
-class UserUpdate(UserBaseAttributes):
+class UserCreate(UserSecureAttr, UserContactsAttr, UserPasswordAttr, UserUsernameAttr):
+    pass
+
+
+class UserContactsUpdate(UserContactsAttr):
     first_name: Optional[str] | None = None
     last_name: Optional[str] | None = None
     phone: Optional[str] | None = None
     email: Optional[str] | None = None
 
 
-class UserRoleUpdate(BaseModel):
-    role: list[str]
-
-
-class UserDisabledUpdate(BaseModel):
-    disabled: bool
-
-
-class UserLoginDeniedUpdate(BaseModel):
-    login_denied: bool
-
-
 class UserResponse(UserBase):
-    # Make Output json based on main UserBase(BaseModel) class + current class
+    # Make Output json based on parent UserBase(BaseModel) class + current class
     id: int
     created: str
     updated: str | None = None  # | None = None options required if no value present in database

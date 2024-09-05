@@ -42,7 +42,6 @@ async def favicon():
 
 """ Authentication (no RBAC for this section) ------------------------------------------------------------------- """
 
-
 # OAuth2PasswordRequestForm:
 # This is a dependency class to collect the `username` and `password` as form data for an OAuth2 password flow.
 # The OAuth2 specification dictates that for a password flow the data should be collected using form data
@@ -114,7 +113,7 @@ async def read_user_by_id(user_id: int, db: Session = Depends(get_db),
 
 # Update (PUT)
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_by_id(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db),
+async def update_user_by_id(user_id: int, user: schemas.UserContactsUpdate, db: Session = Depends(get_db),
                             permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
@@ -128,7 +127,7 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
 
 # Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
-async def change_my_password(user: schemas.UserPassword,
+async def change_my_password(user: schemas.UserPasswordAttr,
                              current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
@@ -137,7 +136,7 @@ async def change_my_password(user: schemas.UserPassword,
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/password", tags=["User"])
-async def update_user_password_by_id(user_id: int, user: schemas.UserPassword, db: Session = Depends(get_db),
+async def update_user_password_by_id(user_id: int, user: schemas.UserPasswordAttr, db: Session = Depends(get_db),
                                      permission: bool = Depends(
                                          auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_password"]))):
     return crud.update_user_password(db=db, user_id=user_id, user=user)
@@ -145,7 +144,7 @@ async def update_user_password_by_id(user_id: int, user: schemas.UserPassword, d
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/username", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_username_by_id(user_id: int, user: schemas.UserUsername, db: Session = Depends(get_db),
+async def update_user_username_by_id(user_id: int, user: schemas.UserUsernameAttr, db: Session = Depends(get_db),
                                      permission: bool = Depends(
                                          auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_username"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
@@ -153,14 +152,14 @@ async def update_user_username_by_id(user_id: int, user: schemas.UserUsername, d
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/role", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_role_by_id(user_id: int, user: schemas.UserRoleUpdate, db: Session = Depends(get_db),
+async def update_user_role_by_id(user_id: int, user: schemas.UserRoleAttr, db: Session = Depends(get_db),
                                  permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_role"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/disabled", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_disabled_by_id(user_id: int, user: schemas.UserDisabledUpdate, db: Session = Depends(get_db),
+async def update_user_disabled_by_id(user_id: int, user: schemas.UserDisabledAttr, db: Session = Depends(get_db),
                                      permission: bool = Depends(
                                          auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_disabled"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
@@ -168,7 +167,7 @@ async def update_user_disabled_by_id(user_id: int, user: schemas.UserDisabledUpd
 
 # Update attribute (PATCH)
 @app.patch("/user/{user_id}/login_denied", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_login_denied_by_id(user_id: int, user: schemas.UserLoginDeniedUpdate,
+async def update_user_login_denied_by_id(user_id: int, user: schemas.UserLoginDeniedAttr,
                                          db: Session = Depends(get_db),
                                          permission: bool = Depends(
                                              auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_login_denied"]))):
