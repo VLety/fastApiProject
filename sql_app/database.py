@@ -64,16 +64,16 @@ def database_error_handler(db: Session, error: exc.IntegrityError):
     db.rollback()
 
     parsed_error = str(error.orig.args[0])
-    print("SQLAlchemy IntegrityError:", parsed_error)
 
     # Manage UNIQUE field errors
     if parsed_error == "UNIQUE constraint failed: users.username":
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["username_already_registered"])
     elif parsed_error == "UNIQUE constraint failed: users.phone":
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
     elif parsed_error == "UNIQUE constraint failed: users.email":
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["email_already_registered"])
 
     # Another errors
     else:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["error_processing_database_request"])
+        print("SQLAlchemy IntegrityError:", parsed_error)
+        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["error_processing_database_request"])

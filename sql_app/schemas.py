@@ -23,6 +23,7 @@ PERMISSIONS = util.get_permissions()
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
 
+
 class AuthToken(BaseModel):
     access_token: str
     token_type: str
@@ -34,6 +35,7 @@ class AuthTokenData(BaseModel):
 
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
+
 
 class UserUsernameAttr(BaseModel):
     username: str = Field(
@@ -63,7 +65,11 @@ class UserContactsAttr(BaseModel):
     first_name: str
     last_name: str
     phone: str
-    email: str
+    email: str = Field(
+        min_length=APP_SCHEMAS["User"]["email"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["email"]["max_length"],
+        examples=APP_SCHEMAS["User"]["email"]["examples"]
+    )
 
 
 class UserRoleAttr(BaseModel):
@@ -113,6 +119,7 @@ class UserResponse(UserBase):
 
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
 
+
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class
     first_name: str
@@ -133,7 +140,6 @@ class EmployeeCreate(EmployeeBase):
 
 
 class EmployeeUpdate(BaseModel):
-
     first_name: str | None = None
     last_name: str | None = None
     nick_name: str | None = None

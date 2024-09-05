@@ -33,7 +33,7 @@ class User(Base):
     first_name = Column(String(64), index=True)
     last_name = Column(String(64), index=True)
     phone = Column(String(20), index=True, unique=True)
-    email = Column(String(254), index=True, unique=True)
+    email = Column(String(64), index=True, unique=True)
     role = Column(JSON())
     disabled = Column(BOOLEAN, default=False)
     login_denied = Column(BOOLEAN, default=False)
@@ -54,7 +54,7 @@ class Employee(Base):
     last_name = Column(String(64), index=True)
     nick_name = Column(String(20), index=True)
     phone = Column(String(20), index=True, unique=True)
-    email = Column(String(254), index=True, unique=True)
+    email = Column(String(64), index=True, unique=True)
     birthday = Column(String(10), index=True)
     country = Column(String(64), index=True)
     city = Column(String(64), index=True)
@@ -71,9 +71,9 @@ class Ticket(Base):
     metadata_obj = metadata_obj  # Create table if not exist
 
     id = Column(Integer, primary_key=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    status = Column(String, index=True)
+    title = Column(String(32), index=True)
+    description = Column(String(64), index=True)
+    status = Column(String(16), index=True)
     employee_id = Column(Integer, ForeignKey("employees.id"))
     owner_id = Column(Integer, ForeignKey("users.id"))
 
@@ -82,3 +82,5 @@ class Ticket(Base):
 
     employee = relationship("Employee", back_populates="tickets")  # Set table relation
     owner = relationship("User", back_populates="tickets")  # Set table relation
+
+"volodimir.letiahin@key-info.com.ua                "
