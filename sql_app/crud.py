@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import exc
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
-from . import models, schemas
+from . import models, schemas, database
 from .auth import get_password_hash
 import util
 
@@ -63,7 +62,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     #                       hashed_password=hashed_password,
     #                       created=util.get_current_time_utc("TIME"))
 
-    db_user = create_db_record(db=db, db_record=db_user)
+    db_user = database.create_db_record(db=db, db_record=db_user)
     return db_user
 
 
@@ -77,7 +76,7 @@ def update_user(db: Session, user_id, user):
     user = validate_user_role(user=user)
 
     # Update User record in database
-    db_employee = update_db_record(db=db, db_record=db_user, payload=user)
+    db_employee = database.update_db_record(db=db, db_record=db_user, payload=user)
     return db_employee
 
 
@@ -168,7 +167,7 @@ def update_employee(db: Session, employee_id, employee):
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
 
     # Update Employee record in database
-    db_employee = update_db_record(db, db_employee, employee)
+    db_employee = database.update_db_record(db, db_employee, employee)
     return db_employee
 
 
@@ -218,58 +217,5 @@ def get_my_tickets(db: Session, owner_id: int, skip: int = 0, limit: int = APP_C
 
 def update_ticket(db: Session, db_ticket, ticket: schemas.TicketUpdate):
     # Update Ticket record in database
-    db_ticket = update_db_record(db=db, db_record=db_ticket, payload=ticket)
+    db_ticket = database.update_db_record(db=db, db_record=db_ticket, payload=ticket)
     return db_ticket
-
-
-""" Support functions -------------------------------------------------------------------------------------------- """
-
-
-def update_db_record(db: Session, db_record, payload):
-    # Set new field(s) value(s) and not override existence DB field(s)
-    for field_name in payload.model_fields_set:
-        setattr(db_record, field_name, getattr(payload, field_name))
-
-    # Set update time-date
-    db_record.updated = util.get_current_time_utc("TIME")
-
-    # Update record in database
-    try:
-        db.commit()
-        db.refresh(db_record)
-        return db_record
-
-    # Manage UNIQUE field errors
-    except exc.IntegrityError as Error:
-        parsed_error = str(Error.orig.args[0])
-        print("SQLAlchemy IntegrityError:", parsed_error)
-        if parsed_error == "UNIQUE constraint failed: users.username":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.phone":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.email":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
-
-
-def create_db_record(db: Session, db_record):
-
-    # Set created time-date
-    db_record.created = util.get_current_time_utc("TIME")
-
-    # Create record in database
-    try:
-        db.add(db_record)
-        db.commit()
-        db.refresh(db_record)
-        return db_record
-
-    # Manage UNIQUE field errors
-    except exc.IntegrityError as Error:
-        parsed_error = str(Error.orig.args[0])
-        print("SQLAlchemy IntegrityError:", parsed_error)
-        if parsed_error == "UNIQUE constraint failed: users.username":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.phone":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.email":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
