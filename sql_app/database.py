@@ -39,16 +39,8 @@ def update_db_record(db: Session, db_record, payload):
         db.refresh(db_record)
         return db_record
 
-    # Manage UNIQUE field errors
-    except exc.IntegrityError as Error:
-        parsed_error = str(Error.orig.args[0])
-        print("SQLAlchemy IntegrityError:", parsed_error)
-        if parsed_error == "UNIQUE constraint failed: users.username":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.phone":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.email":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+    except exc.IntegrityError as error:
+        database_error_handler(db=db, error=error)
 
 
 def create_db_record(db: Session, db_record):
@@ -63,13 +55,25 @@ def create_db_record(db: Session, db_record):
         db.refresh(db_record)
         return db_record
 
+    except exc.IntegrityError as error:
+        database_error_handler(db=db, error=error)
+
+def database_error_handler(db: Session, error: exc.IntegrityError):
+    # Session.rollback() method will be called so that the transaction is rolled back immediately,
+    # before propagating the exception outward.
+    db.rollback()
+
+    parsed_error = str(error.orig.args[0])
+    print("SQLAlchemy IntegrityError:", parsed_error)
+
     # Manage UNIQUE field errors
-    except exc.IntegrityError as Error:
-        parsed_error = str(Error.orig.args[0])
-        print("SQLAlchemy IntegrityError:", parsed_error)
-        if parsed_error == "UNIQUE constraint failed: users.username":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.phone":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
-        elif parsed_error == "UNIQUE constraint failed: users.email":
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+    if parsed_error == "UNIQUE constraint failed: users.username":
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+    elif parsed_error == "UNIQUE constraint failed: users.phone":
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+    elif parsed_error == "UNIQUE constraint failed: users.email":
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+
+    # Another errors
+    else:
+        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["error_processing_database_request"])
