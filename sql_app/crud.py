@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import exc
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from . import models, schemas
@@ -27,48 +28,42 @@ def get_user_by_phone(db: Session, phone: str):
     return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
 
 
-def validate_user_attr(db: Session, user: schemas.UserCreate, db_user: models.User = None):
-    if hasattr(user, 'role'):  # Check role is existed
+def validate_user_role(user: schemas.UserCreate):
+    # Check role is existed
+    if hasattr(user, 'role'):
         # Remove role list duplication like ["admin", "admin"] and sorting list
         user.role = list(set(user.role))
         user.role.sort(reverse=False)
-        # Check if User's role is allowed
         for role in user.role:
             if role not in PERMISSIONS["rbac_roles"]:
                 raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
-
-    # For NEW User: check if unique User's identification attributes already exists
-    if db_user is None:
-        db_user = get_user_by_username(db=db, username=user.username)
-        if db_user:
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-        db_user = get_user_by_email(db=db, email=user.email)
-        if db_user:
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
-        db_user = get_user_by_phone(db=db, phone=user.phone)
-        if db_user:
-            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
 
     return user
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    user = validate_user_attr(db=db, user=user, db_user=None)  # Check if new user attributes is valid
-    hashed_password = get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
-    db_user = models.User(username=user.username,
-                          first_name=user.first_name,
-                          last_name=user.last_name,
-                          phone=user.phone,
-                          email=user.email,
-                          role=user.role,
-                          disabled=user.disabled,
-                          login_denied=user.login_denied,
-                          hashed_password=hashed_password,
-                          created=util.get_current_time_utc("TIME"))
+    # Validate User's role(s)
+    user = validate_user_role(user=user)
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+    # Create hashed password based on PWD_CONTEXT
+    hashed_password = get_password_hash(user.password)
+
+    # We can do record setup in a short way like:
+    # https://docs.pydantic.dev/latest/concepts/serialization/#advanced-include-and-exclude
+    db_user = models.User(**user.model_dump(exclude={"password"}), hashed_password=hashed_password)
+    # Also we can do record setup in a long way but more clearly in detail like:
+    # db_user = models.User(username=user.username,
+    #                       first_name=user.first_name,
+    #                       last_name=user.last_name,
+    #                       phone=user.phone,
+    #                       email=user.email,
+    #                       role=user.role,
+    #                       disabled=user.disabled,
+    #                       login_denied=user.login_denied,
+    #                       hashed_password=hashed_password,
+    #                       created=util.get_current_time_utc("TIME"))
+
+    db_user = create_db_record(db=db, db_record=db_user)
     return db_user
 
 
@@ -78,18 +73,11 @@ def update_user(db: Session, user_id, user):
     if db_user is None:
         raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
 
-    # Check if username already exist for other users
-    if hasattr(user, 'username'):
-        db_user_by_username = get_user_by_username(db=db, username=user.username)
-        if db_user_by_username:
-            if db_user_by_username.id != user_id:
-                raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
-
-    # Validate User's attributes
-    user = validate_user_attr(db=db, user=user, db_user=db_user)
+    # Validate User's role(s)
+    user = validate_user_role(user=user)
 
     # Update User record in database
-    db_employee = update_db_record(db, db_user, user)
+    db_employee = update_db_record(db=db, db_record=db_user, payload=user)
     return db_employee
 
 
@@ -155,7 +143,6 @@ def create_employee(db: Session, employee: schemas.EmployeeCreate):
 
     # We can do record setup in a short way like:
     db_employee = models.Employee(**employee.model_dump(), created=util.get_current_time_utc("TIME"))
-
     # Also we can do record setup in a long way but more clearly in detail like:
     # db_employee = models.Employee(first_name=employee.first_name,
     #                               last_name=employee.last_name,
@@ -239,14 +226,50 @@ def update_ticket(db: Session, db_ticket, ticket: schemas.TicketUpdate):
 
 
 def update_db_record(db: Session, db_record, payload):
-    # Set new fild(s) value(s) and not override existence DB field(s)
+    # Set new field(s) value(s) and not override existence DB field(s)
     for field_name in payload.model_fields_set:
         setattr(db_record, field_name, getattr(payload, field_name))
 
     # Set update time-date
     db_record.updated = util.get_current_time_utc("TIME")
 
-    # Update database
-    db.commit()
-    db.refresh(db_record)
-    return db_record
+    # Update record in database
+    try:
+        db.commit()
+        db.refresh(db_record)
+        return db_record
+
+    # Manage UNIQUE field errors
+    except exc.IntegrityError as Error:
+        parsed_error = str(Error.orig.args[0])
+        print("SQLAlchemy IntegrityError:", parsed_error)
+        if parsed_error == "UNIQUE constraint failed: users.username":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+        elif parsed_error == "UNIQUE constraint failed: users.phone":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+        elif parsed_error == "UNIQUE constraint failed: users.email":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+
+
+def create_db_record(db: Session, db_record):
+
+    # Set created time-date
+    db_record.created = util.get_current_time_utc("TIME")
+
+    # Create record in database
+    try:
+        db.add(db_record)
+        db.commit()
+        db.refresh(db_record)
+        return db_record
+
+    # Manage UNIQUE field errors
+    except exc.IntegrityError as Error:
+        parsed_error = str(Error.orig.args[0])
+        print("SQLAlchemy IntegrityError:", parsed_error)
+        if parsed_error == "UNIQUE constraint failed: users.username":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+        elif parsed_error == "UNIQUE constraint failed: users.phone":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+        elif parsed_error == "UNIQUE constraint failed: users.email":
+            raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
