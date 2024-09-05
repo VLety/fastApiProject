@@ -108,7 +108,6 @@ class UserResponse(UserBase):
         from_attributes = True  # Pydantic V2 version
 
 
-
 """ Employees + Tickets -------------------------------------------------------------------------------------------- """
 
 class EmployeeBase(BaseModel):
