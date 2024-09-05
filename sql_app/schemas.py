@@ -79,14 +79,17 @@ class UserLoginDeniedAttr(BaseModel):
 
 
 class UserSecureAttr(UserLoginDeniedAttr, UserDisabledAttr, UserRoleAttr):
+    # Class created from parent classes by "stack (LIFO) principle": first class will be most bottom.
     pass
 
 
 class UserBase(UserSecureAttr, UserContactsAttr, UserUsernameAttr):
+    # Class created from parent classes by "stack (LIFO) principle": first class will be most bottom.
     pass
 
 
 class UserCreate(UserSecureAttr, UserContactsAttr, UserPasswordAttr, UserUsernameAttr):
+    # Class created from parent classes by "stack (LIFO) principle": first class will be most bottom.
     pass
 
 
