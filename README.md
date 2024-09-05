@@ -64,11 +64,11 @@
 > * Get my current status (based on a valid user token) **/api/v1/status**<br />
 > ### RBAC roles:
 > * admin - can do CRUD (PATCH) requests with **User**, **Employee** and **Ticket** (top level of security)
-> * manager - can do CRUD requests with **Employee** and **Ticket** also UPDATE **User** Contacts, Disabled and LoginDenied attribute. Can't change User role(s).
+> * manager - can do CRUD requests with **Employee** and **Ticket**, also read **User** and UPDATE: Contacts, Disabled and LoginDenied attribute. Can't change User role(s).
 > * support - can do CRUD requests with **Ticket**
 > * all roles can use Authentication section (change your own password etc).
 > ### Additional security attributes
-> * Disabled users with valid token cannot access any endpoints regardless of their role (except for the Authentication section) - but can Login (get valid token).<br />
+> * Disabled users with valid token cannot access any endpoints regardless of their role(s), except for the Authentication section - but can Login (get valid token).<br />
 > * LoginDenied users cannot Login (cannot get valid token).<br />
 > * Default token expiration period equal "ACCESS_TOKEN_EXPIRE_MINUTES": 60 (we can changer this setting in ./config/config.json file).
 
