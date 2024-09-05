@@ -33,7 +33,6 @@ class AuthTokenData(BaseModel):
     scopes: list[str] = []
 
 
-
 """ Users ---------------------------------------------------------------------------------------------------------- """
 
 class UserUsernameAttr(BaseModel):
@@ -79,7 +78,7 @@ class UserLoginDeniedAttr(BaseModel):
     login_denied: bool = Field(default=False)
 
 
-class UserSecureAttr(UserRoleAttr, UserDisabledAttr, UserLoginDeniedAttr):
+class UserSecureAttr(UserLoginDeniedAttr, UserDisabledAttr, UserRoleAttr):
     pass
 
 
