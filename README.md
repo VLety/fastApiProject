@@ -58,6 +58,12 @@
 
 > [!TIP]
 > ## Learn more about the project security model
+> ### RBAC roles:
+> * admin - can do CRUD (PATCH) requests with **User**, **Employee** and **Ticket** (top level of security)
+> * manager - can do CRUD requests with **Employee** and **Ticket** also UPDATE **User** Contacts, Disabled and LoginDenied attribute. Can't change User role(s).
+> * support - can do CRUD requests with **Ticket**
+> * all roles can use Authentication section (change your own password etc).
+> ### Additional security attributes
 > The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:
 > * Login (get a valid token) based on username and password **/api/v1/token**
 > * Get information about me (based on a valid user token) **/api/v1/me**
