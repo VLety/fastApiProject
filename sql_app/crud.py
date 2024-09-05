@@ -16,7 +16,7 @@ def get_user(db: Session, user_id: int):
 
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()  # type: ignore[call-arg]
+    return db.query(models.User).filter(models.User.username == username).first()
 
 
 def get_user_by_email(db: Session, email: str):
@@ -27,7 +27,7 @@ def get_user_by_phone(db: Session, phone: str):
     return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
 
 
-def validate_user_attr(db: Session, user: schemas.UserBase, db_user: models.User = None):
+def validate_user_attr(db: Session, user: schemas.UserCreate, db_user: models.User = None):
     if hasattr(user, 'role'):  # Check role is existed
         # Remove role list duplication like ["admin", "admin"] and sorting list
         user.role = list(set(user.role))

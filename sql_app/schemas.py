@@ -23,23 +23,6 @@ PERMISSIONS = util.get_permissions()
 
 """ Authorization -------------------------------------------------------------------------------------------------- """
 
-
-class AuthUser(BaseModel):
-    id: int
-    username: str
-    email: str | None = None
-    phone: str | None = None
-    first_name: str | None = None
-    last_name: str | None = None
-    role: list[str] = []
-    disabled: bool | None = None
-    login_denied: bool | None = None
-
-
-class AuthUserInDB(AuthUser):
-    hashed_password: str
-
-
 class AuthToken(BaseModel):
     access_token: str
     token_type: str
@@ -48,6 +31,7 @@ class AuthToken(BaseModel):
 class AuthTokenData(BaseModel):
     username: str | None = None
     scopes: list[str] = []
+
 
 
 """ Users ---------------------------------------------------------------------------------------------------------- """
@@ -127,8 +111,8 @@ class UserResponse(UserBase):
         from_attributes = True  # Pydantic V2 version
 
 
-""" Employees + Tickets -------------------------------------------------------------------------------------------- """
 
+""" Employees + Tickets -------------------------------------------------------------------------------------------- """
 
 class EmployeeBase(BaseModel):
     # Make Input json based on current (main) class

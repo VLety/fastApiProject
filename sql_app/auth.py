@@ -14,7 +14,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 import util
-from .schemas import AuthUser, AuthTokenData
+from .schemas import UserResponse, AuthTokenData
 from . import crud
 from .database import get_db
 
@@ -110,7 +110,7 @@ async def get_current_user(security_scopes: SecurityScopes,
 
 
 # User has valid token and NOT disabled
-async def get_current_active_user(current_user: Annotated[AuthUser, Security(get_current_user)]):
+async def get_current_active_user(current_user: Annotated[UserResponse, Security(get_current_user)]):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["user_disabled"])
     return current_user
@@ -121,7 +121,7 @@ class RBAC:
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl
 
-    def __call__(self, user: AuthUser = Depends(get_current_active_user)) -> bool:
+    def __call__(self, user: UserResponse = Depends(get_current_active_user)) -> bool:
         for permission in self.acl:
             if permission in user.role:
                 return True

@@ -66,12 +66,12 @@ async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequest
 
 
 @app.get("/me/", response_model=schemas.UserResponse, tags=["Authentication"])
-async def read_about_me(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)]):
+async def read_about_me(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)]):
     return current_user
 
 
 @app.get("/status/", tags=["Authentication"])
-async def read_my_status(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_active_user)]):
+async def read_my_status(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_active_user)]):
     return {"status": "ok"}
 
 
@@ -79,7 +79,7 @@ async def read_my_status(current_user: Annotated[schemas.AuthUser, Depends(auth.
 # Need to choose optional attribute scopes=["status"] under Login process, then scope list added to JWT token
 # It is just example - in fact we don't need use scope Security for this project...
 @app.get("/token/scope_example/", tags=["Authentication"])
-async def read_scope_example(current_user: Annotated[schemas.AuthUser, auth.Security(auth.get_current_active_user,
+async def read_scope_example(current_user: Annotated[schemas.UserResponse, auth.Security(auth.get_current_active_user,
                                                                                   scopes=["scope_example"])]):
     return {"status": "Access allowed base on token's 'scopes': ['scope_example']"}
 
@@ -129,7 +129,7 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
 # Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
 async def change_my_password(user: schemas.UserPassword,
-                             current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
+                             current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
     return crud.update_user_password(db=db, user_id=current_user.id, user=user)
@@ -231,7 +231,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 # Create (POST)
 @app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
-async def create_ticket_for_employee(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
+async def create_ticket_for_employee(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                                      employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
@@ -261,7 +261,7 @@ async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
 
 # Read (GET) MY
 @app.get("/ticket/my/", response_model=list[schemas.Ticket], tags=["Ticket"])
-async def read_my_tickets(current_user: Annotated[schemas.AuthUser, Depends(auth.get_current_user)],
+async def read_my_tickets(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                           skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                           db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
