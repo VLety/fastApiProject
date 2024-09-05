@@ -25,10 +25,9 @@
 > Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.<br />
 > * Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the employees are supported. The creation and processing of the **Ticket** is the responsibility of the support department.
 > * Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying logins (separate from the user's roles).
-
 > ### Technical requirements
 > * REST API server with Swagger UI.
-> * OAuth2 authorization with Role-based access control (RBAC) model.
+> * OAuth2 authorization protocol with Role-based access control (RBAC) model.
 > * Ability for easily integration with others backend solutions and frontend UI/UX part.
 
 ## Project Tech stack
