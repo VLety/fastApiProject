@@ -209,5 +209,10 @@ Customer response:
     print(print_and_log_string)
 
 
-def raise_http_error(status_code: int, detail: str):
-    raise HTTPException(status_code=status_code, detail=detail)
+def raise_http_error(http_error_json: json, headers: json = None):
+    status_code = http_error_json["status_code"]
+    detail = http_error_json["detail"]
+    if headers is None:
+        raise HTTPException(status_code=status_code, detail=detail)
+    else:
+        raise HTTPException(status_code=status_code, detail=detail, headers=headers)

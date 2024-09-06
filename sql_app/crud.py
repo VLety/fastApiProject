@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from . import models, schemas, database
 from .auth import get_password_hash
-from util import get_config, get_permissions, raise_http_error
+from util import get_config, get_permissions, raise_http_error, get_current_time_utc
 
 APP_CONFIG = get_config()
 PERMISSIONS = get_permissions()
@@ -37,7 +37,6 @@ def validate_user_role(user: schemas.UserCreate):
             if role not in PERMISSIONS["rbac_roles"]:
                 raise_http_error(status_code=APP_CONFIG["raise_error"]["unknown_role"]["status_code"],
                                  detail=APP_CONFIG["raise_error"]["unknown_role"]["detail"])
-
     return user
 
 
@@ -86,13 +85,14 @@ def update_user_password(db: Session, user_id, user):
     # Check if User exists
     db_user = get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
 
     # Set new password
     db_user.hashed_password = get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
 
     # Set update time-date
-    db_user.updated = util.get_current_time_utc("TIME")
+    db_user.updated = get_current_time_utc("TIME")
 
     # Update database
     db.commit()
@@ -105,7 +105,9 @@ def delete_user(db: Session, user_id):
     # Check if User exists
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
+
     # Delete User in database
     db.delete(db_user)
     db.commit()
@@ -143,7 +145,7 @@ def get_employees(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESP
 def create_employee(db: Session, employee: schemas.EmployeeCreate):
 
     # We can do record setup in a short way like:
-    db_employee = models.Employee(**employee.model_dump(), created=util.get_current_time_utc("TIME"))
+    db_employee = models.Employee(**employee.model_dump(), created=get_current_time_utc("TIME"))
     # Also we can do record setup in a long way but more clearly in detail like:
     # db_employee = models.Employee(first_name=employee.first_name,
     #                               last_name=employee.last_name,
@@ -166,7 +168,8 @@ def update_employee(db: Session, employee_id, employee):
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
 
     # Update Employee record in database
     db_employee = database.update_db_record(db, db_employee, employee)
@@ -177,7 +180,9 @@ def delete_employee(db: Session, employee_id):
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
+
     # Delete User in database
     db.delete(db_employee)
     db.commit()

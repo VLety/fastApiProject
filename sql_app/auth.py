@@ -13,12 +13,12 @@ from sqlalchemy.orm import Session
 import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-import util
+from util import get_config, raise_http_error
 from .schemas import UserResponse, AuthTokenData
 from . import crud
 from .database import get_db
 
-APP_CONFIG = util.get_config()
+APP_CONFIG = get_config()
 SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
 ALGORITHM = APP_CONFIG["auth"]["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_MINUTES = APP_CONFIG["auth"]["ACCESS_TOKEN_EXPIRE_MINUTES"]
@@ -39,7 +39,6 @@ def get_password_hash(password):
 
 
 def authenticate_user(db_user, password: str):
-
     if not db_user:  # Check if User exist
         return False
 
@@ -47,7 +46,8 @@ def authenticate_user(db_user, password: str):
         return False
 
     if db_user.login_denied:  # Check if User login allowed
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["user_login_denied"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_login_denied"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["user_login_denied"]["detail"])
 
     return db_user
 
@@ -70,49 +70,49 @@ async def get_current_user(security_scopes: SecurityScopes,
                            token: Annotated[str, Depends(OAUTH2_SCHEME)],
                            db: Session = Depends(get_db)):
 
+    # A server using HTTP authentication will respond with a 401 Unauthorized response to a request for a protected
+    # resource. This response must include at least one WWW-Authenticate header and at least one challenge,
+    # to indicate what authentication schemes can be used to access the resource (and any additional data that each
+    # particular scheme needs).
     if security_scopes.scopes:
-        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+        exception_headers = {"WWW-Authenticate": "Bearer scope=" + security_scopes.scope_str}
     else:
-        authenticate_value = "Bearer"
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=APP_CONFIG["raise_error"]["could_not_validate_credentials"],
-        headers={"WWW-Authenticate": authenticate_value},
-    )
+        exception_headers = {"WWW-Authenticate": "Bearer"}
 
     try:
-        # payload: {'sub': 'admin', 'scopes': ['scope_example'], 'exp': 1723557087}
+        # Try to get data from Token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        # payload: {'sub': 'admin', 'scopes': ['scope_example'], 'exp': 1723557087}
         username: str = payload.get("sub")
         if username is None:
-            raise credentials_exception
-
+            raise_http_error(APP_CONFIG["raise_error"]["could_not_validate_credentials"], headers=exception_headers)
         token_scopes = payload.get("scopes", [])
         token_data = AuthTokenData(scopes=token_scopes, username=username)
 
+        # Try to get User from database by username
+        db_user = crud.get_user_by_username(db=db, username=token_data.username)
+        if db_user is None:
+            raise_http_error(APP_CONFIG["raise_error"]["incorrect_user_name_or_password"], headers=exception_headers)
+
+        # Security SCOPE validation
+        for scope in security_scopes.scopes:
+            if scope not in token_data.scopes:
+                raise_http_error(APP_CONFIG["raise_error"]["not_enough_permissions"], headers=exception_headers)
+
+        return db_user
+
     except (InvalidTokenError, ValidationError) as token_error:
         if str(token_error) == "Signature has expired":  # ValidationError respond
-            credentials_exception.detail = APP_CONFIG["raise_error"]["token_has_expired"]
-        raise credentials_exception
-
-    db_user = crud.get_user_by_username(db, username=token_data.username)
-
-    if db_user is None:
-        raise credentials_exception
-
-    # security scope validation
-    for scope in security_scopes.scopes:
-        if scope not in token_data.scopes:
-            credentials_exception.detail = APP_CONFIG["raise_error"]["not_enough_permissions"]
-            raise credentials_exception
-
-    return db_user
+            raise_http_error(APP_CONFIG["raise_error"]["token_has_expired"], headers=exception_headers)
+        else:
+            raise_http_error(APP_CONFIG["raise_error"]["could_not_validate_credentials"], headers=exception_headers)
 
 
 # User has valid token and NOT disabled
 async def get_current_active_user(current_user: Annotated[UserResponse, Security(get_current_user)]):
     if current_user.disabled:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["user_disabled"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_disabled"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["user_disabled"]["detail"])
     return current_user
 
 
@@ -127,7 +127,5 @@ class RBAC:
                 return True
 
         # Raise UNAUTHORIZED error if permission is not exists in User's roles
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=APP_CONFIG["raise_error"]["not_enough_permissions"]
-        )
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["not_enough_permissions"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["not_enough_permissions"]["detail"])
