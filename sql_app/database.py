@@ -66,17 +66,13 @@ def database_error_handler(db: Session, error: exc.IntegrityError):
 
     # Manage UNIQUE field errors
     if parsed_error == "UNIQUE constraint failed: users.username":
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["username_already_registered"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["username_already_registered"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["username_already_registered"])
     elif parsed_error == "UNIQUE constraint failed: users.phone":
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["phone_already_registered"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["phone_already_registered"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["phone_already_registered"])
     elif parsed_error == "UNIQUE constraint failed: users.email":
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["email_already_registered"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["email_already_registered"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["email_already_registered"])
 
     # Another errors
     else:
         print("SQLAlchemy IntegrityError:", parsed_error)
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["error_processing_database_request"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["error_processing_database_request"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["error_processing_database_request"])

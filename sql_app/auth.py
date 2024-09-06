@@ -103,7 +103,7 @@ async def get_current_active_user(current_user: Annotated[UserResponse, Security
     return current_user
 
 
-# Role-based access control (RBAC) system where access permission (ACL) based on User's roles
+# Role-based access control (RBAC) model where endpoint access permission (ACL) based on User's roles
 class RBAC:
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl

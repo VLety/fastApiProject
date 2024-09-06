@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
-from fastapi import HTTPException
 from . import models, schemas, database
 from .auth import get_password_hash
 from util import get_config, get_permissions, raise_http_error, get_current_time_utc
@@ -30,13 +29,13 @@ def get_user_by_phone(db: Session, phone: str):
 def validate_user_role(user: schemas.UserCreate):
     # Check role is existed
     if hasattr(user, 'role'):
-        # Remove role list duplication like ["admin", "admin"] and sorting list
+        # Remove role list duplication like ["admin", "admin"] and do list sorting
         user.role = list(set(user.role))
         user.role.sort(reverse=False)
         for role in user.role:
             if role not in PERMISSIONS["rbac_roles"]:
-                raise_http_error(status_code=APP_CONFIG["raise_error"]["unknown_role"]["status_code"],
-                                 detail=APP_CONFIG["raise_error"]["unknown_role"]["detail"])
+                raise_http_error(APP_CONFIG["raise_error"]["unknown_role"])
+
     return user
 
 
@@ -70,8 +69,7 @@ def update_user(db: Session, user_id, user):
     # Check if User exists
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
     # Validate User's role(s)
     user = validate_user_role(user=user)
@@ -85,8 +83,7 @@ def update_user_password(db: Session, user_id, user):
     # Check if User exists
     db_user = get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
     # Set new password
     db_user.hashed_password = get_password_hash(user.password)  # Create hashed password based on PWD_CONTEXT
@@ -105,8 +102,7 @@ def delete_user(db: Session, user_id):
     # Check if User exists
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
     # Delete User in database
     db.delete(db_user)
@@ -168,8 +164,7 @@ def update_employee(db: Session, employee_id, employee):
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["employee_not_found"])
 
     # Update Employee record in database
     db_employee = database.update_db_record(db, db_employee, employee)
@@ -180,8 +175,7 @@ def delete_employee(db: Session, employee_id):
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["employee_not_found"])
 
     # Delete User in database
     db.delete(db_employee)
