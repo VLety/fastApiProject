@@ -1,26 +1,8 @@
-"""
-https://docs.sqlalchemy.org/en/20/dialects/sqlite.html
-"""
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, MetaData
+from sqlalchemy import Column, ForeignKey, Integer, String, MetaData
 from sqlalchemy.orm import relationship
 from .database import Base
-from sqlalchemy.dialects.sqlite import (
-    BLOB,
-    BOOLEAN,
-    CHAR,
-    DATE,
-    DATETIME,
-    DECIMAL,
-    FLOAT,
-    INTEGER,
-    NUMERIC,
-    JSON,
-    SMALLINT,
-    TEXT,
-    TIME,
-    TIMESTAMP,
-    VARCHAR,
-)
+# https://docs.sqlalchemy.org/en/20/dialects/sqlite.html
+from sqlalchemy.dialects.sqlite import BOOLEAN, INTEGER, JSON, VARCHAR
 metadata_obj = MetaData()
 
 
@@ -82,5 +64,3 @@ class Ticket(Base):
 
     employee = relationship("Employee", back_populates="tickets")  # Set table relation
     owner = relationship("User", back_populates="tickets")  # Set table relation
-
-"volodimir.letiahin@key-info.com.ua                "
