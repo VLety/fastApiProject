@@ -192,7 +192,7 @@ def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, emplo
     db_item = models.Ticket(**ticket.model_dump(),
                             owner_id=user_id,
                             employee_id=employee_id,
-                            created=util.get_current_time_utc("TIME"))
+                            created=get_current_time_utc("TIME"))
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
