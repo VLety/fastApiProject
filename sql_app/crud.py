@@ -3,10 +3,10 @@ from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from . import models, schemas, database
 from .auth import get_password_hash
-import util
+from util import get_config, get_permissions, raise_http_error
 
-APP_CONFIG = util.get_config()
-PERMISSIONS = util.get_permissions()
+APP_CONFIG = get_config()
+PERMISSIONS = get_permissions()
 
 """ Users -------------------------------------------------------------------------------------------------------- """
 
@@ -35,7 +35,8 @@ def validate_user_role(user: schemas.UserCreate):
         user.role.sort(reverse=False)
         for role in user.role:
             if role not in PERMISSIONS["rbac_roles"]:
-                raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["unknown_role"])
+                raise_http_error(status_code=APP_CONFIG["raise_error"]["unknown_role"]["status_code"],
+                                 detail=APP_CONFIG["raise_error"]["unknown_role"]["detail"])
 
     return user
 
@@ -70,7 +71,8 @@ def update_user(db: Session, user_id, user):
     # Check if User exists
     db_user = get_user(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
 
     # Validate User's role(s)
     user = validate_user_role(user=user)
@@ -186,7 +188,6 @@ def delete_employee(db: Session, employee_id):
 
 
 """ Tickets ---------------------------------------------------------------------------------------------------- """
-
 
 def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
     db_item = models.Ticket(**ticket.model_dump(),

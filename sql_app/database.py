@@ -1,11 +1,10 @@
 from sqlalchemy import create_engine, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from fastapi import HTTPException
-import util
+from util import get_project_root, get_config, raise_http_error, get_current_time_utc
 
-APP_CONFIG = util.get_config()
-SQLALCHEMY_DB_PATH = f"sqlite:////{util.get_project_root()}{APP_CONFIG['sqlite_db_path']}"
+APP_CONFIG = get_config()
+SQLALCHEMY_DB_PATH = f"sqlite:////{get_project_root()}{APP_CONFIG['sqlite_db_path']}"
 
 # connect_args is needed only for SQLite. It's not needed for other databases!
 engine = create_engine(SQLALCHEMY_DB_PATH, connect_args={"check_same_thread": False})
@@ -31,7 +30,7 @@ def update_db_record(db: Session, db_record, payload):
         setattr(db_record, field_name, getattr(payload, field_name))
 
     # Set update time-date
-    db_record.updated = util.get_current_time_utc("TIME")
+    db_record.updated = get_current_time_utc("TIME")
 
     # Update record in database
     try:
@@ -44,9 +43,8 @@ def update_db_record(db: Session, db_record, payload):
 
 
 def create_db_record(db: Session, db_record):
-
     # Set created time-date
-    db_record.created = util.get_current_time_utc("TIME")
+    db_record.created = get_current_time_utc("TIME")
 
     # Create record in database
     try:
@@ -58,6 +56,7 @@ def create_db_record(db: Session, db_record):
     except exc.IntegrityError as error:
         database_error_handler(db=db, error=error)
 
+
 def database_error_handler(db: Session, error: exc.IntegrityError):
     # Session.rollback() method will be called so that the transaction is rolled back immediately,
     # before propagating the exception outward.
@@ -67,13 +66,17 @@ def database_error_handler(db: Session, error: exc.IntegrityError):
 
     # Manage UNIQUE field errors
     if parsed_error == "UNIQUE constraint failed: users.username":
-        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["username_already_registered"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["username_already_registered"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["username_already_registered"]["detail"])
     elif parsed_error == "UNIQUE constraint failed: users.phone":
-        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["phone_already_registered"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["phone_already_registered"]["detail"])
     elif parsed_error == "UNIQUE constraint failed: users.email":
-        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["email_already_registered"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["email_already_registered"]["detail"])
 
     # Another errors
     else:
         print("SQLAlchemy IntegrityError:", parsed_error)
-        raise HTTPException(status_code=422, detail=APP_CONFIG["raise_error"]["error_processing_database_request"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["error_processing_database_request"]["status_code"],
+                         detail=APP_CONFIG["raise_error"]["error_processing_database_request"]["detail"])

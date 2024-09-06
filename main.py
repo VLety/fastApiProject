@@ -4,12 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from typing import Annotated
 from sqlalchemy.orm import Session
-import util
+from util import get_config, get_permissions, raise_http_error
 from sql_app import crud, models, schemas, auth
 from sql_app.database import engine, get_db
 
-APP_CONFIG = util.get_config()  # Project config data
-PERMISSIONS = util.get_permissions()  # Project access permission data
+APP_CONFIG = get_config()  # Project config data
+PERMISSIONS = get_permissions()  # Project access permission data
 models.Base.metadata.create_all(bind=engine)  # Create all empty tables by "if not exist" condition
 
 app = FastAPI(root_path=APP_CONFIG["root_path"],
@@ -54,7 +54,8 @@ async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequest
     user = auth.authenticate_user(db_user, form_data.password)
 
     if not user:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["incorrect_user_name_or_password"]["detail"])
 
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
@@ -107,7 +108,8 @@ async def read_user_by_id(user_id: int, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["user_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_not_found"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["user_not_found"]["detail"])
     return db_user
 
 
@@ -184,11 +186,13 @@ async def create_employee(employee: schemas.EmployeeCreate, db: Session = Depend
     # Check if unique employee's identification attributes already exists
     db_employee = crud.get_employee_by_email(db, email=employee.email)
     if db_employee:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["email_already_registered"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["email_already_registered"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["email_already_registered"]["detail"])
 
     db_employee = crud.get_employee_by_phone(db, phone=employee.phone)
     if db_employee:
-        raise HTTPException(status_code=400, detail=APP_CONFIG["raise_error"]["phone_already_registered"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["phone_already_registered"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["phone_already_registered"]["detail"])
 
     return crud.create_employee(db=db, employee=employee)
 
@@ -207,7 +211,8 @@ async def read_employee(employee_id: int, db: Session = Depends(get_db),
                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_employee_employee_id"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
     return db_employee
 
 
@@ -235,7 +240,9 @@ async def create_ticket_for_employee(current_user: Annotated[schemas.UserRespons
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
     db_employee = crud.get_employee(db, employee_id=employee_id)
     if db_employee is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["employee_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["employee_not_found"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["employee_not_found"]["detail"])
+
     return crud.create_ticket(db=db, ticket=ticket, user_id=current_user.id, employee_id=employee_id)
 
 
@@ -254,7 +261,8 @@ async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
     if db_ticket is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["ticket_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["ticket_not_found"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["ticket_not_found"]["detail"])
     return db_ticket
 
 
@@ -274,5 +282,6 @@ async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Sessio
                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_ticket_ticket_id"]))):
     db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
     if db_ticket is None:
-        raise HTTPException(status_code=404, detail=APP_CONFIG["raise_error"]["ticket_not_found"])
+        raise_http_error(status_code=APP_CONFIG["raise_error"]["ticket_not_found"]["status_code"],
+                              detail=APP_CONFIG["raise_error"]["ticket_not_found"]["detail"])
     return crud.update_ticket(db=db, db_ticket=db_ticket, ticket=ticket)

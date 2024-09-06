@@ -2,6 +2,7 @@ import json
 import time
 from pathlib import Path
 from datetime import datetime
+from fastapi import HTTPException
 
 
 def get_project_root() -> Path:
@@ -206,3 +207,7 @@ Customer response:
 {json_string.decode()}
 {'^' * 91}"""
     print(print_and_log_string)
+
+
+def raise_http_error(status_code: int, detail: str):
+    raise HTTPException(status_code=status_code, detail=detail)
