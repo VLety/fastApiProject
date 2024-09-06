@@ -52,7 +52,7 @@ class UserPasswordAttr(BaseModel):
                           examples=APP_SCHEMAS["User"]["password"]["examples"],
                           )
 
-    # Model validators: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
+    # Here we use Model validator: https://docs.pydantic.dev/latest/concepts/validators/#model-validators
     @model_validator(mode='after')
     def check_passwords(self) -> Self:
         for pattern in APP_SCHEMAS["User"]["password"]["pattern"]:
@@ -62,13 +62,29 @@ class UserPasswordAttr(BaseModel):
 
 
 class UserContactsAttr(BaseModel):
-    first_name: str
-    last_name: str
-    phone: str
+    first_name: str = Field(
+        min_length=APP_SCHEMAS["User"]["first_name"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["first_name"]["max_length"],
+        examples=APP_SCHEMAS["User"]["first_name"]["examples"],
+        pattern=APP_SCHEMAS["User"]["first_name"]["pattern"],
+    )
+    last_name: str = Field(
+        min_length=APP_SCHEMAS["User"]["last_name"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["last_name"]["max_length"],
+        examples=APP_SCHEMAS["User"]["last_name"]["examples"],
+        pattern=APP_SCHEMAS["User"]["last_name"]["pattern"],
+    )
+    phone: str = Field(
+        min_length=APP_SCHEMAS["User"]["phone"]["min_length"],
+        max_length=APP_SCHEMAS["User"]["phone"]["max_length"],
+        examples=APP_SCHEMAS["User"]["phone"]["examples"],
+        pattern=APP_SCHEMAS["User"]["phone"]["pattern"],
+    )
     email: str = Field(
         min_length=APP_SCHEMAS["User"]["email"]["min_length"],
         max_length=APP_SCHEMAS["User"]["email"]["max_length"],
-        examples=APP_SCHEMAS["User"]["email"]["examples"]
+        examples=APP_SCHEMAS["User"]["email"]["examples"],
+        pattern=APP_SCHEMAS["User"]["email"]["pattern"],
     )
 
 
