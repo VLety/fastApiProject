@@ -1,5 +1,5 @@
-# REST API server solution based on FastAPI framework
-> Recommended for PoC or Prototype approach<br />
+# REST API server solution based on FastAPI framework with RBAC model
+> Recommended for PoC and Prototype approach or as a base template<br />
 > The delivery result of this project can be seen here https://fastapiproject.key-info.com.ua/api/v1/docs
 
 > [!IMPORTANT]
