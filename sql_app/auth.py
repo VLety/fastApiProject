@@ -1,9 +1,3 @@
-"""
-OAuth2 with Password (and hashing), Bearer with JWT tokens:
-https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#oauth2-with-password-and-hashing-bearer-with-jwt-tokens
-OAuth2 scopes:
-https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/#oauth2-scopes
-"""
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from pydantic import ValidationError
@@ -19,7 +13,7 @@ from . import crud
 from .database import get_db
 
 APP_CONFIG = get_config()
-SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]  # to get a SECRET_KEY run in terminal: openssl rand -hex 32
+SECRET_KEY = APP_CONFIG["auth"]["SECRET_KEY"]
 ALGORITHM = APP_CONFIG["auth"]["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_MINUTES = APP_CONFIG["auth"]["ACCESS_TOKEN_EXPIRE_MINUTES"]
 PWD_CONTEXT = CryptContext(schemes=APP_CONFIG["auth"]["PWD_CONTEXT"]["schemes"],
@@ -46,20 +40,14 @@ def authenticate_user(db_user, password: str):
         return False
 
     if db_user.login_denied:  # Check if User login allowed
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_login_denied"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["user_login_denied"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["user_login_denied"])
 
     return db_user
 
 
 def create_access_token(data: dict, expires_delta: timedelta):  # timedelta | None = None
-    to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
-    # if expires_delta:
-    #     expire = datetime.now(timezone.utc) + expires_delta
-    # else:
-    #     expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-
+    to_encode = data.copy()
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -111,8 +99,7 @@ async def get_current_user(security_scopes: SecurityScopes,
 # User has valid token and NOT disabled
 async def get_current_active_user(current_user: Annotated[UserResponse, Security(get_current_user)]):
     if current_user.disabled:
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["user_disabled"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["user_disabled"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["user_disabled"])
     return current_user
 
 
@@ -127,5 +114,4 @@ class RBAC:
                 return True
 
         # Raise UNAUTHORIZED error if permission is not exists in User's roles
-        raise_http_error(status_code=APP_CONFIG["raise_error"]["not_enough_permissions"]["status_code"],
-                         detail=APP_CONFIG["raise_error"]["not_enough_permissions"]["detail"])
+        raise_http_error(APP_CONFIG["raise_error"]["not_enough_permissions"])
