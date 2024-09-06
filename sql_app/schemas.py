@@ -99,13 +99,6 @@ class UserCreate(UserSecureAttr, UserContactsAttr, UserPasswordAttr, UserUsernam
     pass
 
 
-class UserContactsUpdate(UserContactsAttr):
-    first_name: Optional[str] | None = None
-    last_name: Optional[str] | None = None
-    phone: Optional[str] | None = None
-    email: Optional[str] | None = None
-
-
 class UserResponse(UserBase):
     # Make Output json based on parent UserBase(BaseModel) class + current class
     id: int

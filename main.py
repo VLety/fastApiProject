@@ -114,7 +114,7 @@ async def read_user_by_id(user_id: int, db: Session = Depends(get_db),
 
 # Update (PUT)
 @app.put("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_by_id(user_id: int, user: schemas.UserContactsUpdate, db: Session = Depends(get_db),
+async def update_user_by_id(user_id: int, user: schemas.UserBase, db: Session = Depends(get_db),
                             permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_user_user_id"]))):
     return crud.update_user(db=db, user_id=user_id, user=user)
 
@@ -124,6 +124,13 @@ async def update_user_by_id(user_id: int, user: schemas.UserContactsUpdate, db: 
 async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
                             permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_user_user_id"]))):
     return crud.delete_user(db=db, user_id=user_id)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/contacts", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_contacts_by_id(user_id: int, user: schemas.UserContactsAttr, db: Session = Depends(get_db),
+                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_contacts"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)
