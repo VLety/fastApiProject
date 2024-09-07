@@ -224,10 +224,8 @@ class Ticket(TicketBase):
         from_attributes = True  # Pydantic V2 version
 
 
-class TicketUpdate(BaseModel):
-    title: str | None = None
-    description: str | None = None
-    status: str | None = None
+class TicketUpdate(TicketBase):
+    pass
 
 
 class EmployeeResponse(EmployeeBase):
