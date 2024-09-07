@@ -130,40 +130,84 @@ class UserResponse(UserBase):
 
 
 class EmployeeBase(BaseModel):
-    # Make Input json based on current (main) class
-    first_name: str
-    last_name: str
-    nick_name: str
-    phone: str
-    email: str
+    first_name: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["first_name"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["first_name"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["first_name"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["first_name"]["pattern"],
+    )
+    last_name: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["last_name"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["last_name"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["last_name"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["last_name"]["pattern"],
+    )
+    nick_name: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["nick_name"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["nick_name"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["nick_name"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["nick_name"]["pattern"],
+    )
+    phone: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["phone"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["phone"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["phone"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["phone"]["pattern"],
+    )
+    email: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["email"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["email"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["email"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["email"]["pattern"],
+    )
     birthday: date
-    country: str
-    city: str
-    address: str
+    country: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["country"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["country"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["country"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["country"]["pattern"],
+    )
+    city: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["city"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["city"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["city"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["city"]["pattern"],
+    )
+    address: str = Field(
+        min_length=APP_SCHEMAS["Employee"]["address"]["min_length"],
+        max_length=APP_SCHEMAS["Employee"]["address"]["max_length"],
+        examples=APP_SCHEMAS["Employee"]["address"]["examples"],
+        pattern=APP_SCHEMAS["Employee"]["address"]["pattern"],
+    )
 
 
 class EmployeeCreate(EmployeeBase):
-    # Make Input json based on main EmployeeBase(BaseModel) class + current class
-    # password: str  # We can add here additional parameter that is not present in UserBase Class
     pass
 
 
-class EmployeeUpdate(BaseModel):
-    first_name: str | None = None
-    last_name: str | None = None
-    nick_name: str | None = None
-    phone: str | None = None
-    email: str | None = None
-    birthday: date = None
-    country: str | None = None
-    city: str | None = None
-    address: str | None = None
+class EmployeeUpdate(EmployeeBase):
+    pass
 
 
 class TicketBase(BaseModel):
-    title: str
-    description: str
-    status: str
+    title: str = Field(
+        min_length=APP_SCHEMAS["Ticket"]["title"]["min_length"],
+        max_length=APP_SCHEMAS["Ticket"]["title"]["max_length"],
+        examples=APP_SCHEMAS["Ticket"]["title"]["examples"],
+        pattern=APP_SCHEMAS["Ticket"]["title"]["pattern"],
+    )
+    description: str = Field(
+        min_length=APP_SCHEMAS["Ticket"]["description"]["min_length"],
+        max_length=APP_SCHEMAS["Ticket"]["description"]["max_length"],
+        examples=APP_SCHEMAS["Ticket"]["description"]["examples"],
+        pattern=APP_SCHEMAS["Ticket"]["description"]["pattern"],
+    )
+    status: str = Field(
+        min_length=APP_SCHEMAS["Ticket"]["status"]["min_length"],
+        max_length=APP_SCHEMAS["Ticket"]["status"]["max_length"],
+        examples=APP_SCHEMAS["Ticket"]["status"]["examples"],
+        pattern=APP_SCHEMAS["Ticket"]["status"]["pattern"],
+    )
 
 
 class TicketCreate(TicketBase):
