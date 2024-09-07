@@ -171,7 +171,7 @@ Change SECRET_KEY value
 > [!TIP]
 > If you wish, you can change the necessary project parameters using the initial setup, please going through:
 > * config.json: The file is intended to store the main project configuration settings.
-> * schemas.json: The file is used to configure Pydantic JSON schemas validation.
+> * schemas.json: The file is used to configure Pydantic schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
 > * log.ini: The file is used to configure server logging.
 
