@@ -3,7 +3,7 @@
   "rbac_roles": [
     "admin",
     "manager",
-    "employee"
+    "support"
   ],
   "com01": "User ACL ----------------------------------------------------------------------------------------------",
   "POST_user": [
@@ -23,7 +23,16 @@
   "DELETE_user_user_id": [
     "admin"
   ],
-    "PATCH_user_user_id_password": [
+  "PATCH_user_password": [
+    "admin",
+    "manager",
+    "support"
+  ],
+  "PATCH_user_user_id_contacts": [
+    "admin",
+    "manager"
+  ],
+  "PATCH_user_user_id_password": [
     "admin"
   ],
   "PATCH_user_user_id_username": [
@@ -33,10 +42,12 @@
     "admin"
   ],
   "PATCH_user_user_id_disabled": [
-    "admin"
+    "admin",
+    "manager"
   ],
   "PATCH_user_user_id_login_denied": [
-    "admin"
+    "admin",
+    "manager"
   ],
   "com02": "Employee ACL -----------------------------------------------------------------------------------------",
   "POST_employee": [
@@ -46,12 +57,12 @@
   "GET_employee": [
     "admin",
     "manager",
-    "employee"
+    "support"
   ],
   "GET_employee_employee_id": [
     "admin",
     "manager",
-    "employee"
+    "support"
   ],
   "PUT_employee_employee_id": [
     "admin",
@@ -65,11 +76,15 @@
   "POST_ticket": [
     "admin",
     "manager",
-    "employee"
+    "support"
   ],
   "GET_ticket": [
     "admin",
     "manager",
-    "employee"
+    "support"
+  ],
+  "PUT_ticket_ticket_id": [
+    "admin",
+    "manager"
   ]
 }

@@ -2,6 +2,7 @@
   "about": "The file is intended to store the main project configuration settings.",
   "sqlite_db_path": "/sql_app/sql_app.db",
   "root_path": "/api/v1",
+  "BODY_RESPONSE_ITEMS_LIMIT": 100,
   "auth": {
     "SECRET_KEY": "a25558caa5fcb16caa53861021e480c1d1977a98a77b63c2513dccf2b00b9c04",
     "ALGORITHM": "HS256",
@@ -15,7 +16,7 @@
     "OAUTH2_SCHEME": {
       "tokenUrl": "token",
       "scopes": {
-        "status": "Read information about token authorization status [scope using example]."
+        "scope_example": "Read information based on [scopes] usage (example)."
       }
     }
   },
@@ -33,18 +34,62 @@
     ]
   },
   "raise_error": {
-    "incorrect_user_name_or_password": "Incorrect User name or password",
-    "could_not_validate_credentials": "Could not validate credentials",
-    "token_has_expired": "Token has expired",
-    "not_enough_permissions": "Not enough permissions",
-    "user_disabled": "User disabled",
-    "user_login_denied": "User login denied",
-    "username_already_registered": "Username already registered",
-    "email_already_registered": "Email already registered",
-    "phone_already_registered": "Phone already registered",
-    "unknown_role": "Unknown role",
-    "employee_not_found": "Employee not found",
-    "user_not_found": "User not found"
+    "incorrect_user_name_or_password": {
+      "status_code": 400,
+      "detail": "Incorrect User name or password"
+    },
+    "could_not_validate_credentials": {
+      "status_code": 401,
+      "detail": "Could not validate credentials"
+    },
+    "token_has_expired": {
+      "status_code": 400,
+      "detail": "Token has expired"
+    },
+    "not_enough_permissions": {
+      "status_code": 401,
+      "detail": "Not enough permissions"
+    },
+    "user_disabled": {
+      "status_code": 400,
+      "detail": "User disabled"
+    },
+    "user_login_denied": {
+      "status_code": 400,
+      "detail": "User login denied"
+    },
+    "username_already_registered": {
+      "status_code": 422,
+      "detail": "Username already registered"
+    },
+    "email_already_registered": {
+      "status_code": 422,
+      "detail": "Email already registered"
+    },
+    "phone_already_registered": {
+      "status_code": 422,
+      "detail": "Phone already registered"
+    },
+    "unknown_role": {
+      "status_code": 404,
+      "detail": "Unknown role"
+    },
+    "user_not_found": {
+      "status_code": 404,
+      "detail": "User not found"
+    },
+    "employee_not_found": {
+      "status_code": 404,
+      "detail": "Employee not found"
+    },
+    "ticket_not_found": {
+      "status_code": 404,
+      "detail": "Ticket not found"
+    },
+    "error_processing_database_request": {
+      "status_code": 422,
+      "detail": "Error processing database request"
+    }
   },
   "message": {
     "employee_deleted_successfully": "Employee deleted successfully",
@@ -52,24 +97,24 @@
     "password_changed_successfully": "Password changed successfully"
   },
   "api_docs": {
-    "title": "REST API server solution based on FastAPI framework",
-    "version": "0.0.1",
-    "summary": "Promotion and educational project REST API server based on the FastAPI framework",
-    "description": "Project based on: OpenAPI Specification (OAS 3.1) with OAuth2 authentication, hashing Password, Bearer JWT token and RBAC access-control authorization model",
-    "terms_of_service": "https://spec.openapis.org/oas/latest.html",
+    "title": "REST API server solution based on FastAPI framework with RBAC model",
+    "version": "0.0.3",
+    "summary": "Recommended for PoC and Prototype approach or as a base template.",
+    "description": "Idea: Prototype/MVP backend solution for implementing a simple Ticket system.",
+    "terms_of_service": "https://github.com/VLety/fastApiProject/blob/master/README.md",
     "contact": {
       "name": "Volodymyr Letiahin",
       "url": "https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/",
-      "email": "vl@key-info.com.ua"
+      "email": "linkedin@key-info.com.ua"
     },
     "license_info": {
-      "name": "License: Apache 2.0",
-      "identifier": "MIT"
+      "name": "License: MIT",
+      "url": "https://github.com/VLety/fastApiProject/blob/master/LICENSE"
     },
     "openapi_tags": [
       {
         "name": "Authentication",
-        "description": "OAuth2 with scope, hashing Password and Bearer authentication with JWT token.",
+        "description": "OAuth2 authorization protocol with scopes, Bearer authentication with JWT token.",
         "externalDocs": {
           "description": "OAuth2 authorization protocol specification >>>",
           "url": "https://oauth.net/2/"
@@ -85,7 +130,7 @@
       },
       {
         "name": "Ticket",
-        "description": "Manage Tickets for Employee"
+        "description": "CRUD operations with Ticket"
       }
     ]
   }

@@ -1,11 +1,27 @@
 {
-  "about": "The file is used to configure Pydantic JSON schemas validation.",
+  "about": "The file is used to configure Pydantic schemas validation.",
   "User": {
     "username": {
       "min_length": 5,
       "max_length": 16,
       "examples": [
-        "Admin"
+        "Username"
+      ],
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "first_name": {
+      "min_length": 2,
+      "max_length": 16,
+      "examples": [
+        "Jones"
+      ],
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "last_name": {
+      "min_length": 2,
+      "max_length": 16,
+      "examples": [
+        "Smith"
       ],
       "pattern": "^[a-zA-Z]+$"
     },
@@ -33,6 +49,114 @@
           "error": "The password must contain at least one special character"
         }
       ]
+    },
+    "phone": {
+      "min_length": 10,
+      "max_length": 20,
+      "examples": [
+        "+380504430000"
+      ],
+      "pattern": "^\\+[0-9]+$"
+    },
+    "email": {
+      "min_length": 8,
+      "max_length": 64,
+      "examples": [
+        "user@gmail.com"
+      ],
+      "pattern": "[\\w\\.-]+@[\\w\\.-]+(\\.[\\w]+)+"
+    }
+  },
+  "Employee": {
+    "first_name": {
+      "min_length": 2,
+      "max_length": 16,
+      "examples": [
+        "Jones"
+      ],
+      "pattern": "^[a-zA-Z -äöüÄÖÜß]+$"
+    },
+    "last_name": {
+      "min_length": 2,
+      "max_length": 16,
+      "examples": [
+        "Smith"
+      ],
+      "pattern": "^[a-zA-Z -äöüÄÖÜß]+$"
+    },
+    "nick_name": {
+      "min_length": 3,
+      "max_length": 16,
+      "examples": [
+        "Bravo"
+      ],
+      "pattern": "^[a-zA-Z]+$"
+    },
+    "phone": {
+      "min_length": 10,
+      "max_length": 20,
+      "examples": [
+        "+380504430000"
+      ],
+      "pattern": "^\\+[0-9]+$"
+    },
+    "email": {
+      "min_length": 8,
+      "max_length": 64,
+      "examples": [
+        "user@gmail.com"
+      ],
+      "pattern": "[\\w\\.-]+@[\\w\\.-]+(\\.[\\w]+)+"
+    },
+    "country": {
+      "min_length": 3,
+      "max_length": 32,
+      "examples": [
+        "Ukraine"
+      ],
+      "pattern": "^[a-zA-Z ’\\-ôäöüÄÖÜß]+$"
+    },
+    "city": {
+      "min_length": 3,
+      "max_length": 32,
+      "examples": [
+        "Kyiv"
+      ],
+      "pattern": "^[a-zA-Z äöüÄÖÜß]+$"
+    },
+    "address": {
+      "min_length": 16,
+      "max_length": 64,
+      "examples": [
+        "Khreschatyk St, 14, UA 01001"
+      ],
+      "pattern": "^[a-zA-Z0-9,: -äöüÄÖÜß]+$"
+    }
+  },
+  "Ticket": {
+    "title": {
+      "min_length": 8,
+      "max_length": 32,
+      "examples": [
+        "Network problem"
+      ],
+      "pattern": "^[a-zA-Z0-9 #’\\-]+$"
+    },
+    "description": {
+      "min_length": 8,
+      "max_length": 64,
+      "examples": [
+        "The employee cannot access network resources."
+      ],
+      "pattern": "^[a-zA-Z0-9 #’\\-]+$"
+    },
+    "status": {
+      "min_length": 4,
+      "max_length": 16,
+      "examples": [
+        "Open"
+      ],
+      "pattern": "^[a-zA-Z0-9 #’\\-]+$"
     }
   }
 }
