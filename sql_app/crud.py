@@ -1,3 +1,9 @@
+"""
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from . import models, schemas, database

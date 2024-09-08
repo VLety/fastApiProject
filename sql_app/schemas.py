@@ -1,5 +1,16 @@
 """
-https://stackoverflow.com/questions/71570607/sqlalchemy-models-vs-pydantic-models
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
+from datetime import date
+from pydantic import BaseModel, Field, model_validator
+from typing_extensions import Self
+import re
+import util
+
+"""
 https://docs.pydantic.dev/latest/
     Pydantic is the most widely used data validation library for Python. Fast and extensible, Pydantic plays nicely
 with your linters/IDE/brain. Define how data should be in pure and Python canonical - validate it with Pydantic.
@@ -11,12 +22,6 @@ a dict), you can declare the specific data you want to return, and it will be ab
     Pydantic should be responsible for schemas (basically defining input and output formats) and DTOs (used to
 transfer data between different layers of an app).
 """
-from datetime import date
-from pydantic import BaseModel, Field, ValidationError, ValidationInfo, model_validator
-from typing import Optional
-from typing_extensions import Self
-import re
-import util
 
 APP_SCHEMAS = util.get_schemas()
 PERMISSIONS = util.get_permissions()

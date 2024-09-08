@@ -1,8 +1,14 @@
+"""
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
 from sqlalchemy import Column, ForeignKey, Integer, String, MetaData
 from sqlalchemy.orm import relationship
 from .database import Base
-# https://docs.sqlalchemy.org/en/20/dialects/sqlite.html
 from sqlalchemy.dialects.sqlite import BOOLEAN, INTEGER, JSON, VARCHAR
+
 metadata_obj = MetaData()
 
 

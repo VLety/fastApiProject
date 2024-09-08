@@ -1,7 +1,13 @@
-""" REST API server solution based on FastAPI framework """
+"""
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from sqlalchemy.orm import Session
 from util import get_config, get_permissions, raise_http_error
@@ -24,7 +30,6 @@ app = FastAPI(root_path=APP_CONFIG["root_path"],
 
 # CORS (Cross-Origin Resource Sharing)
 # https://fastapi.tiangolo.com/tutorial/cors/#cors-cross-origin-resource-sharing
-# noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
     allow_origins=APP_CONFIG["cors"]["allow_origins"],
@@ -47,7 +52,7 @@ async def favicon():
 # The OAuth2 specification dictates that for a password flow the data should be collected using form data
 # (instead of JSON) and that it should have the specific fields `username` and `password`.
 @app.post("/token", tags=["Authentication"])
-async def login_for_access_token(form_data: Annotated[auth.OAuth2PasswordRequestForm, Depends()],
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: Session = Depends(get_db)
                                  ) -> schemas.AuthToken:
     db_user = crud.get_user_by_username(db, username=form_data.username)

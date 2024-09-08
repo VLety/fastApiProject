@@ -1,3 +1,9 @@
+"""
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
 from sqlalchemy import create_engine, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -72,7 +78,7 @@ def database_error_handler(db: Session, error: exc.IntegrityError):
     elif parsed_error == "UNIQUE constraint failed: users.email":
         raise_http_error(APP_CONFIG["raise_error"]["email_already_registered"])
 
-    # Another errors
+    # Another error(s)
     else:
         print("SQLAlchemy IntegrityError:", parsed_error)
         raise_http_error(APP_CONFIG["raise_error"]["error_processing_database_request"])

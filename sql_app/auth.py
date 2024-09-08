@@ -1,8 +1,14 @@
+"""
+Project name: REST API server solution based on FastAPI framework with RBAC model
+Author: Volodymyr Letiahin
+Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
+License: MIT
+"""
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from pydantic import ValidationError
-from fastapi import Depends, HTTPException, Security, status
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes, OAuth2PasswordRequestForm
+from fastapi import Depends, Security
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from sqlalchemy.orm import Session
 import jwt
 from jwt.exceptions import InvalidTokenError
