@@ -105,10 +105,39 @@ async def read_all_users(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_I
 @app.get("/user/{user_id}", response_model=schemas.UserResponse, tags=["User"])
 async def read_user_by_id(user_id: int, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_user_id"]))):
-    db_user = crud.get_user(db, user_id=user_id)
+    db_user = crud.get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
+    return db_user
 
+
+# Read (GET)
+@app.get("/user/username/{username}", response_model=schemas.UserResponse, tags=["User"])
+async def read_user_by_username(username: str, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_username"]))):
+    db_user = crud.get_user_by_username(db=db, username=username)
+    if db_user is None:
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
+    return db_user
+
+
+# Read (GET)
+@app.get("/user/phone/{phone}", response_model=schemas.UserResponse, tags=["User"])
+async def read_user_by_phone(phone: str, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_phone"]))):
+    db_user = crud.get_user_by_phone(db=db, phone=phone)
+    if db_user is None:
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
+    return db_user
+
+
+# Read (GET)
+@app.get("/user/email/{email}", response_model=schemas.UserResponse, tags=["User"])
+async def read_user_by_email(email: str, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_user_email"]))):
+    db_user = crud.get_user_by_email(db=db, email=email)
+    if db_user is None:
+        raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
     return db_user
 
 
@@ -127,19 +156,19 @@ async def delete_user_by_id(user_id: int, db: Session = Depends(get_db),
 
 
 # Update attribute (PATCH)
-@app.patch("/user/{user_id}/contacts", response_model=schemas.UserResponse, tags=["User"])
-async def update_user_contacts_by_id(user_id: int, user: schemas.UserContactsAttr, db: Session = Depends(get_db),
-                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_contacts"]))):
-    return crud.update_user(db=db, user_id=user_id, user=user)
-
-
-# Update attribute (PATCH)
 @app.patch("/user/password", tags=["User"])
 async def change_my_password(user: schemas.UserPasswordAttr,
                              current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                              db: Session = Depends(get_db),
                              permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_password"]))):
     return crud.update_user_password(db=db, user_id=current_user.id, user=user)
+
+
+# Update attribute (PATCH)
+@app.patch("/user/{user_id}/contacts", response_model=schemas.UserResponse, tags=["User"])
+async def update_user_contacts_by_id(user_id: int, user: schemas.UserContactsAttr, db: Session = Depends(get_db),
+                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PATCH_user_user_id_contacts"]))):
+    return crud.update_user(db=db, user_id=user_id, user=user)
 
 
 # Update attribute (PATCH)

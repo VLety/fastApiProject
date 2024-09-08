@@ -10,20 +10,20 @@ PERMISSIONS = get_permissions()
 """ Users -------------------------------------------------------------------------------------------------------- """
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()  # type: ignore[call-arg]
+def get_user_by_id(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
 
 
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()  # type: ignore[call-arg]
-
-
 def get_user_by_phone(db: Session, phone: str):
-    return db.query(models.User).filter(models.User.phone == phone).first()  # type: ignore[call-arg]
+    return db.query(models.User).filter(models.User.phone == phone).first()
+
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
 
 
 def validate_user_role(user: schemas.UserCreate):
@@ -67,7 +67,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def update_user(db: Session, user_id, user):
     # Check if User exists
-    db_user = get_user(db, user_id=user_id)
+    db_user = get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
@@ -81,7 +81,7 @@ def update_user(db: Session, user_id, user):
 
 def update_user_password(db: Session, user_id, user):
     # Check if User exists
-    db_user = get_user(db=db, user_id=user_id)
+    db_user = get_user_by_id(db=db, user_id=user_id)
     if db_user is None:
         raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
@@ -100,7 +100,7 @@ def update_user_password(db: Session, user_id, user):
 
 def delete_user(db: Session, user_id):
     # Check if User exists
-    db_user = get_user(db, user_id=user_id)
+    db_user = get_user_by_id(db, user_id=user_id)
     if db_user is None:
         raise_http_error(APP_CONFIG["raise_error"]["user_not_found"])
 
@@ -139,7 +139,6 @@ def get_employees(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESP
 
 
 def create_employee(db: Session, employee: schemas.EmployeeCreate):
-
     # We can do record setup in a short way like:
     db_employee = models.Employee(**employee.model_dump(), created=get_current_time_utc("TIME"))
     # Also we can do record setup in a long way but more clearly in detail like:
@@ -187,6 +186,7 @@ def delete_employee(db: Session, employee_id):
 
 
 """ Tickets ---------------------------------------------------------------------------------------------------- """
+
 
 def create_ticket(db: Session, ticket: schemas.TicketCreate, user_id: int, employee_id: int):
     db_item = models.Ticket(**ticket.model_dump(),

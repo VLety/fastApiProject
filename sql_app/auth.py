@@ -103,7 +103,7 @@ async def get_current_active_user(current_user: Annotated[UserResponse, Security
     return current_user
 
 
-# Role-based access control (RBAC) model where endpoint access permission (ACL) based on User's roles
+# Role-based access control (RBAC) model where endpoint access permission (ACL) validated with User's roles
 class RBAC:
     def __init__(self, acl: list[str]) -> None:
         self.acl = acl
@@ -113,5 +113,4 @@ class RBAC:
             if permission in user.role:
                 return True
 
-        # Raise UNAUTHORIZED error if permission is not exists in User's roles
         raise_http_error(APP_CONFIG["raise_error"]["not_enough_permissions"])
