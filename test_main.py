@@ -157,3 +157,14 @@ def test_create_new_ticket_for_new_employee():
 
     assert response.status_code == 200
     assert response.json() == TestData["ticket"]
+
+
+def test_read_new_employee_with_ticket():
+    response = TestApiServer.get(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    TestData["employee"]["tickets"] = [TestData["ticket"]]
+
+    assert response.status_code == 200
+    assert response.json() == TestData["employee"]
