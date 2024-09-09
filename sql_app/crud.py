@@ -130,14 +130,6 @@ def get_employee(db: Session, employee_id: int):
     return db.query(models.Employee).filter(models.Employee.id == employee_id).first()
 
 
-def get_employee_by_email(db: Session, email: str):
-    return db.query(models.Employee).filter(models.Employee.email == email).first()  # type: ignore[call-arg]
-
-
-def get_employee_by_phone(db: Session, phone: str):
-    return db.query(models.Employee).filter(models.Employee.phone == phone).first()  # type: ignore[call-arg]
-
-
 def get_employees(db: Session, skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]):
     if limit > APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]:
         limit = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"]
@@ -176,13 +168,13 @@ def update_employee(db: Session, employee_id, employee):
     return db_employee
 
 
-def delete_employee(db: Session, employee_id):
+def delete_employee(db: Session, employee_id: int):
     # Check if Employee exists
     db_employee = get_employee(db, employee_id=employee_id)
     if db_employee is None:
         raise_http_error(APP_CONFIG["raise_error"]["employee_not_found"])
 
-    # Delete User in database
+    # Delete Employee in database
     db.delete(db_employee)
     db.commit()
 
@@ -225,3 +217,16 @@ def update_ticket(db: Session, db_ticket, ticket: schemas.TicketUpdate):
     # Update Ticket record in database
     db_ticket = database.update_db_record(db=db, db_record=db_ticket, payload=ticket)
     return db_ticket
+
+
+def delete_ticket(db: Session, ticket_id: int):
+    # Check if Ticket exists
+    db_ticket = get_ticket(db, ticket_id=ticket_id)
+    if db_ticket is None:
+        raise_http_error(APP_CONFIG["raise_error"]["ticket_not_found"])
+
+    # Delete Ticket in database
+    db.delete(db_ticket)
+    db.commit()
+
+    return JSONResponse(content={"message": APP_CONFIG["message"]["ticket_deleted_successfully"]})

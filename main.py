@@ -252,7 +252,7 @@ async def update_employee(employee_id: int, employee: schemas.EmployeeUpdate, db
     return crud.update_employee(db=db, employee_id=employee_id, employee=employee)
 
 
-# Delete (DELETE) FIRST
+# Delete (DELETE)
 @app.delete("/employee/{employee_id}", tags=["Employee"])
 async def delete_employee(employee_id: int, db: Session = Depends(get_db),
                           permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_employee_employee_id"]))):
@@ -313,3 +313,10 @@ async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Sessio
         raise_http_error(APP_CONFIG["raise_error"]["ticket_not_found"])
 
     return crud.update_ticket(db=db, db_ticket=db_ticket, ticket=ticket)
+
+
+# Delete (DELETE)
+@app.delete("/ticket/{ticket_id}", tags=["Ticket"])
+async def delete_employee(ticket_id: int, db: Session = Depends(get_db),
+                          permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["DELETE_ticket_ticket_id"]))):
+    return crud.delete_ticket(db=db, ticket_id=ticket_id)

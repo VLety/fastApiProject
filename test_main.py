@@ -159,6 +159,15 @@ def test_create_new_ticket_for_new_employee():
     assert response.json() == TestData["ticket"]
 
 
+def test_read_new_ticket():
+    response = TestApiServer.get(TestApiRootPath + f'/ticket/{TestData["ticket"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == 200
+    assert response.json() == TestData["ticket"]
+
+
 def test_read_new_employee_with_ticket():
     response = TestApiServer.get(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
                                  headers=TestData["user_header"])
@@ -168,3 +177,21 @@ def test_read_new_employee_with_ticket():
 
     assert response.status_code == 200
     assert response.json() == TestData["employee"]
+
+
+def test_read_my_ticket():
+    response = TestApiServer.get(TestApiRootPath + "/ticket/my/?skip=0&limit=100",
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == 200
+    assert response.json() == [TestData["ticket"]]
+
+
+def test_delete_new_ticket():
+    response = TestApiServer.delete(TestApiRootPath + f'/ticket/{TestData["ticket"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == 200
+    assert response.json() == {"message": APP_CONFIG["message"]["ticket_deleted_successfully"]}
