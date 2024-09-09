@@ -195,3 +195,12 @@ def test_delete_new_ticket():
 
     assert response.status_code == 200
     assert response.json() == {"message": APP_CONFIG["message"]["ticket_deleted_successfully"]}
+
+
+def test_read_new_deleted_ticket():
+    response = TestApiServer.get(TestApiRootPath + f'/ticket/{TestData["ticket"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == APP_CONFIG["raise_error"]["ticket_not_found"]["status_code"]
+    assert response.json() == {"detail": APP_CONFIG["raise_error"]["ticket_not_found"]["detail"]}
