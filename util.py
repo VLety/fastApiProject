@@ -71,6 +71,14 @@ def get_permissions():
     return permissions_json
 
 
+def get_test_main():
+    """ GET project config from test_main.json file"""
+    file_path_config = f"{get_project_root()}/config/test_main.json"
+    config_json = get_json_file_content(file_path_config)
+
+    return config_json
+
+
 def get_credential():
     """ GET project config from credential.json file"""
     file_path_config = f"{get_project_root()}/config/credential.json"

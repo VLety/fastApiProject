@@ -219,8 +219,10 @@ class TicketCreate(TicketBase):
     pass
 
 
-class Ticket(TicketBase):
+class TicketResponse(TicketBase):
     id: int
+    created: str
+    updated: str | None = None  # | None = None options required if no value present in database
     owner_id: int
     employee_id: int
 
@@ -238,7 +240,7 @@ class EmployeeResponse(EmployeeBase):
     id: int
     created: str
     updated: str | None = None  # | None = None options required if no value present in database
-    tickets: list[Ticket] = []
+    tickets: list[TicketResponse] = []
 
     class Config:
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'

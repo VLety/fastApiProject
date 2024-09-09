@@ -263,7 +263,7 @@ async def delete_employee(employee_id: int, db: Session = Depends(get_db),
 
 
 # Create (POST)
-@app.post("/ticket/{employee_id}", response_model=schemas.Ticket, tags=["Ticket"])
+@app.post("/ticket/{employee_id}", response_model=schemas.TicketResponse, tags=["Ticket"])
 async def create_ticket_for_employee(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                                      employee_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db),
                                      permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["POST_ticket"]))):
@@ -275,7 +275,7 @@ async def create_ticket_for_employee(current_user: Annotated[schemas.UserRespons
 
 
 # Read (GET) ALL
-@app.get("/ticket/", response_model=list[schemas.Ticket], tags=["Ticket"])
+@app.get("/ticket/", response_model=list[schemas.TicketResponse], tags=["Ticket"])
 async def read_all_tickets(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                            db: Session = Depends(get_db),
                            permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
@@ -284,7 +284,7 @@ async def read_all_tickets(skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE
 
 
 # Read (GET)
-@app.get("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
+@app.get("/ticket/{ticket_id}", response_model=schemas.TicketResponse, tags=["Ticket"])
 async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
                       permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["GET_ticket"]))):
     db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
@@ -295,7 +295,7 @@ async def read_ticket(ticket_id: int, db: Session = Depends(get_db),
 
 
 # Read (GET) MY
-@app.get("/ticket/my/", response_model=list[schemas.Ticket], tags=["Ticket"])
+@app.get("/ticket/my/", response_model=list[schemas.TicketResponse], tags=["Ticket"])
 async def read_my_tickets(current_user: Annotated[schemas.UserResponse, Depends(auth.get_current_user)],
                           skip: int = 0, limit: int = APP_CONFIG["BODY_RESPONSE_ITEMS_LIMIT"],
                           db: Session = Depends(get_db),
@@ -305,7 +305,7 @@ async def read_my_tickets(current_user: Annotated[schemas.UserResponse, Depends(
 
 
 # Update (PUT)
-@app.put("/ticket/{ticket_id}", response_model=schemas.Ticket, tags=["Ticket"])
+@app.put("/ticket/{ticket_id}", response_model=schemas.TicketResponse, tags=["Ticket"])
 async def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db),
                         permission: bool = Depends(auth.RBAC(acl=PERMISSIONS["PUT_ticket_ticket_id"]))):
     db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
