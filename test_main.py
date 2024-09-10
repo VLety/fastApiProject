@@ -197,10 +197,66 @@ def test_delete_new_ticket():
     assert response.json() == {"message": APP_CONFIG["message"]["ticket_deleted_successfully"]}
 
 
-def test_read_new_deleted_ticket():
+def test_read_deleted_new_ticket():
     response = TestApiServer.get(TestApiRootPath + f'/ticket/{TestData["ticket"]["id"]}',
                                  headers=TestData["user_header"])
     print_response(response)
 
     assert response.status_code == APP_CONFIG["raise_error"]["ticket_not_found"]["status_code"]
     assert response.json() == {"detail": APP_CONFIG["raise_error"]["ticket_not_found"]["detail"]}
+
+
+def test_read_new_employee_without_ticket():
+    response = TestApiServer.get(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    TestData["employee"]["tickets"] = []
+
+    assert response.status_code == 200
+    assert response.json() == TestData["employee"]
+
+
+def test_delete_new_employee():
+    response = TestApiServer.delete(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == 200
+    assert response.json() == {"message": APP_CONFIG["message"]["employee_deleted_successfully"]}
+
+
+def test_read_deleted_new_employee():
+    response = TestApiServer.get(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == APP_CONFIG["raise_error"]["employee_not_found"]["status_code"]
+    assert response.json() == {"detail": APP_CONFIG["raise_error"]["employee_not_found"]["detail"]}
+
+
+def test_delete_new_user():
+    response = TestApiServer.delete(TestApiRootPath + f'/user/{TestData["user"]["id"]}',
+                                 headers=TestData["valid_admin_header"])
+    print_response(response)
+
+    assert response.status_code == 200
+    assert response.json() == {"message": APP_CONFIG["message"]["user_deleted_successfully"]}
+
+
+def test_read_deleted_new_user():
+    response = TestApiServer.get(TestApiRootPath + f'/user/{TestData["user"]["id"]}',
+                                 headers=TestData["valid_admin_header"])
+    print_response(response)
+
+    assert response.status_code == APP_CONFIG["raise_error"]["user_not_found"]["status_code"]
+    assert response.json() == {"detail": APP_CONFIG["raise_error"]["user_not_found"]["detail"]}
+
+
+def test_read_me_by_deleted_new_user():
+    response = TestApiServer.get(TestApiRootPath + "/me",
+                                 headers=TestData["user_header"])
+    print_response(response)
+
+    assert response.status_code == APP_CONFIG["raise_error"]["incorrect_user_name_or_password"]["status_code"]
+    assert response.json() == {"detail": APP_CONFIG["raise_error"]["incorrect_user_name_or_password"]["detail"]}
