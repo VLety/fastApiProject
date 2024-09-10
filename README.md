@@ -200,12 +200,23 @@ python /home/ubuntu/fastApiProject/setup/change_users_password.py
 > We should see something like this:
 > ![image](https://github.com/user-attachments/assets/8c26f82b-b08d-4592-b174-15aa91649055)
 
-#### Run project for testing purpose
+#### Run project TEST to check if everthing setup properly
+Set relevant admin user name & password in the ./config/test_main.json file<br />
+```
+nano /home/ubuntu/fastApiProject/config/test_main.json
+```
+> Save: Ctrl+o, Exit: Ctrl+x<br />
+
+Run test
+> VENV must be in Active mode
+```
+python -m pytest -rP test_main.py
+```
+Also we can run API server in a port mode [optional]
 > VENV must be in Active mode
 ```
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
-
 > We should see something like this:<br />
 > ![image](https://github.com/user-attachments/assets/c445a34e-60bd-475f-adc4-1fe13f930330)
 
