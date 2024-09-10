@@ -123,6 +123,7 @@ pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
+pip3 install pytest
 ```
 Deactivate VENV
 ```
