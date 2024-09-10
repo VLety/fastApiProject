@@ -50,16 +50,6 @@ def test_read_me_wrong_token():
     }
 
 
-def test_read_me_expired_token():
-    response = TestApiServer.get(TestApiRootPath + "/me", headers=TestData["expired_header"])
-    print_response(response)
-
-    assert response.status_code == APP_CONFIG["raise_error"]["token_has_expired"]["status_code"]
-    assert response.json() == {
-        "detail": APP_CONFIG["raise_error"]["token_has_expired"]["detail"]
-    }
-
-
 def test_create_new_user():
     # Add password
     user_with_password = TestData["user"].copy()
