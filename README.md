@@ -123,6 +123,8 @@ pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
+pip3 install pytest
+pip3 install pytest-assert-utils
 ```
 Deactivate VENV
 ```
@@ -209,11 +211,17 @@ nano /home/ubuntu/fastApiProject/config/test_main.json
 ```
 > Save: Ctrl+o, Exit: Ctrl+x<br />
 
-Run test
+Run test in compact output<br />
 > VENV must be in Active mode
+```
+python -m pytest /home/ubuntu/fastApiProject/test_main.py
+```
+
+Run test in verbose output [optional]<br />
 ```
 python -m pytest -rP /home/ubuntu/fastApiProject/test_main.py
 ```
+
 Also we can run API server in a port mode [optional]
 > VENV must be in Active mode
 ```
