@@ -37,7 +37,7 @@
 * Pydantic V2 as schemas builder [read more](https://docs.pydantic.dev/latest/#pydantic)
 * Annotated(typing) for metadata management [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT for encode and decode JSON Web Tokens (JWT) [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt)
-* Passlib[bcrypt] for password hashing [read more](https://passlib.readthedocs.io/en/stable/install.html#optional-libraries)
+* Passlib[Argon2] for password hashing [why not commonly used [bcrypt]](https://peps.python.org/pep-0594/#crypt) [read more](https://passlib.readthedocs.io/en/stable/lib/passlib.hash.argon2.html#passlib-hash-argon2-argon2)
 * Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 * Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
@@ -122,7 +122,7 @@ source venv/bin/activate
 pip3 install "fastapi[standard]"
 pip3 install SQLAlchemy
 pip3 install pyjwt
-pip3 install "passlib[bcrypt]"
+pip3 install "passlib[argon2]"
 pip3 install pytest
 pip3 install pytest-assert-utils
 ```
