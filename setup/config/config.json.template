@@ -4,7 +4,7 @@
   "root_path": "/api/v1",
   "BODY_RESPONSE_ITEMS_LIMIT": 100,
   "auth": {
-    "SECRET_KEY": "a25558caa5fcb16caa53861021e480c1d1977a98a77b63c2513dccf2b00b9c04",
+    "SECRET_KEY": "c785b10c875f96aed62f57ed79add66f2b7650039cf92caea24da0bbbed0b697",
     "ALGORITHM": "HS256",
     "ACCESS_TOKEN_EXPIRE_MINUTES": 60,
     "PWD_CONTEXT": {
@@ -92,8 +92,9 @@
     }
   },
   "message": {
-    "employee_deleted_successfully": "Employee deleted successfully",
     "user_deleted_successfully": "User deleted successfully",
+    "employee_deleted_successfully": "Employee deleted successfully",
+    "ticket_deleted_successfully": "Ticket deleted successfully",
     "password_changed_successfully": "Password changed successfully"
   },
   "api_docs": {
@@ -104,8 +105,7 @@
     "terms_of_service": "https://github.com/VLety/fastApiProject/blob/master/README.md",
     "contact": {
       "name": "Volodymyr Letiahin",
-      "url": "https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/",
-      "email": "linkedin@key-info.com.ua"
+      "url": "https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/"
     },
     "license_info": {
       "name": "License: MIT",

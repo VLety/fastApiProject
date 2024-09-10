@@ -148,13 +148,13 @@
       "examples": [
         "The employee cannot access network resources."
       ],
-      "pattern": "^[a-zA-Z0-9 #’\\-]+$"
+      "pattern": "^[a-zA-Z0-9 .#’\\-]+$"
     },
     "status": {
-      "min_length": 4,
+      "min_length": 3,
       "max_length": 16,
       "examples": [
-        "Open"
+        "New"
       ],
       "pattern": "^[a-zA-Z0-9 #’\\-]+$"
     }

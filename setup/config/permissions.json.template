@@ -17,6 +17,18 @@
     "admin",
     "manager"
   ],
+  "GET_user_username": [
+    "admin",
+    "manager"
+  ],
+  "GET_user_phone": [
+    "admin",
+    "manager"
+  ],
+  "GET_user_email": [
+    "admin",
+    "manager"
+  ],
   "PUT_user_user_id": [
     "admin"
   ],
@@ -84,6 +96,10 @@
     "support"
   ],
   "PUT_ticket_ticket_id": [
+    "admin",
+    "manager"
+  ],
+  "DELETE_ticket_ticket_id": [
     "admin",
     "manager"
   ]
