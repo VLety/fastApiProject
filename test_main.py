@@ -87,8 +87,8 @@ def test_get_new_user_token():
     print_response(response)
 
     TestData["user_header"] = TestData["base_header"].copy()
-    TestData["user_header"]["Authorization"] = TestData["user_header"]["Authorization"] + response.json()[
-        "access_token"]
+    TestData["user_header"]["Authorization"] = (TestData["user_header"]["Authorization"] +
+                                                response.json()["access_token"])
 
     assert response.status_code == 200
     assert response.json() == {
