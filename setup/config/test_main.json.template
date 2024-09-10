@@ -1,4 +1,5 @@
 {
+  "about": "The file is intended to store the main project test settings.",
   "admin_user": {
     "username": "admin",
     "password": "passWord@1"
