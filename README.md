@@ -210,7 +210,7 @@ nano /home/ubuntu/fastApiProject/config/test_main.json
 Run test
 > VENV must be in Active mode
 ```
-python -m pytest -rP test_main.py
+python -m pytest -rP /home/ubuntu/fastApiProject/test_main.py
 ```
 Also we can run API server in a port mode [optional]
 > VENV must be in Active mode
