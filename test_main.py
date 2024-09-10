@@ -11,6 +11,7 @@ import util
 from pytest_assert_utils import util as pt_util
 from fastapi.testclient import TestClient
 
+
 TestApiServer = TestClient(app)
 TestApiRootPath = APP_CONFIG["root_path"]
 TestData = util.get_test_main()  # Project TEST data
@@ -200,7 +201,7 @@ def test_read_my_ticket():
 
 def test_delete_new_ticket():
     response = TestApiServer.delete(TestApiRootPath + f'/ticket/{TestData["ticket"]["id"]}',
-                                 headers=TestData["user_header"])
+                                    headers=TestData["user_header"])
     print_response(response)
 
     assert response.status_code == 200
@@ -229,7 +230,7 @@ def test_read_new_employee_without_ticket():
 
 def test_delete_new_employee():
     response = TestApiServer.delete(TestApiRootPath + f'/employee/{TestData["employee"]["id"]}',
-                                 headers=TestData["user_header"])
+                                    headers=TestData["user_header"])
     print_response(response)
 
     assert response.status_code == 200
@@ -247,7 +248,7 @@ def test_read_deleted_new_employee():
 
 def test_delete_new_user():
     response = TestApiServer.delete(TestApiRootPath + f'/user/{TestData["user"]["id"]}',
-                                 headers=TestData["valid_admin_header"])
+                                    headers=TestData["valid_admin_header"])
     print_response(response)
 
     assert response.status_code == 200
