@@ -21,6 +21,25 @@ def print_response(response):
     util.print_json(response.json())
 
 
+def test_create_valid_admin_header():
+    response = TestApiServer.post(TestApiRootPath + "/token",
+                                  data={
+                                      "username": TestData["admin_user"]["username"],
+                                      "password": TestData["admin_user"]["password"]
+                                  })
+    print_response(response)
+
+    TestData["valid_admin_header"] = TestData["base_header"].copy()
+    TestData["valid_admin_header"]["Authorization"] = (TestData["valid_admin_header"]["Authorization"] +
+                                                       response.json()["access_token"])
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "access_token": pt_util.Any(str),
+        "token_type": "bearer"
+    }
+
+
 def test_read_me_wrong_token():
     response = TestApiServer.get(TestApiRootPath + "/me", headers=TestData["wrong_header"])
     print_response(response)
@@ -67,6 +86,7 @@ def test_get_new_user_token():
                                   })
     print_response(response)
 
+    TestData["user_header"] = TestData["base_header"].copy()
     TestData["user_header"]["Authorization"] = TestData["user_header"]["Authorization"] + response.json()[
         "access_token"]
 
