@@ -5,8 +5,7 @@ Contact: https://www.linkedin.com/in/volodymyr-letiahin-0208a5b2/
 License: MIT
 """
 from sqlalchemy import create_engine, exc
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from util import get_project_root, get_config, raise_http_error, get_current_time_utc
 
 APP_CONFIG = get_config()

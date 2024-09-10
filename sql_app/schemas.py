@@ -126,7 +126,10 @@ class UserResponse(UserBase):
     created: str
     updated: str | None = None  # | None = None options required if no value present in database
 
-    class Config:
+    class ConfigDict:
+        # PydanticDeprecatedSince20: Support for class-based `Config` is deprecated, use ConfigDict instead.
+        # Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at
+        # https://errors.pydantic.dev/2.8/migration/
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
 
@@ -226,8 +229,11 @@ class TicketResponse(TicketBase):
     owner_id: int
     employee_id: int
 
-    class Config:
-        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode'
+    class ConfigDict:
+        # PydanticDeprecatedSince20: Support for class-based `Config` is deprecated, use ConfigDict instead.
+        # Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at
+        # https://errors.pydantic.dev/2.8/migration/
+        # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
 
 
@@ -242,6 +248,9 @@ class EmployeeResponse(EmployeeBase):
     updated: str | None = None  # | None = None options required if no value present in database
     tickets: list[TicketResponse] = []
 
-    class Config:
+    class ConfigDict:
+        # PydanticDeprecatedSince20: Support for class-based `Config` is deprecated, use ConfigDict instead.
+        # Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at
+        # https://errors.pydantic.dev/2.8/migration/
         # orm_mode = True  # Pydantic V1 version format -> 'orm_mode' has been renamed to 'from_attributes'
         from_attributes = True  # Pydantic V2 version
