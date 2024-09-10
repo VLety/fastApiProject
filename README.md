@@ -219,7 +219,7 @@ nano /home/ubuntu/fastApiProject/config/test_main.json
 Run test in compact output<br />
 > VENV must be in Active mode
 ```
-python -m pytest /home/ubuntu/fastApiProject/test_main.py
+python -m pytest --disable-pytest-warnings /home/ubuntu/fastApiProject/test_main.py
 ```
 
 Run test in verbose output [optional]<br />
