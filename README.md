@@ -143,6 +143,7 @@ cd /home/ubuntu/fastApiProject/config/
 mv -f config.json.template config.json
 mv -f permissions.json.template permissions.json
 mv -f schemas.json.template schemas.json
+mv -f test_main.json.template test_main.json
 mv -f log.ini.template log.ini
 ```
 
