@@ -174,6 +174,7 @@ Change SECRET_KEY value
 > * config.json: The file is intended to store the main project configuration settings.
 > * schemas.json: The file is used to configure Pydantic schemas validation.
 > * permissions.json: The file is used to configure RBAC permissions for API endpoints.
+> * test_main.json: The file is intended to store the main project test settings.
 > * log.ini: The file is used to configure server logging.
 
 Change password for default users<br />
