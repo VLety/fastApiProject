@@ -136,7 +136,7 @@ deactivate
 > [!IMPORTANT]
 > There are many approaches to avoid "config problem" - we will use the initial creation of configuration files from the project config templates.
 
-Copy all 4 config template files from ./setup/config to the base project's ./config folder and rename them by removing the "template" extension.
+Copy all 5 config template files from ./setup/config to the base project's ./config folder and rename them by removing the "template" extension.
 ```
 cp -f /home/ubuntu/fastApiProject/setup/config/*.template /home/ubuntu/fastApiProject/config/
 cd /home/ubuntu/fastApiProject/config/
@@ -148,7 +148,7 @@ mv -f log.ini.template log.ini
 ```
 
 > As a result, we should get the following list of files:<br />
-> ![image](https://github.com/user-attachments/assets/5b63b47a-531b-4418-9251-2e5f35c1633b)<br /><br />
+> ![image](https://github.com/user-attachments/assets/97e8b3ab-13c4-4842-bae9-4cf0dbf792c1)<br /><br />
 
 Generate a new SECRET_KEY that will be used to encrypt/decrypt JWT tokens
 ```
