@@ -211,14 +211,13 @@ nano /home/ubuntu/fastApiProject/config/test_main.json
 ```
 > Save: Ctrl+o, Exit: Ctrl+x<br />
 
-Run test<br />
+Run test in compact output<br />
 > VENV must be in Active mode
-Short output<br />
 ```
 python -m pytest test_main.py
 ```
 
-Verbose output<br />
+Run test in verbose output [optional]<br />
 ```
 python -m pytest -rP /home/ubuntu/fastApiProject/test_main.py
 ```
