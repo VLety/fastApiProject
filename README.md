@@ -124,6 +124,7 @@ pip3 install SQLAlchemy
 pip3 install pyjwt
 pip3 install "passlib[bcrypt]"
 pip3 install pytest
+pip3 install pytest-assert-utils
 ```
 Deactivate VENV
 ```
