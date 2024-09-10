@@ -1,0 +1,54 @@
+{
+  "admin_user": {
+    "username": "admin",
+    "password": "passWord@1"
+  },
+  "base_header": {
+    "accept": "application/json",
+    "Authorization": "Bearer "
+  },
+  "wrong_header": {
+    "accept": "application/json",
+    "Authorization": "Bearer Wrong-Token!!!"
+  },
+  "user": {
+    "username": "IAmManager",
+    "first_name": "Jones",
+    "last_name": "Smith",
+    "phone": "+380504430000",
+    "email": "user@gmail.com",
+    "role": [
+      "manager"
+    ],
+    "disabled": false,
+    "login_denied": false
+  },
+  "user_password": "passWord@8",
+  "employee": {
+    "first_name": "Marry",
+    "last_name": "Fox",
+    "nick_name": "Bravo",
+    "phone": "+380504430000",
+    "email": "Marry.Fox@gmail.com",
+    "birthday": "1998-06-01",
+    "country": "Ukraine",
+    "city": "Kyiv",
+    "address": "Khreschatyk St, 14, UA 01001"
+  },
+  "employee_update": {
+    "first_name": "Marry",
+    "last_name": "Smith",
+    "nick_name": "Bravo",
+    "phone": "+380504430000",
+    "email": "Marry.Smith@gmail.com",
+    "birthday": "1998-06-01",
+    "country": "Ukraine",
+    "city": "Kyiv",
+    "address": "Khreschatyk St, 14, UA 01001"
+  },
+  "ticket": {
+    "title": "Network problem",
+    "description": "The employee cannot access network resources.",
+    "status": "New"
+  }
+}
