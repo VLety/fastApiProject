@@ -2,21 +2,21 @@
 > Recommended for PoC and Prototype approach or as a base template<br />
 > The delivery result of this project can be seen here https://fastapiproject.key-info.com.ua/api/v1/docs
 
-> [!IMPORTANT]
+> [!TIP]
 > * Purpose: Intended for educational and promotional needs.
 > * Audience: Python Junior+/Middle level with linux DevOps skills.
 
-> [!Note]
+> [!TIP]
 > This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.<br />
 > [Read more](https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts) about FastAPI recommended deployment.
 
 > [!Note]
 > What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests.
 
-> [!TIP]
+> [!Note]
 > Using Nginx as a Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
-> [!CAUTION]
+> [!WARNING]
 > However, to fully utilize the solution in a production environment, it is recommended to add Docker delivery technology, use PostgreSQL database instead of SQLite3 (AWS RDS will be enough), optionally add Redis for caching support and Gunicorn WSGI server with automatic management of multiple worker processes in front of Uvicorn ASGI server, if it is really necessary according to the project requirements.
 
 ## Project IDEA
