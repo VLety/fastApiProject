@@ -43,9 +43,7 @@
 > Using Nginx as a Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
 > [!Note]
-> For password hashing we will not apply the commonly used [bcrypt] algorithm, will use the Argon2 for the following reasons:
-> * Crypt Function has been deprecated since Python version 3.11 and will be removed in version 3.13 [read more](https://peps.python.org/pep-0594/#crypt)
-> * Argon2 is a modern Password Hashing Algorithm and is intended to replace pbkdf2_sha256, bcrypt, and scrypt [read more](https://guptadeepak.com/comparative-analysis-of-password-hashing-algorithms-argon2-bcrypt-scrypt-and-pbkdf2/)
+> For password hashing we will not apply the commonly used [bcrypt] algorithm, we will use the Argon2. Argon2 is a modern Password Hashing Algorithm and is intended to replace pbkdf2_sha256, bcrypt, and scrypt [read more](https://guptadeepak.com/comparative-analysis-of-password-hashing-algorithms-argon2-bcrypt-scrypt-and-pbkdf2/)
   
 ## Project specification and standards
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
@@ -64,14 +62,13 @@
 > [!TIP]
 > ## Learn more about the project security model
 > > The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:
-> * Login (get a valid token) based on username and password **/api/v1/token**
+> * Login event based on username and password (get a valid token) **/api/v1/token**
 > * Get information about me (based on a valid user token) **/api/v1/me**
-> * Get my current status (based on a valid user token) **/api/v1/status**<br />
+> * Get my current status considering on Disabled and LoginDenied User state (based on a valid user token) **/api/v1/status**<br />
 > ### RBAC roles:
 > * admin - can do CRUD (PATCH) requests with **User**, **Employee** and **Ticket** (top level of security).
 > * manager - can do CRUD requests with **Employee** and **Ticket**, also read **User** and UPDATE: Contacts, Disabled and LoginDenied attribute. Can't change User role(s).
 > * support - can do CRUD requests with **Ticket**, also read **Employee**.
-> * all roles can use Authentication section and change your own password.
 > ### Additional security attributes
 > * Disabled users with valid token cannot access any endpoints regardless of their role(s), except for the Authentication section - but can Login (get valid token).<br />
 > * LoginDenied users cannot Login (cannot get valid token).<br />
