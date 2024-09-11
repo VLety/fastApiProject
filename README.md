@@ -7,7 +7,7 @@
 > * Audience: Python Junior+/Middle level with linux DevOps skills.
 
 > [!TIP]
-> This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP-production purposes.<br />
+> This solution is presented in the most easy-to-learn form without using Docker delivery technology or an additional full-fledged WSGI HTTP server such as Gunicorn. We will simply use the Uvicorn ASGI web server that is already built into FastAPI framework with NGINX as a proxy server. And this deployment option will be sufficient for PoC, Prototype, or even MVP purposes.<br />
 > [Read more](https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts) about FastAPI recommended deployment.
 
 > [!IMPORTANT]
@@ -18,11 +18,11 @@
 > ### User story
 > Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.<br />
 > * Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the employees are supported. The creation and processing of the **Ticket** is the responsibility of the support department.
-> * Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying logins (separate from the user's roles).
+> * Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying login.
 > ### Technical requirements
 > * REST API server with Swagger UI.
 > * OAuth2 authorization protocol with Role-based access control (RBAC) model.
-> * Ability for easily integration with others backend solutions and frontend UI/UX part.
+> * Ability for easily integration to other backend solutions and frontend UI/UX part.
 
 ## Project Tech stack
 * Python 3.10+
@@ -37,15 +37,13 @@
 * Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
 
 > [!Note]
-> What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests. We know that FastApi is an asynchronous framework, so Uvicorn ASGI web server is an obvious choice.
+> What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests. We know that FastAPI is an asynchronous framework, so Uvicorn ASGI web server is an obvious choice.
 
 > [!Note]
 > Using Nginx as a Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
 
 > [!Note]
-> For password hashing we will not apply the commonly used [bcrypt] algorithm, will use the Argon2 for the following reasons:
-> * Crypt Function has been deprecated since Python version 3.11 and will be removed in version 3.13 [read more](https://peps.python.org/pep-0594/#crypt)
-> * Argon2 is a modern Password Hashing Algorithm and is intended to replace pbkdf2_sha256, bcrypt, and scrypt [read more](https://guptadeepak.com/comparative-analysis-of-password-hashing-algorithms-argon2-bcrypt-scrypt-and-pbkdf2/)
+> For password hashing we will not apply the commonly used [bcrypt] algorithm, we will use the Argon2. Argon2 is a modern Password Hashing Algorithm and is intended to replace pbkdf2_sha256, bcrypt, and scrypt [read more](https://guptadeepak.com/comparative-analysis-of-password-hashing-algorithms-argon2-bcrypt-scrypt-and-pbkdf2/)
   
 ## Project specification and standards
 * OpenAPI Specification v3.1 [read more](https://spec.openapis.org/oas/latest.html)
@@ -64,14 +62,13 @@
 > [!TIP]
 > ## Learn more about the project security model
 > > The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:
-> * Login (get a valid token) based on username and password **/api/v1/token**
+> * Login event based on username and password (get a valid token) **/api/v1/token**
 > * Get information about me (based on a valid user token) **/api/v1/me**
-> * Get my current status (based on a valid user token) **/api/v1/status**<br />
+> * Get my current status considering on Disabled and LoginDenied User state (based on a valid user token) **/api/v1/status**<br />
 > ### RBAC roles:
 > * admin - can do CRUD (PATCH) requests with **User**, **Employee** and **Ticket** (top level of security).
 > * manager - can do CRUD requests with **Employee** and **Ticket**, also read **User** and UPDATE: Contacts, Disabled and LoginDenied attribute. Can't change User role(s).
 > * support - can do CRUD requests with **Ticket**, also read **Employee**.
-> * all roles can use Authentication section and change your own password.
 > ### Additional security attributes
 > * Disabled users with valid token cannot access any endpoints regardless of their role(s), except for the Authentication section - but can Login (get valid token).<br />
 > * LoginDenied users cannot Login (cannot get valid token).<br />
@@ -107,7 +104,7 @@ sudo apt -y install python3-venv
 
 Clone a project from a GitHub repository
 ```
-git clone https://VLety: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@github.com/VLety/fastApiProject.git
+git clone https://github.com/VLety/fastApiProject.git
 ```
 Let's go to our project catalog
 ```
@@ -130,6 +127,10 @@ pip3 install pyjwt
 pip3 install "passlib[argon2]"
 pip3 install pytest
 pip3 install pytest-assert-utils
+```
+Or use requirements.txt installation file - the choice is yours
+```
+pip3 install -r ./requirements.txt
 ```
 Deactivate VENV
 ```
@@ -466,23 +467,3 @@ sudo systemctl restart nginx
 
 > [!TIP]
 > ### Project setup and deployment completed successfully!
-
-## Useful commands
-> * Activate VENV
-> ```
-> cd /home/ubuntu/fastApiProject/
-> source venv/bin/activate
-> ```
-> * Run project in port mode
->  ```
->  
->  ```
-> * Deactivate VENV (exit)
-> ```
-> deactivate
-> ```
-
-### NGINX
-```
-sudo systemctl restart nginx
-```
