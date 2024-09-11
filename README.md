@@ -104,7 +104,7 @@ sudo apt -y install python3-venv
 
 Clone a project from a GitHub repository
 ```
-git clone https://VLety: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@github.com/VLety/fastApiProject.git
+git clone https://github.com/VLety/fastApiProject.git
 ```
 Let's go to our project catalog
 ```
