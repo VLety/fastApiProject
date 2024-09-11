@@ -61,7 +61,7 @@
 
 > [!TIP]
 > ## Learn more about the project security model
-> > The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:
+> **The role-based access control (RBAC) model is used to grant permissions to any API endpoint, except for the Authentication section, where we have:**
 > * Login event based on username and password (get a valid token) **/api/v1/token**
 > * Get information about me (based on a valid user token) **/api/v1/me**
 > * Get my current status considering on Disabled and LoginDenied User state (based on a valid user token) **/api/v1/status**<br />
