@@ -18,11 +18,11 @@
 > ### User story
 > Need to create a Prototype/MVP backend solution for implementing a simple Ticket system.<br />
 > * Participants: **User** of the outsourcing support department, **Employee** and **Ticket** on the basis of which the employees are supported. The creation and processing of the **Ticket** is the responsibility of the support department.
-> * Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying logins (separate from the user's roles).
+> * Security: Access to the system based on user's roles. It is also necessary to have separate explicit user attributes to control enabling/disabling access to the system and allowing/denying login.
 > ### Technical requirements
 > * REST API server with Swagger UI.
 > * OAuth2 authorization protocol with Role-based access control (RBAC) model.
-> * Ability for easily integration with others backend solutions and frontend UI/UX part.
+> * Ability for easily integration to other backend solutions and frontend UI/UX part.
 
 ## Project Tech stack
 * Python 3.10+
@@ -37,7 +37,7 @@
 * Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
 
 > [!Note]
-> What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests. We know that FastApi is an asynchronous framework, so Uvicorn ASGI web server is an obvious choice.
+> What is the difference between [WSGI](https://wsgi.tutorial.codepoint.net/intro) and [ASGI](https://asgi.readthedocs.io/en/latest/) server interface specification? In simple words: WSGI is synchronous, handling one request at a time, and blocking execution until processing is complete. ASGI is asynchronous, handling multiple requests concurrently without blocking other requests. We know that FastAPI is an asynchronous framework, so Uvicorn ASGI web server is an obvious choice.
 
 > [!Note]
 > Using Nginx as a Proxy in front of your WSGI or ASGI server may not be necessary for PoC or Prototype approach, but is recommended for additional resilience and full-fledged production environment. Nginx can deal with serving your static media and buffering slow requests, leaving your application servers free from load as much as possible, add more security etc.
@@ -127,6 +127,10 @@ pip3 install pyjwt
 pip3 install "passlib[argon2]"
 pip3 install pytest
 pip3 install pytest-assert-utils
+```
+Or use requirements.txt installation file - the choice is yours
+```
+pip3 install -r ./requirements.txt
 ```
 Deactivate VENV
 ```
