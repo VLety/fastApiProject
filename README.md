@@ -467,23 +467,3 @@ sudo systemctl restart nginx
 
 > [!TIP]
 > ### Project setup and deployment completed successfully!
-
-## Useful commands
-> * Activate VENV
-> ```
-> cd /home/ubuntu/fastApiProject/
-> source venv/bin/activate
-> ```
-> * Run project in port mode
->  ```
->  
->  ```
-> * Deactivate VENV (exit)
-> ```
-> deactivate
-> ```
-
-### NGINX
-```
-sudo systemctl restart nginx
-```
