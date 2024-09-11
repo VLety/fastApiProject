@@ -32,6 +32,7 @@
 * Annotated(typing) for metadata management [read more](https://docs.python.org/3/library/typing.html#typing.Annotated)
 * PyJWT for encode and decode JSON Web Tokens (JWT) [read more](https://pyjwt.readthedocs.io/en/stable/#welcome-to-pyjwt)
 * Passlib[Argon2] for password hashing [read more](https://passlib.readthedocs.io/en/stable/lib/passlib.hash.argon2.html#passlib-hash-argon2-argon2)
+* Pytest as a Python testing framework [read more](https://docs.pytest.org/en/stable/)
 * Uvicorn as ASGI web server [read more](https://www.uvicorn.org/)
 * NGINX as Reverse Proxy & TLS Termination service [read more](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 * Certbot as Let’s Encrypt SSL certificate manager [read more](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
