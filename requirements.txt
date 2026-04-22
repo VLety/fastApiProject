@@ -32,7 +32,7 @@ httptools==0.6.1
 watchfiles==0.23.0
 greenlet==3.0.3
 annotated-types==0.7.0
-python-multipart==0.0.22
+python-multipart==0.0.26
 pycparser==2.22
 packaging==24.1
 SQLAlchemy==2.0.32
